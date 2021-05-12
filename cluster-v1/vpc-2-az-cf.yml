@@ -16,7 +16,7 @@ Description: Creates the VPC for creating Aurora cluster
 Parameters:
   TemplateName:
     Type: String
-    Default: rds-vpc
+    Default: rdsa-vpc
     Description: Name used for different elements created.
 
 ## Mappings
