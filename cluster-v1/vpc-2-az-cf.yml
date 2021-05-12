@@ -175,12 +175,12 @@ Outputs:
     Value: !Ref MainVPC
     Export:
         Name: !Sub "${AWS::Region}-${AWS::StackName}-MainVPC"
-  PublicSubnetACidr:
+  PublicSubnetCidrA:
     Description: PublicSubnetA CIDR for LAB
     Value: !Select [ 0, !Cidr [ !GetAtt MainVPC.CidrBlock, 4, 8 ]]
     Export:
         Name: !Sub "${AWS::Region}-${AWS::StackName}-PublicSubnetACidr"
-  PublicSubnetBCidr:
+  PublicSubnetCidrA:
     Description: PublicSubnetA CIDR for LAB
     Value: !Select [ 1, !Cidr [ !GetAtt MainVPC.CidrBlock, 4, 8 ]]
     Export:

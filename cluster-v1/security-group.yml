@@ -17,7 +17,7 @@ Parameters:
 
   TemplateName:
     Type: String
-    Default: rds-security-group
+    Default: rdsa-security-group
     Description: Name used for different elements created
 
   # This is the VPC Id for the RDS VPC created earlier
