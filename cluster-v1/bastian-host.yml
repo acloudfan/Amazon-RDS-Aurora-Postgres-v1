@@ -1,0 +1,86 @@
+---
+## 
+## Creates an EC2 host to interact with DB cluster
+##
+## Changelog:
+##
+## Dependencies:
+## none
+##
+## This sample code is made available under the MIT-0 license. See the LICENSE file.
+
+AWSTemplateFormatVersion: 2010-09-09
+Description: Host for interacting with the DB cluster
+## Parameters
+Parameters:
+  TemplateName:
+    Type: String
+    Default: rdsa-bastian-host
+    Description: Name used for different elements created.
+  KeyName:
+    Description: Amazon EC2 KeyPair
+    Type: AWS::EC2::KeyPair::KeyName
+  VpcId:
+    Description: Enter the VPC ID
+    Type: AWS::EC2::VPC::Id
+  PublicSubnetIds:
+    Description: Enter the Public Subnets
+    Type: AWS::EC2::Subnet::Id
+
+# Mappings
+Mappings:
+  RegionMap:
+    us-east-1:
+      AMI: ami-0d5eff06f840b45e9
+    us-east-2:
+      AMI: ami-077e31c4939f6a2f3
+    us-west-1:
+      AMI: ami-04468e03c37242e1e
+    us-west-2:
+      AMI: ami-0cf6f5c8a62fa5da6
+
+
+# Resources
+Resources:
+  HostSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Open Port 22 for ssh
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: "22"
+          ToPort: "22"
+          CidrIp: 0.0.0.0/0
+
+  BastianEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      ImageId:
+        Fn::FindInMap:
+          - RegionMap
+          - !Ref AWS::Region
+          - AMI
+      SecurityGroupIds:
+        - !Ref HostSecurityGroup
+      SubnetId: !Ref PublicSubnetIds
+      Tags:
+        - Key: Name
+          Value: "Private Instance"
+      KeyName: !Ref KeyName
+
+Outputs:
+  BastianHostIP:
+    Description: The Public Ip
+    Value: !GetAtt BastianEC2Instance.PublicIp
+  ConnectionCMD:
+    Value:
+      !Join [
+        "",
+        [
+          ssh -A -J ec2-user@,
+          !GetAtt BastianEC2Instance.PublicIp
+        ],
+      ]
+    Description: Copy and run it in your shell
