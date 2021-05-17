@@ -47,6 +47,14 @@ Parameters:
     Description: 'Security group for the DB cluster instances'
     Type: String
 
+  SetupCustomParameterGroups:
+    Description: 'Should custom cluster and DB instance parameter groups be setup'
+    Type: String
+    Default: "false"
+    AllowedValues:
+      - "true"
+      - "false"
+
   DBMasterUserPassword:
     Description: 'This is the password for the master user'
     Type: String
@@ -71,7 +79,12 @@ Mappings:
   ClusterSettings:
     global:
       dbSchema: labdb
+      dbDriver: pgsql
+      dbFamily: aurora-postgresql11
 
+Conditions:
+  #Boolean indicates whether Cluster & DB Parameter groups will be created and setup
+  SetupParameterGroups: !Equals [!Ref SetupCustomParameterGroups, "true"]
 
 Resources:
 
@@ -109,7 +122,6 @@ Resources:
 
   # Deploy the first cluster node (always the writer)
   DBPrimaryNode:
-    # Condition: WithInstance
     Type: AWS::RDS::DBInstance
     DependsOn: DBCluster
     Properties:
@@ -122,6 +134,52 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub ${TemplateName}-node-01
+
+  # Cluster Custom Parameter Group
+  CustomClusterParameterGroup:
+    Type: AWS::RDS::DBClusterParameterGroup
+    Condition: SetupParameterGroups
+    Properties:
+      Description: !Sub ${TemplateName}-clusterparamgroup
+      Family: !FindInMap [ ClusterSettings, global, dbFamily ]
+      Parameters:
+        rds.force_ssl: 0
+        shared_preload_libraries: 'pg_stat_statements,pg_hint_plan,auto_explain'
+      Tags:
+        - Key: Name
+          Value: !Sub ${TemplateName}-clusterparamgroup
+
+  # DB Parameter Group
+  CustomDBParameterGroup:
+    Type: AWS::RDS::DBParameterGroup
+    Condition: SetupParameterGroups
+    Properties:
+      Description: !Sub ${TemplateName}-dbparamgroup
+      Family: !FindInMap [ ClusterSettings, global, dbFamily ]
+      Parameters:
+        log_rotation_age: '1440'
+        log_rotation_size: '102400'
+      Tags:
+        - Key: Name
+          Value: !Sub ${TemplateName}-dbparamgroup
+
+  # Aurora Enhanced monitoring role
+  EnhancedMonitoringRole:
+    Type: AWS::IAM::Role
+    Condition: SetupParameterGroups
+    Properties:
+      RoleName: !Sub ${TemplateName}-monitor-${AWS::Region}
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - sts:AssumeRole
+            Principal:
+              Service:
+                - monitoring.rds.amazonaws.com
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole
 
 Outputs:
   DBClusterId:
@@ -142,3 +200,12 @@ Outputs:
   DBUsername:
     Description: Database master username
     Value: !Ref DBMasterUsername
+  EnhancedMonitoringRole:
+    Description: Role used for enhanced monitoring
+    Value: !GetAtt EnhancedMonitoringRole.Arn
+  CustomClusterParameterGroup:
+    Description: Cluster parameter group used for the cluster
+    Value: !Ref CustomClusterParameterGroup
+  CustomDBParameterGroup:
+    Description: DB parameter group used for instances
+    Value: !Ref CustomDBParameterGroup

@@ -42,6 +42,8 @@ Mappings:
 
 # Resources
 Resources:
+
+  # Bastian Host Security Group
   HostSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -52,7 +54,38 @@ Resources:
           FromPort: "22"
           ToPort: "22"
           CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: "8080"
+          ToPort: "8080"
+          CidrIp: 0.0.0.0/0
 
+  # Bastian host role
+  BastianHostRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${TemplateName}-bastian-${AWS::Region}
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - sts:AssumeRole
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+
+
+  # Bastian host profile
+  BastianHostInstanceProfile: 
+    Type: "AWS::IAM::InstanceProfile"
+    Properties: 
+      Path: "/"
+      Roles: 
+        - !Ref BastianHostRole
+
+  # Bastian host EC2 instance
   BastianEC2Instance:
     Type: AWS::EC2::Instance
     Properties:
@@ -65,6 +98,7 @@ Resources:
       SecurityGroupIds:
         - !Ref HostSecurityGroup
       SubnetId: !Ref PublicSubnetIds
+      IamInstanceProfile: !Ref BastianHostInstanceProfile
       Tags:
         - Key: Name
           Value: "Private Instance"

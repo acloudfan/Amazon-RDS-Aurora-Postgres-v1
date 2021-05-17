@@ -45,8 +45,8 @@ Parameters:
 
 
 Resources:
-## Create DB security group for PostgreSQL
-  rdsSecurityGroupCluster:
+  # Create DB security group for PostgreSQL
+  RDSASecurityGroupCluster:
     Type: AWS::EC2::SecurityGroup
     Properties:
       VpcId: !Ref RdsAuroraVPC
@@ -66,6 +66,14 @@ Resources:
           ToPort: !Ref RdsIngressPort
           CidrIp: !Ref PubSubnetCidrB
           Description: Allows hosts in public subnet B to connect with the cluster
+  # Add self reference for the SG
+  # RDSASecurityGroupClusterIngress:
+  #   Type: 'AWS::EC2::SecurityGroupIngress'
+  #   Properties:
+  #     GroupId: !GetAtt 'RDSASecurityGroupCluster.GroupId'
+  #     IpProtocol: -1
+  #     SourceSecurityGroupId: !Ref RDSASecurityGroupCluster
+  #     Description: 'Self Reference'
 
 Outputs:
   DBSecurityGroupCluster:
