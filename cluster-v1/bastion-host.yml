@@ -15,7 +15,7 @@ Description: Host for interacting with the DB cluster
 Parameters:
   TemplateName:
     Type: String
-    Default: rdsa-bastian-host
+    Default: rdsa-bastion-host
     Description: Name used for different elements created.
   KeyName:
     Description: Amazon EC2 KeyPair
@@ -43,7 +43,7 @@ Mappings:
 # Resources
 Resources:
 
-  # Bastian Host Security Group
+  # Bastion Host Security Group
   HostSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -58,12 +58,16 @@ Resources:
           FromPort: "8080"
           ToPort: "8080"
           CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: "3389"
+          ToPort: "3389"
+          CidrIp: 0.0.0.0/0
 
-  # Bastian host role
-  BastianHostRole:
+  # Bastion host role
+  BastionHostRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub ${TemplateName}-bastian-${AWS::Region}
+      RoleName: !Sub ${TemplateName}-bastion-${AWS::Region}
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -77,16 +81,16 @@ Resources:
         - arn:aws:iam::aws:policy/AdministratorAccess
 
 
-  # Bastian host profile
-  BastianHostInstanceProfile: 
+  # Bastion host profile
+  BastionHostInstanceProfile: 
     Type: "AWS::IAM::InstanceProfile"
     Properties: 
       Path: "/"
       Roles: 
-        - !Ref BastianHostRole
+        - !Ref BastionHostRole
 
-  # Bastian host EC2 instance
-  BastianEC2Instance:
+  # Bastion host EC2 instance
+  BastionEC2Instance:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: t2.micro
@@ -98,23 +102,23 @@ Resources:
       SecurityGroupIds:
         - !Ref HostSecurityGroup
       SubnetId: !Ref PublicSubnetIds
-      IamInstanceProfile: !Ref BastianHostInstanceProfile
+      IamInstanceProfile: !Ref BastionHostInstanceProfile
       Tags:
         - Key: Name
           Value: "Private Instance"
       KeyName: !Ref KeyName
 
 Outputs:
-  BastianHostIP:
+  BastionHostIP:
     Description: The Public Ip
-    Value: !GetAtt BastianEC2Instance.PublicIp
+    Value: !GetAtt BastionEC2Instance.PublicIp
   ConnectionCMD:
     Value:
       !Join [
         "",
         [
           ssh -A -J ec2-user@,
-          !GetAtt BastianEC2Instance.PublicIp
+          !GetAtt BastionEC2Instance.PublicIp
         ],
       ]
     Description: Copy and run it in your shell

@@ -1,7 +1,8 @@
 ---
 ## 
 ## Creates Aurora PostgreSQL Cluster
-##
+## + May be used for creating the cluster and DB parameter groups
+## + Groups not applied to the cluster/instances
 ## Changelog:
 ##
 ## Dependencies:

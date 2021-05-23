@@ -29,6 +29,7 @@ Parameters:
   RdsIngressPort:
     Type: Number
     AllowedValues: [3306, 5432]
+    Default: 5432
     Description: This is the Listener port (3306 for MySQL and 5432 for PostgreSQL)
 
   # Public Subnet A CIDR
@@ -46,7 +47,7 @@ Parameters:
 
 Resources:
   # Create DB security group for PostgreSQL
-  RDSASecurityGroupCluster:
+  RDSSecurityGroupCluster:
     Type: AWS::EC2::SecurityGroup
     Properties:
       VpcId: !Ref RdsAuroraVPC
@@ -78,6 +79,6 @@ Resources:
 Outputs:
   DBSecurityGroupCluster:
     Description: This is the Security group to be used for the DB cluster
-    Value: !Ref rdsSecurityGroupCluster
+    Value: !Ref RDSSecurityGroupCluster
     Export:
         Name: !Sub "${AWS::Region}-${AWS::StackName}-SecurityGroupDBCluster"
