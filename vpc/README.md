@@ -14,5 +14,8 @@ Setup tools on VM
 2. Install git
 yum install git -y
 
-3. 
+3. Clone the repository
+git clone https://github.com/acloudfan/Amazon-RDS-Aurora-v1.git
+
+4. 
 
