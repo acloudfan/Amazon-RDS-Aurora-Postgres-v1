@@ -19,7 +19,9 @@ Parameters:
     Description: Name used for different elements created.
   KeyName:
     Description: Amazon EC2 KeyPair
-    Type: AWS::EC2::KeyPair::KeyName
+    Default: ''
+    # Type: AWS::EC2::KeyPair::KeyName
+    Type: String
   VpcId:
     Description: Enter the VPC ID
     Type: AWS::EC2::VPC::Id
@@ -33,12 +35,15 @@ Mappings:
     us-east-1:
       AMI: ami-0d5eff06f840b45e9
     us-east-2:
-      AMI: ami-077e31c4939f6a2f3
+      AMI: ami-077e31c4939f6a2f3  
     us-west-1:
       AMI: ami-04468e03c37242e1e
     us-west-2:
       AMI: ami-0cf6f5c8a62fa5da6
 
+# Conditions
+Conditions:
+  HasNoKeyName: !Equals [!Ref KeyName, '']
 
 # Resources
 Resources:
@@ -108,7 +113,8 @@ Resources:
       Tags:
         - Key: Name
           Value: "Private Instance"
-      KeyName: !Ref KeyName
+      # KeyName: !Ref KeyName
+      KeyName: !If [HasNoKeyName,  !Ref AWS::NoValue , !Ref KeyName]
 
 Outputs:
   BastionHostIP:

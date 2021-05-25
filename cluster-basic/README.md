@@ -29,6 +29,8 @@ sudo su -
 amazon-linux-extras install postgresql10 vim epel
 yum install -y postgresql-server postgresql-devel
 
+amazon-linux-extras install postgresql11 vim epel -y
+
 pgbench
 =======
 yum install postgresql-contrib

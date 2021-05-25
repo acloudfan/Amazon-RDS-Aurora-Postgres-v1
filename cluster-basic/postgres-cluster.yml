@@ -48,14 +48,6 @@ Parameters:
     Description: 'Security group for the DB cluster instances'
     Type: AWS::EC2::SecurityGroup::Id
 
-  # SetupCustomParameterGroups:
-  #   Description: 'Should custom cluster and DB instance parameter groups be setup'
-  #   Type: String
-  #   Default: "false"
-  #   AllowedValues:
-  #     - "true"
-  #     - "false"
-
   DBMasterUserPassword:
     Description: 'This is the password for the master user'
     Type: String
@@ -91,6 +83,7 @@ Resources:
       Description: Subnet group
       Properties:
         DBSubnetGroupDescription: !Sub ${TemplateName}-db-subnet-group
+        DBSubnetGroupName: !Sub ${TemplateName}-db-subnet-group
         SubnetIds: !Split [',', !Ref PrivateSubnets] 
         Tags:
           - Key: Name
@@ -157,12 +150,4 @@ Outputs:
   ClusterDBSubnetGroup:
     Description: Subnet Group created for the DB cluster
     Value: !Ref ClusterDBSubnetGroup
-  # EnhancedMonitoringRole:
-  #   Description: Role used for enhanced monitoring
-  #   Value: !GetAtt EnhancedMonitoringRole.Arn
-  # CustomClusterParameterGroup:
-  #   Description: Cluster parameter group used for the cluster
-  #   Value: !Ref CustomClusterParameterGroup
-  # CustomDBParameterGroup:
-  #   Description: DB parameter group used for instances
-  #   Value: !Ref CustomDBParameterGroup
+
