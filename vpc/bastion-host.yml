@@ -84,6 +84,7 @@ Resources:
   # Bastion host profile
   BastionHostInstanceProfile: 
     Type: "AWS::IAM::InstanceProfile"
+    DependsOn: BastionHostRole
     Properties: 
       Path: "/"
       Roles: 
@@ -92,6 +93,7 @@ Resources:
   # Bastion host EC2 instance
   BastionEC2Instance:
     Type: AWS::EC2::Instance
+    DependsOn: [BastionHostInstanceProfile, HostSecurityGroup]
     Properties:
       InstanceType: t2.micro
       ImageId:

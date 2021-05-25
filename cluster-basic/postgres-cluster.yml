@@ -46,15 +46,15 @@ Parameters:
 
   DBSecurityGroupCluster:
     Description: 'Security group for the DB cluster instances'
-    Type: String
+    Type: AWS::EC2::SecurityGroup::Id
 
-  SetupCustomParameterGroups:
-    Description: 'Should custom cluster and DB instance parameter groups be setup'
-    Type: String
-    Default: "false"
-    AllowedValues:
-      - "true"
-      - "false"
+  # SetupCustomParameterGroups:
+  #   Description: 'Should custom cluster and DB instance parameter groups be setup'
+  #   Type: String
+  #   Default: "false"
+  #   AllowedValues:
+  #     - "true"
+  #     - "false"
 
   DBMasterUserPassword:
     Description: 'This is the password for the master user'
@@ -66,7 +66,7 @@ Parameters:
   DBEngineVersion:
     Description: Select Database Engine Version
     Type: String
-    Default: 11.7
+    Default: 11.9
     AllowedValues:
       - 11.6
       - 11.7
@@ -75,7 +75,7 @@ Parameters:
       - 12.4
 
 
-
+# Used as globals
 Mappings:
   ClusterSettings:
     global:
@@ -83,23 +83,30 @@ Mappings:
       dbDriver: pgsql
       dbFamily: aurora-postgresql11
 
-Conditions:
-  #Boolean indicates whether Cluster & DB Parameter groups will be created and setup
-  SetupParameterGroups: !Equals [!Ref SetupCustomParameterGroups, "true"]
-
+# Resources for the cluster
 Resources:
+  # DB Cluster Subnet Group
+  ClusterDBSubnetGroup:
+      Type: AWS::RDS::DBSubnetGroup
+      Description: Subnet group
+      Properties:
+        DBSubnetGroupDescription: !Sub ${TemplateName}-db-subnet-group
+        SubnetIds: !Split [',', !Ref PrivateSubnets] 
+        Tags:
+          - Key: Name
+            Value: !Sub ${TemplateName}-db-subnet-group
 
   # Create Aurora cluster
   # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html
   DBCluster:
     Type: AWS::RDS::DBCluster
-    # DependsOn: [roleEnhancedMonitoring]
+    DependsOn: [ClusterDBSubnetGroup]
     Properties:
+      DBClusterIdentifier: !Sub ${TemplateName}-cluster
       Engine: aurora-postgresql
       EngineVersion : !Ref DBEngineVersion
       Port: 5432
-      DBSubnetGroupName: !Ref DBSubnets
-      DBClusterIdentifier: !Sub ${TemplateName}-cluster
+      DBSubnetGroupName: !Ref ClusterDBSubnetGroup
       BackupRetentionPeriod: 7
       MasterUsername: !Ref DBMasterUsername
       MasterUserPassword: !Ref DBMasterUserPassword
@@ -110,24 +117,14 @@ Resources:
         - Key: Name
           Value: !Sub ${TemplateName}-cluster
 
-  # DB Cluster Subnet Groups
-  DBSubnets:
-      Type: AWS::RDS::DBSubnetGroup
-      Properties:
-        DBSubnetGroupDescription: !Sub ${TemplateName}-db-subnet-group
-        SubnetIds: !Split [',', !Ref PrivateSubnets] 
-        Tags:
-          - Key: Name
-            Value: !Sub ${TemplateName}-db-subnet-group
-
 
   # Deploy the first cluster node (always the writer)
   DBPrimaryNode:
     Type: AWS::RDS::DBInstance
     DependsOn: DBCluster
     Properties:
-      DBClusterIdentifier: !Ref DBCluster
       DBInstanceIdentifier: !Sub ${TemplateName}-node-01
+      DBClusterIdentifier: !Ref DBCluster
       DBInstanceClass: !Ref DBInstanceClass
       Engine: aurora-postgresql
       EngineVersion : !Ref DBEngineVersion
@@ -136,52 +133,8 @@ Resources:
         - Key: Name
           Value: !Sub ${TemplateName}-node-01
 
-  # Cluster Custom Parameter Group
-  CustomClusterParameterGroup:
-    Type: AWS::RDS::DBClusterParameterGroup
-    Condition: SetupParameterGroups
-    Properties:
-      Description: !Sub ${TemplateName}-clusterparamgroup
-      Family: !FindInMap [ ClusterSettings, global, dbFamily ]
-      Parameters:
-        rds.force_ssl: 0
-        shared_preload_libraries: 'pg_stat_statements,pg_hint_plan,auto_explain'
-      Tags:
-        - Key: Name
-          Value: !Sub ${TemplateName}-clusterparamgroup
 
-  # DB Parameter Group
-  CustomDBParameterGroup:
-    Type: AWS::RDS::DBParameterGroup
-    Condition: SetupParameterGroups
-    Properties:
-      Description: !Sub ${TemplateName}-dbparamgroup
-      Family: !FindInMap [ ClusterSettings, global, dbFamily ]
-      Parameters:
-        log_rotation_age: '1440'
-        log_rotation_size: '102400'
-      Tags:
-        - Key: Name
-          Value: !Sub ${TemplateName}-dbparamgroup
-
-  # Aurora Enhanced monitoring role
-  EnhancedMonitoringRole:
-    Type: AWS::IAM::Role
-    Condition: SetupParameterGroups
-    Properties:
-      RoleName: !Sub ${TemplateName}-monitor-${AWS::Region}
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Action:
-              - sts:AssumeRole
-            Principal:
-              Service:
-                - monitoring.rds.amazonaws.com
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole
-
+# Outputs
 Outputs:
   DBClusterId:
     Description: Cluster resource ARN
@@ -201,12 +154,15 @@ Outputs:
   DBUsername:
     Description: Database master username
     Value: !Ref DBMasterUsername
-  EnhancedMonitoringRole:
-    Description: Role used for enhanced monitoring
-    Value: !GetAtt EnhancedMonitoringRole.Arn
-  CustomClusterParameterGroup:
-    Description: Cluster parameter group used for the cluster
-    Value: !Ref CustomClusterParameterGroup
-  CustomDBParameterGroup:
-    Description: DB parameter group used for instances
-    Value: !Ref CustomDBParameterGroup
+  ClusterDBSubnetGroup:
+    Description: Subnet Group created for the DB cluster
+    Value: !Ref ClusterDBSubnetGroup
+  # EnhancedMonitoringRole:
+  #   Description: Role used for enhanced monitoring
+  #   Value: !GetAtt EnhancedMonitoringRole.Arn
+  # CustomClusterParameterGroup:
+  #   Description: Cluster parameter group used for the cluster
+  #   Value: !Ref CustomClusterParameterGroup
+  # CustomDBParameterGroup:
+  #   Description: DB parameter group used for instances
+  #   Value: !Ref CustomDBParameterGroup

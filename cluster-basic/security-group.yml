@@ -51,7 +51,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       VpcId: !Ref RdsAuroraVPC
-      GroupName: !Sub ${TemplateName}-rdsa-internal
+      GroupName: !Sub ${TemplateName}-internal
       GroupDescription: RDS cluster firewall
       Tags:
         - Key: Name

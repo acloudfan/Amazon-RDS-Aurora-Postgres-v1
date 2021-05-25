@@ -3,12 +3,20 @@ security-group.yml
 ==================
 Sets up the security group for Aurora cluster
 
+postgres-cluster.yml
+====================
++ Creates the DB Subnet group
++ Create the DB Cluster
++ Creates the DB Instance (primary node)
 
-
-
-Bastian host
+Bastion host
 ============
-- Private EC2 instance needs role for aws cli
+EC2 instance needs a role for aws cli
+
+
+1. Create the VPC
+2. Create the security group
+3. Create the DB cluster
 
 sudo su -
 su ec2-user

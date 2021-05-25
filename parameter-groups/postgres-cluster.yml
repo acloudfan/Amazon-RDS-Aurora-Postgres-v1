@@ -1,0 +1,216 @@
+---
+## 
+## Creates Aurora PostgreSQL Cluster
+## + May be used for creating the cluster and DB parameter groups
+## + Groups not applied to the cluster/instances
+## Changelog:
+##
+## Dependencies:
+## none
+##
+## This sample code is made available under the MIT-0 license. See the LICENSE file.
+
+AWSTemplateFormatVersion: 2010-09-09
+Description: Amazon RDS PostgreSQL Database Cluster Creation
+## Parameters
+Parameters:
+  TemplateName:
+    Type: String
+    Default: rdsa-postgresql
+    Description: Name used for different elements created.
+
+  # This is the VPC Id for the RDS VPC created earlier
+  RdsAuroraVPC:
+    Type: AWS::EC2::VPC::Id
+    Description: Main VPC id
+
+  # Subnets for the cluster
+  PrivateSubnets:
+    Type: String
+    Description: IDs of a Private subnets for RDS PG.
+
+  # Does NOT list all allowed values - please check documentation
+  # Version dependencies, db.r3 not available for PG
+  # db.r6g.large available only for "12.4 and higher, 11.9 and higher"
+  DBInstanceClass:
+    Description: 'The instance type of database server.'
+    Type: String
+    Default: 'db.t3.medium'
+    AllowedValues: ['db.t3.medium','db.r4.large','db.r5.large','db.r6g.large']
+
+  # Master user name created for the cluster
+  DBMasterUsername:
+    Description: 'The master user name for the DB instance (ignored when DBSnapshotIdentifier is set, value used from snapshot).'
+    Type: String
+    Default: masteruser
+
+  DBSecurityGroupCluster:
+    Description: 'Security group for the DB cluster instances'
+    Type: AWS::EC2::SecurityGroup::Id
+
+  SetupCustomParameterGroups:
+    Description: 'Should custom cluster and DB instance parameter groups be setup'
+    Type: String
+    Default: "false"
+    AllowedValues:
+      - "true"
+      - "false"
+
+  DBMasterUserPassword:
+    Description: 'This is the password for the master user'
+    Type: String
+    Default: masteruserpw
+
+
+  # Version of the Database engine
+  DBEngineVersion:
+    Description: Select Database Engine Version
+    Type: String
+    Default: 11.7
+    AllowedValues:
+      - 11.6
+      - 11.7
+      - 11.8
+      - 11.9
+      - 12.4
+
+
+
+Mappings:
+  ClusterSettings:
+    global:
+      dbSchema: labdb
+      dbDriver: pgsql
+      dbFamily: aurora-postgresql11
+
+Conditions:
+  #Boolean indicates whether Cluster & DB Parameter groups will be created and setup
+  SetupParameterGroups: !Equals [!Ref SetupCustomParameterGroups, "true"]
+
+Resources:
+
+  # Create Aurora cluster
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html
+  DBCluster:
+    Type: AWS::RDS::DBCluster
+    # DependsOn: [roleEnhancedMonitoring]
+    Properties:
+      DBClusterIdentifier: !Sub ${TemplateName}-cluster
+      Engine: aurora-postgresql
+      EngineVersion : !Ref DBEngineVersion
+      Port: 5432
+      DBSubnetGroupName: !Ref ClusterDBSubnetGroup
+      BackupRetentionPeriod: 7
+      MasterUsername: !Ref DBMasterUsername
+      MasterUserPassword: !Ref DBMasterUserPassword
+      DatabaseName: !FindInMap [ ClusterSettings, global, dbSchema ]
+      StorageEncrypted: true
+      VpcSecurityGroupIds: [ !Ref DBSecurityGroupCluster ]
+      Tags:
+        - Key: Name
+          Value: !Sub ${TemplateName}-cluster
+
+  # DB Cluster Subnet Group
+  ClusterDBSubnetGroup:
+      Type: AWS::RDS::DBSubnetGroup
+      
+      Properties:
+        DBSubnetGroupDescription: !Sub ${TemplateName}-db-subnet-group
+        SubnetIds: !Split [',', !Ref PrivateSubnets] 
+        Tags:
+          - Key: Name
+            Value: !Sub ${TemplateName}-db-subnet-group
+
+
+  # Deploy the first cluster node (always the writer)
+  DBPrimaryNode:
+    Type: AWS::RDS::DBInstance
+    DependsOn: DBCluster
+    Properties:
+      DBInstanceIdentifier: !Sub ${TemplateName}-node-01
+      DBClusterIdentifier: !Ref DBCluster
+      DBInstanceClass: !Ref DBInstanceClass
+      Engine: aurora-postgresql
+      EngineVersion : !Ref DBEngineVersion
+      PubliclyAccessible: false
+      Tags:
+        - Key: Name
+          Value: !Sub ${TemplateName}-node-01
+
+  # Cluster Custom Parameter Group
+  CustomClusterParameterGroup:
+    Type: AWS::RDS::DBClusterParameterGroup
+    Condition: SetupParameterGroups
+    Properties:
+      Description: !Sub ${TemplateName}-clusterparamgroup
+      Family: !FindInMap [ ClusterSettings, global, dbFamily ]
+      Parameters:
+        rds.force_ssl: 0
+        shared_preload_libraries: 'pg_stat_statements,pg_hint_plan,auto_explain'
+      Tags:
+        - Key: Name
+          Value: !Sub ${TemplateName}-clusterparamgroup
+
+  # DB Parameter Group
+  CustomDBParameterGroup:
+    Type: AWS::RDS::DBParameterGroup
+    Condition: SetupParameterGroups
+    Properties:
+      Description: !Sub ${TemplateName}-dbparamgroup
+      Family: !FindInMap [ ClusterSettings, global, dbFamily ]
+      Parameters:
+        log_rotation_age: '1440'
+        log_rotation_size: '102400'
+      Tags:
+        - Key: Name
+          Value: !Sub ${TemplateName}-dbparamgroup
+
+  # Aurora Enhanced monitoring role
+  EnhancedMonitoringRole:
+    Type: AWS::IAM::Role
+    Condition: SetupParameterGroups
+    Properties:
+      RoleName: !Sub ${TemplateName}-monitor-${AWS::Region}
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - sts:AssumeRole
+            Principal:
+              Service:
+                - monitoring.rds.amazonaws.com
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole
+
+Outputs:
+  DBClusterId:
+    Description: Cluster resource ARN
+    Value: !Ref DBCluster
+  clusterEndpoint:
+      Description: Aurora Cluster Endpoint
+      Value: !GetAtt DBCluster.Endpoint.Address
+  readerEndpoint:
+    Description: Aurora Reader Endpoint
+    Value: !GetAtt DBCluster.ReadEndpoint.Address
+  Port:
+    Description: Aurora Endpoint Port
+    Value: !GetAtt DBCluster.Endpoint.Port
+  DatabaseName:
+    Description: Database Name
+    Value: !FindInMap [ ClusterSettings, global, dbSchema ]
+  DBUsername:
+    Description: Database master username
+    Value: !Ref DBMasterUsername
+  ClusterDBSubnetGroup:
+    Description: Subnet Group created for the DB cluster
+    Value: !Ref ClusterDBSubnetGroup
+  EnhancedMonitoringRole:
+    Description: Role used for enhanced monitoring
+    Value: !GetAtt EnhancedMonitoringRole.Arn
+  CustomClusterParameterGroup:
+    Description: Cluster parameter group used for the cluster
+    Value: !Ref CustomClusterParameterGroup
+  CustomDBParameterGroup:
+    Description: DB parameter group used for instances
+    Value: !Ref CustomDBParameterGroup
