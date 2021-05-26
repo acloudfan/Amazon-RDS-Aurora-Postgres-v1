@@ -17,5 +17,10 @@ yum install git -y
 3. Clone the repository
 git clone https://github.com/acloudfan/Amazon-RDS-Aurora-v1.git
 
-4. 
+4. Install the tools
+cd A*
+chmod u+x ./bin/install/*.sh
+sudo ./bin/install/psql-pgbench-jq.sh
+
+
 

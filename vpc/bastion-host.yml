@@ -98,7 +98,7 @@ Resources:
   # Bastion host EC2 instance
   BastionEC2Instance:
     Type: AWS::EC2::Instance
-    DependsOn: [BastionHostInstanceProfile, HostSecurityGroup]
+    DependsOn: [BastionHostInstanceProfile, HostSecurityGroup, BastionHostRole]
     Properties:
       InstanceType: t2.micro
       ImageId:
