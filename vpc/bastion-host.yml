@@ -28,6 +28,16 @@ Parameters:
   PublicSubnetIds:
     Description: Enter the Public Subnets
     Type: AWS::EC2::Subnet::Id
+  InstanceType:
+    Description: Instance family for the test instance
+    Default: t2.micro
+    Type: String
+    AllowedValues: 
+      - "t2.micro"
+      - "t2.small"
+      - "t3.micro"
+      - "t3.small"
+      - "t3.medium"
 
 # Mappings
 Mappings:
@@ -100,7 +110,7 @@ Resources:
     Type: AWS::EC2::Instance
     DependsOn: [BastionHostInstanceProfile, HostSecurityGroup, BastionHostRole]
     Properties:
-      InstanceType: t2.micro
+      InstanceType: !Ref InstanceType
       ImageId:
         Fn::FindInMap:
           - RegionMap
