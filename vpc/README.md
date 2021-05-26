@@ -11,10 +11,14 @@ Setup tools on VM
 =================
 1. SSH into the VM
 
+
 2. Install git
+sudo su -
 yum install git -y
 
 3. Clone the repository
+su ec2-user
+cd ~
 git clone https://github.com/acloudfan/Amazon-RDS-Aurora-v1.git
 
 4. Install the tools
