@@ -1,4 +1,7 @@
 #!/bin/bash
+# Update the ~/.bashrc 
+# Sets up the environment variables with information used by the PG tools
+# REQUIRES the region to be provided as an argument
 if [ -z "$1" ]; then
     echo "Usage:  ./bin/set-env.sh  <AWS-Region> "
     echo "e.g.,   ./bin/set-env.sh  us-east-1"
@@ -6,7 +9,7 @@ if [ -z "$1" ]; then
 fi
 
 export AWS_DEFAULT_REGION=$1
-echo "export DB_PORT=\"$AWS_DEFAULT_REGION\"" >> /home/ec2-user/.bashrc
+echo "export AWS_DEFAULT_REGION=\"$AWS_DEFAULT_REGION\"" >> /home/ec2-user/.bashrc
 
 export PG_CLUSTER_ID=rdsa-postgresql-cluster
 

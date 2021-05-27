@@ -17,4 +17,5 @@ yum install postgresql-contrib -y
 echo "Install jq"
 sudo yum install -y jq
 
+
 echo "Done"
