@@ -33,7 +33,7 @@ Parameters:
   DBEngineVersion:
     Description: Select Database Engine Version
     Type: String
-    Default: 11.7
+    Default: 11.9
     AllowedValues:
       - 11.6
       - 11.7
