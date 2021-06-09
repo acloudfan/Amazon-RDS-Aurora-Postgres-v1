@@ -42,7 +42,8 @@ pgbench --version
 jq --version
 
 6. Setup environment variables in .bashrc
-./bin/setup-env.sh
+
+./bin/setup-env.sh  <<AWS REGION>>
 source ~/.bashrc
 
 6. Test with psql
