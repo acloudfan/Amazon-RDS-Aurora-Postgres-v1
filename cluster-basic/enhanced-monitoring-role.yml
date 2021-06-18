@@ -1,0 +1,41 @@
+---
+## 
+## Creates a Role used for enhanced monitoring
+## Changelog:
+##
+## Dependencies:
+## none
+##
+## This sample code is made available under the MIT-0 license. See the LICENSE file.
+
+AWSTemplateFormatVersion: 2010-09-09
+Description: Role used for setup of the Enhanced Monitoring
+## Parameters
+Parameters:
+  TemplateName:
+    Type: String
+    Default: rdsa-postgresql
+    Description: Name used for different elements created.
+
+
+Resources:
+  EnhancedMonitoringRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${TemplateName}-monitor-${AWS::Region}
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - sts:AssumeRole
+            Principal:
+              Service:
+                - monitoring.rds.amazonaws.com
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole
+
+Outputs:
+  EnhancedMonitoringRole:
+    Description: Role used for enhanced monitoring
+    Value: !GetAtt EnhancedMonitoringRole.Arn

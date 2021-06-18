@@ -1,3 +1,10 @@
+YML
+===
+security-group.yml            Creates the SG for the DB cluster instances
+postgres-cluster.yml          Creates the Aurora cluster with 1 instance
+enhanced-monitoring-role.yml  Creates the role for EM
+
+
 
 security-group.yml
 ==================
@@ -13,13 +20,26 @@ Bastion host
 ============
 EC2 instance needs a role for aws cli
 
-
 1. Create the VPC
 2. Create the security group
 3. Create the DB cluster
 
+Enhanced Monitoring Role
+========================
+Stack Name: rdsa-postgresql-enhanced-monitoring-role
+The role created is used for manually enabling the Enhanced monitoring on DB instance(s)
+
+Login as ec2-user using System Manager connect
+==============================================
 sudo su -
 su ec2-user
+cd
+
+
+
+
+
+
 
 psql:
 ====
