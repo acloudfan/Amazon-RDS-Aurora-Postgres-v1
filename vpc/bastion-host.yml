@@ -70,12 +70,16 @@ Resources:
           ToPort: "22"
           CidrIp: 0.0.0.0/0
         - IpProtocol: tcp
-          FromPort: "8080"
+          FromPort: "8080"  # Used for PgAdmin
           ToPort: "8080"
           CidrIp: 0.0.0.0/0
         - IpProtocol: tcp
           FromPort: "3389"
           ToPort: "3389"
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: "8082"  # Used for Nginx
+          ToPort: "8082"
           CidrIp: 0.0.0.0/0
 
   # Bastion host role

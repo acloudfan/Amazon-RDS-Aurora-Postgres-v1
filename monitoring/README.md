@@ -22,3 +22,7 @@ Set the retention on log group = 6 months
 3. Take some action on RDS cluster & check events in CloudWatch
 * E.g., reboot instance
 * E.g., take snapshot
+
+
+Install nginx
+=============

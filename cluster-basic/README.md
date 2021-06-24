@@ -4,8 +4,6 @@ security-group.yml            Creates the SG for the DB cluster instances
 postgres-cluster.yml          Creates the Aurora cluster with 1 instance
 enhanced-monitoring-role.yml  Creates the role for EM
 
-
-
 security-group.yml
 ==================
 Sets up the security group for Aurora cluster
@@ -29,8 +27,9 @@ Enhanced Monitoring Role
 Stack Name: rdsa-postgresql-enhanced-monitoring-role
 The role created is used for manually enabling the Enhanced monitoring on DB instance(s)
 
-Login as ec2-user using System Manager connect
-==============================================
+
+Login as ec2-user using System Manager (SSM) connect
+====================================================
 sudo su -
 su ec2-user
 cd
