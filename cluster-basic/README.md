@@ -36,7 +36,36 @@ su ec2-user
 cd
 
 
+PgAdmin4
+========
+Installation:
+1. Setup Docker
+./bin/install/docker.sh
 
+2. Setup PgAdmin4
+./bin/install/pgadmin.sh
+
+3. To start PgAdmin
+./bin/startpgadmin.sh
+
+4. To test use the link from startpgadmin.sh
+Use Email = admin@abc.com
+Password = passw0rd
+
+5. To stop PgAdmin
+./bin/stoppgadmin.sh
+
+To add DB cluster to PgAdmin
+============================
+1. 
+
+
+To Change pgadmin password
+==========================
+1. Stop PgAdmin       ./bin/stoppgadmin.sh
+2. Cleanup PgAdmin    ./bin/install/cleanuppgadmin.sh
+3. Edit the email/password in /bin/startpgadmin.sh
+4. Start PgAdmin      ./bin/startpgadmin.sh
 
 
 

@@ -1,0 +1,269 @@
+{
+    "engine": "aurora-postgresql",
+    "instanceID": "rdsa-postgresql-node-01",
+    "instanceResourceID": "XXXXXXXXXXXXXXXXXXXXX",
+    "timestamp": "2021-06-19T15:59:21Z",
+    "version": 1,
+    "uptime": "24 days, 20:31:58",
+    "numVCPUs": 2,
+    "cpuUtilization": {
+        "guest": 0,
+        "irq": 0.2,
+        "system": 3.2,
+        "wait": 0.6,
+        "idle": 90.6,
+        "user": 3.5,
+        "total": 9.4,
+        "steal": 1.2,
+        "nice": 0.7
+    },
+    "loadAverageMinute": {
+        "one": 0.2,
+        "five": 0.37,
+        "fifteen": 0.45
+    },
+    "@": {
+        "writeback": 0,
+        "hugePagesFree": 0,
+        "hugePagesRsvd": 0,
+        "hugePagesSurp": 0,
+        "cached": 944976,
+        "hugePagesSize": 2048,
+        "free": 2137776,
+        "hugePagesTotal": 0,
+        "inactive": 503828,
+        "pageTables": 7636,
+        "dirty": 1024,
+        "mapped": 342868,
+        "active": 1164096,
+        "total": 3980392,
+        "slab": 115140,
+        "buffers": 232972
+    },
+    "tasks": {
+        "sleeping": 101,
+        "zombie": 0,
+        "running": 2,
+        "stopped": 0,
+        "total": 103,
+        "blocked": 0
+    },
+    "swap": {
+        "cached": 54636,
+        "total": 2093052,
+        "free": 1973416
+    },
+    "network": [
+        {
+            "interface": "eth0",
+            "rx": 15865.59,
+            "tx": 19447.76
+        }
+    ],
+    "diskIO": [
+        {
+            "readLatency": 1.74,
+            "writeLatency": 1.38,
+            "writeThroughput": 275.5,
+            "readThroughput": 25.54,
+            "readIOsPS": 0,
+            "writeIOsPS": 0.88,
+            "diskQueueDepth": 0
+        },
+        {
+            "writeKbPS": 48.97,
+            "readIOsPS": 0.09,
+            "await": 0.68,
+            "readKbPS": 2.51,
+            "rrqmPS": 0,
+            "util": 0.18,
+            "avgQueueLen": 0.01,
+            "tps": 9.17,
+            "readKb": 5390993,
+            "device": "rdstemp",
+            "writeKb": 105168496,
+            "avgReqSz": 11.22,
+            "wrqmPS": 0,
+            "writeIOsPS": 9.09
+        }
+    ],
+    "fileSys": [
+        {
+            "used": 2206820,
+            "name": "",
+            "usedFiles": 4411,
+            "usedFilePercent": 0.84,
+            "maxFiles": 524288,
+            "mountPoint": "/rdsdbdata",
+            "total": 8121784,
+            "usedPercent": 27.17
+        }
+    ],
+    "processList": [
+        {
+            "vss": 872252,
+            "name": "OS processes",
+            "tgid": 0,
+            "parentID": 0,
+            "memoryUsedPc": 0.89,
+            "cpuUsedPc": 0,
+            "id": 0,
+            "rss": 35340,
+            "vmlimit": 0
+        },
+        {
+            "vss": 5270448,
+            "name": "RDS processes",
+            "tgid": 0,
+            "parentID": 0,
+            "memoryUsedPc": 10.59,
+            "cpuUsedPc": 0,
+            "id": 0,
+            "rss": 421516,
+            "vmlimit": 0
+        },
+        {
+            "vss": 2519780,
+            "name": "Aurora Storage Daemon",
+            "tgid": 10002,
+            "parentID": 1,
+            "memoryUsedPc": 6.09,
+            "cpuUsedPc": 0,
+            "id": 10002,
+            "rss": 242256,
+            "vmlimit": "unlimited"
+        },
+        {
+            "vss": 12854480,
+            "name": "postgres",
+            "tgid": 10275,
+            "parentID": 1,
+            "memoryUsedPc": 5.67,
+            "cpuUsedPc": 0,
+            "id": 10275,
+            "rss": 225552,
+            "vmlimit": "unlimited"
+        },
+        {
+            "vss": 1205548,
+            "name": "postgres: logger   ",
+            "tgid": 10276,
+            "parentID": 10275,
+            "memoryUsedPc": 0.76,
+            "cpuUsedPc": 0,
+            "id": 10276,
+            "rss": 30084,
+            "vmlimit": "unlimited"
+        },
+        {
+            "vss": 12909956,
+            "name": "postgres: aurora runtime process   ",
+            "tgid": 10279,
+            "parentID": 10275,
+            "memoryUsedPc": 3.52,
+            "cpuUsedPc": 0,
+            "id": 10279,
+            "rss": 139956,
+            "vmlimit": "unlimited"
+        },
+        {
+            "vss": 12854480,
+            "name": "postgres: checkpointer   ",
+            "tgid": 10405,
+            "parentID": 10275,
+            "memoryUsedPc": 0.42,
+            "cpuUsedPc": 0,
+            "id": 10405,
+            "rss": 16732,
+            "vmlimit": "unlimited"
+        },
+        {
+            "vss": 12854480,
+            "name": "postgres: background writer   ",
+            "tgid": 10406,
+            "parentID": 10275,
+            "memoryUsedPc": 0.22,
+            "cpuUsedPc": 0,
+            "id": 10406,
+            "rss": 8648,
+            "vmlimit": "unlimited"
+        },
+        {
+            "vss": 12854480,
+            "name": "postgres: walwriter   ",
+            "tgid": 10407,
+            "parentID": 10275,
+            "memoryUsedPc": 0.19,
+            "cpuUsedPc": 0,
+            "id": 10407,
+            "rss": 7608,
+            "vmlimit": "unlimited"
+        },
+        {
+            "vss": 12854480,
+            "name": "postgres: autovacuum launcher   ",
+            "tgid": 10408,
+            "parentID": 10275,
+            "memoryUsedPc": 0.32,
+            "cpuUsedPc": 0,
+            "id": 10408,
+            "rss": 12896,
+            "vmlimit": "unlimited"
+        },
+        {
+            "vss": 1268296,
+            "name": "postgres: stats collector   ",
+            "tgid": 10409,
+            "parentID": 10275,
+            "memoryUsedPc": 0.17,
+            "cpuUsedPc": 0,
+            "id": 10409,
+            "rss": 6568,
+            "vmlimit": "unlimited"
+        },
+        {
+            "vss": 12854480,
+            "name": "postgres: logical replication launcher   ",
+            "tgid": 10410,
+            "parentID": 10275,
+            "memoryUsedPc": 0.32,
+            "cpuUsedPc": 0,
+            "id": 10410,
+            "rss": 12736,
+            "vmlimit": "unlimited"
+        },
+        {
+            "vss": 12958068,
+            "name": "postgres: rdsadmin rdsadmin [local] idle",
+            "tgid": 21117,
+            "parentID": 10275,
+            "memoryUsedPc": 0.56,
+            "cpuUsedPc": 0,
+            "id": 21117,
+            "rss": 22480,
+            "vmlimit": "unlimited"
+        },
+        {
+            "vss": 12958068,
+            "name": "postgres: rdsadmin rdsadmin [local] idle",
+            "tgid": 21126,
+            "parentID": 10275,
+            "memoryUsedPc": 0.83,
+            "cpuUsedPc": 0,
+            "id": 21126,
+            "rss": 33152,
+            "vmlimit": "unlimited"
+        },
+        {
+            "vss": 12962164,
+            "name": "postgres: rdsadmin rdsadmin [local] idle",
+            "tgid": 21195,
+            "parentID": 10275,
+            "memoryUsedPc": 0.81,
+            "cpuUsedPc": 0,
+            "id": 21195,
+            "rss": 32428,
+            "vmlimit": "unlimited"
+        }
+    ]
+}
