@@ -33,12 +33,18 @@ https://riptutorial.com/gnuplot/example/11275/installation-or-setup
 2. Clone repo
 git clone https://github.com/acloudfan/pgbench-tools.git
 
-3. Install nginx
+3. Install nginx as app
 sudo yum  update
 sudo yum install nginx
 
 Update listen port to 8080
 sudo nano /etc/nginx/nginx.conf
+
+3. Install nginx as a container
+docker run -d -p 8082:80 --read-only -v $(pwd)/nginx-cache:/var/cache/nginx -v $(pwd)/nginx-pid:/var/run nginx
+
+docker run -d -it --rm  --name nginx -p 8082:80 -v ~/nginx/html:/usr/share/nginx/html -v ~/nginx/nginx-cache:/var/cache/nginx -v ~/nginx/nginx-pid:/var/run  -v ~/nginx/nginx.conf:/etc/nginx/nginx.conf:ro  nginx
+
 
 4. Run the test using the script available in pgbench-tools (README.md)
 setup the ./config 
