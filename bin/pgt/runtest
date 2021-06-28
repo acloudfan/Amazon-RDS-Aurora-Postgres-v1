@@ -1,0 +1,17 @@
+#!/bin/bash
+#Runs the test
+
+cd ~/pgbech-tools
+
+source config
+
+NGINX_PGT_CONTENT="~/nginx/html/pgbench-tools"
+
+
+
+./runtest
+
+# Remove
+rm -r "$NGINX_PGT_CONTENT/$SERVERNAME"
+
+cp -r ./results/$SERVERNAME $NGINX_PGT_CONTENT

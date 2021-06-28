@@ -1,0 +1,16 @@
+#!/bin/bash
+#Generate the report
+
+cd ~/pgbench-tools
+
+source config
+
+NGINX_PGT_CONTENT="~/nginx/html/pgbench-tools"
+
+# Generate the Report
+./webreport
+
+# Remove
+rm -r "$NGINX_PGT_CONTENT/$SERVERNAME"
+
+cp -r ./results/$SERVERNAME $NGINX_PGT_CONTENT

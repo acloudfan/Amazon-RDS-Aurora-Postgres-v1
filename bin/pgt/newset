@@ -1,0 +1,6 @@
+#!/bin/bash
+#Add all extra processing here
+
+cd ~/pgbench-tools
+
+./newset  "$1"

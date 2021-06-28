@@ -24,6 +24,7 @@ pgbench -c 200  -b  tpcb-like -M prepared   -T 216000 -P 1800  pgbenchtest
 
 
 
+
 pgbench-tool
 ============
 1. Install gnuplot
@@ -45,6 +46,8 @@ docker run -d -p 8082:80 --read-only -v $(pwd)/nginx-cache:/var/cache/nginx -v $
 
 docker run -d -it --rm  --name nginx -p 8082:80 -v ~/nginx/html:/usr/share/nginx/html -v ~/nginx/nginx-cache:/var/cache/nginx -v ~/nginx/nginx-pid:/var/run  -v ~/nginx/nginx.conf:/etc/nginx/nginx.conf:ro  nginx
 
+Python CGI for nginx
+https://techexpert.tips/nginx/python-cgi-nginx/
 
 4. Run the test using the script available in pgbench-tools (README.md)
 setup the ./config 
@@ -55,3 +58,12 @@ Report generated under /reports folder
 All directories need to have 755 permission
 All files need to have the 644 permission
 
+Steup
+=====
+1. Create the database   'pgbenchtools'
+2. Setup the relations
+psql -f pgbench-tools/init/resultdb.sql -d pgbenchtools
+3. Setup the pgbnech-tools/config
+4. Create the testset
+./bin/pgt/newset "db.t3.medium"
+4. 
