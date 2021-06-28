@@ -34,3 +34,8 @@ echo "export PGPASSWORD=\"$PGPASSWORD\"" >> /home/ec2-user/.bashrc
 export PGDATABASE=labdb
 echo "export PGDATABASE=\"$PGDATABASE\"" >> /home/ec2-user/.bashrc
 
+export NGINX_ROOT="/home/ec2-user/nginx"
+echo "export NGINX_ROOT=\"$NGINX_ROOT\"" >> /home/ec2-user/.bashrc
+
+export PGTOOLS_ROOT="/home/ec2-user/pgbench-tools"
+echo "export PGTOOLS_ROOT=\"$PGTOOLS_ROOT\"" >> /home/ec2-user/.bashrc
