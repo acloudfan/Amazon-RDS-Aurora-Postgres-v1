@@ -22,7 +22,7 @@
         "five": 0.37,
         "fifteen": 0.45
     },
-    "@": {
+    "memory": {
         "writeback": 0,
         "hugePagesFree": 0,
         "hugePagesRsvd": 0,
