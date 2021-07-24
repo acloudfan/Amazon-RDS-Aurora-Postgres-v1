@@ -43,7 +43,7 @@ Resources:
               - !Sub ${RDSATestBucket.Arn}/*
 
   # S3 export role
-  RDSAS3ExportRole:
+  RDSAS3DBClusterRole:
     Type: "AWS::IAM::Role"
     DependsOn: RDSAClusterPolicy
     Properties:
@@ -59,37 +59,20 @@ Resources:
       ManagedPolicyArns:
         - !Ref 'RDSAClusterPolicy'
 
-  # S3 import role
-  RDSAS3ImportRole:
-    Type: "AWS::IAM::Role"
-    DependsOn: RDSAClusterPolicy
-    Properties:
-      AssumeRolePolicyDocument: 
-        Version: "2012-10-17"
-        Statement: 
-          - Effect: "Allow"
-            Principal:
-              Service:
-                - "rds.amazonaws.com"
-            Action:
-                - "sts:AssumeRole"
-      ManagedPolicyArns:
-        - !Ref 'RDSAClusterPolicy'
+
 
 # Outputs
 Outputs:
   ExtensionRDSATestBucket:
     Description: "This is the bucket for testing import/export" 
     Value: !Ref 'RDSATestBucket'
-  RDSATestBucketArn:
-    Description: "This is the ARN for bucket for testing import/export" 
-    Value: !GetAtt RDSATestBucket.Arn
-  ClusterIAMPolicy:
-    Description: "This is a policy for the DB Cluster role"
-    Value: !Ref 'RDSAClusterPolicy'
-  RDSAS3ExportRole:
+  RDSAS3DBClusterRoleArn:
     Description: "Role for S3 export"
-    Value: !Ref 'RDSAS3ExportRole'
-  RDSAS3ImportRole:
-    Description: "Role for S3 import"
-    Value: !Ref 'RDSAS3ImportRole'
+    Value: !GetAtt 'RDSAS3DBClusterRole.Arn'
+  # RDSATestBucketArn:
+  #   Description: "This is the ARN for bucket for testing import/export" 
+  #   Value: !GetAtt RDSATestBucket.Arn
+  # ClusterIAMPolicy:
+  #   Description: "This is a policy for the DB Cluster role"
+  #   Value: !Ref 'RDSAClusterPolicy'
+
