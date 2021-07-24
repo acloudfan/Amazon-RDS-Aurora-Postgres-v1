@@ -12,6 +12,7 @@ export AWS_DEFAULT_REGION=$1
 echo "export AWS_DEFAULT_REGION=\"$AWS_DEFAULT_REGION\"" >> /home/ec2-user/.bashrc
 
 export PG_CLUSTER_ID=rdsa-postgresql-cluster
+echo "export PG_CLUSTER_ID=\"$PG_CLUSTER_ID\"" >> /home/ec2-user/.bashrc
 
 export PGWRITEREP="$(aws rds describe-db-clusters  --db-cluster-identifier $PG_CLUSTER_ID | jq -r .DBClusters[0].Endpoint)"
 echo "export PGWRITEREP=\"$PGWRITEREP\"" >> /home/ec2-user/.bashrc

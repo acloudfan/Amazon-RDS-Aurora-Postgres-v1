@@ -1,0 +1,95 @@
+---
+## 
+## Creates an EC2 host to interact with DB cluster
+##
+## Changelog:
+##
+## Dependencies:
+## none
+##
+## This sample code is made available under the MIT-0 license. See the LICENSE file.
+
+AWSTemplateFormatVersion: 2010-09-09
+Description: Creates a bucket and roles for trying out the Aurora Postgres S3 extension
+
+
+# Resources
+Resources:
+
+  # S3 bucket for testing
+  RDSATestBucket:
+    Type: "AWS::S3::Bucket"
+    DeletionPolicy: Delete
+
+  # Policy 
+  RDSAClusterPolicy:
+    Type: "AWS::IAM::ManagedPolicy"
+    DependsOn: RDSATestBucket
+    Properties:
+      ManagedPolicyName: rdsa-s3-extension
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: 
+              - "S3:GetObject"
+              - "s3:AbortMultipartUpload"
+              - "s3:DeleteObject"
+              - "s3:ListMultipartUploadParts"
+              - "s3:PutObject"
+              - "s3:ListBucket"
+            Resource:
+              - !GetAtt RDSATestBucket.Arn
+              - !Sub ${RDSATestBucket.Arn}/*
+
+  # S3 export role
+  RDSAS3ExportRole:
+    Type: "AWS::IAM::Role"
+    DependsOn: RDSAClusterPolicy
+    Properties:
+      AssumeRolePolicyDocument: 
+        Version: "2012-10-17"
+        Statement: 
+          - Effect: "Allow"
+            Principal:
+              Service:
+                - "rds.amazonaws.com"
+            Action:
+                - "sts:AssumeRole"
+      ManagedPolicyArns:
+        - !Ref 'RDSAClusterPolicy'
+
+  # S3 import role
+  RDSAS3ImportRole:
+    Type: "AWS::IAM::Role"
+    DependsOn: RDSAClusterPolicy
+    Properties:
+      AssumeRolePolicyDocument: 
+        Version: "2012-10-17"
+        Statement: 
+          - Effect: "Allow"
+            Principal:
+              Service:
+                - "rds.amazonaws.com"
+            Action:
+                - "sts:AssumeRole"
+      ManagedPolicyArns:
+        - !Ref 'RDSAClusterPolicy'
+
+# Outputs
+Outputs:
+  ExtensionRDSATestBucket:
+    Description: "This is the bucket for testing import/export" 
+    Value: !Ref 'RDSATestBucket'
+  RDSATestBucketArn:
+    Description: "This is the ARN for bucket for testing import/export" 
+    Value: !GetAtt RDSATestBucket.Arn
+  ClusterIAMPolicy:
+    Description: "This is a policy for the DB Cluster role"
+    Value: !Ref 'RDSAClusterPolicy'
+  RDSAS3ExportRole:
+    Description: "Role for S3 export"
+    Value: !Ref 'RDSAS3ExportRole'
+  RDSAS3ImportRole:
+    Description: "Role for S3 import"
+    Value: !Ref 'RDSAS3ImportRole'
