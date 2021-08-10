@@ -8,7 +8,7 @@ https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/postgresql-s3-expor
 
 1. Setup the S3 bucket and roles using CloudFormation Template
 
-* Set the stack name to  'rdsa-extension-test'
+* Set the stack name to  'rdsa-s3extension-test'
 * Use the template 's3-roles-etension.yml'
 
 2. SSH to Bastion host & Setup the environment variable
@@ -39,8 +39,8 @@ aws rds describe-db-clusters  --db-cluster-id $PG_CLUSTER_ID --query DBClusters[
 psql --set=TEST_BUCKET="$TEST_BUCKET"  --set=AWS_DEFAULT_REGION="$AWS_DEFAULT_REGION"
 
 * Create a test table
-=> CREATE TABLE extension_test AS \
-SELECT s, md5(random()::text) \
+=> CREATE TABLE extension_test AS 
+SELECT s, md5(random()::text) 
 FROM generate_Series(1,5) s;
 
 5. Enable the extension
@@ -73,19 +73,26 @@ aws s3 ls "s3://$TEST_BUCKET"
 sudo aws s3 cp "s3://$TEST_BUCKET/exported_data.txt" /dev/stdout   --quiet
 
 
-Clean up
-========
+Clean up (Recipe: aws_s3)
+=========================
 Now we need to cleanup the environment
 
-1. Remove the role from the DB cluster
+1. Remove the role association from the DB cluster
 aws  rds      remove-role-from-db-cluster  \
                 --db-cluster-identifier     $PG_CLUSTER_ID   \
                 --role-arn                  $TEST_ROLE_ARN   \
                 --feature-name              s3Export  
 
-2. Check the status of this change
+* Check the status of this change
 * The status may be *Pending* for some time. Wait till the role is disassociated
+
 aws rds describe-db-clusters  --db-cluster-id $PG_CLUSTER_ID --query DBClusters[0].AssociatedRoles
+
+2. Drop the extension
+
+psql --set=TEST_BUCKET="$TEST_BUCKET"  --set=AWS_DEFAULT_REGION="$AWS_DEFAULT_REGION"
+
+=> DROP EXTENSION aws_s3 ;
 
 3. Delete the content of the bucket
 aws s3 rm s3://$TEST_BUCKET --recursive
