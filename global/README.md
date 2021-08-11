@@ -1,7 +1,8 @@
 # Global Database
 
-Create Global DB Clusing using the console
-==========================================
+Create Global DB Cluster 
+========================
+Set the Region in console visible
 
 # Create the primary cluster - Region 1 e.g., us-west-1
 Use the CloudFormation template : global/primary-cluster.yml
@@ -41,4 +42,64 @@ CREATE TABLE global(id integer);
 # To read from Secondary
 psql -h $PGREADEREP
 
+Checkout the lag
+================
+https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-database-monitoring.html
+
+Describe Log Sequence Number or LSN
+
+replication_lag_in_msec  vs    rpo_lag_in_msec
+
+
+# Use psql on Primary
+
+- Checkout lag
+select * from aurora_global_db_status();
+
+- Checkout instance status
+select * from aurora_global_db_instance_status();
+
+
+Planned | Managed Failover
+==========================
+https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-database-disaster-recovery.html#aurora-global-database-disaster-recovery.managed-failover
+
+1. Connect to the primary region (Region-1)
+* execute the SQL Insert against primary cluster = SUCCESS
+
+2. Carry out the controlled failover
+* Checkout the console on which region is primary
+
+3. In the previous Bastion | psql session  (Region-1)
+* The session will break so launch psql
+* execute the SQL Insert against primary cluster = FAILURE
+
+4. Start the Bastion host in Region-2
+* execute the SQL Insert against primary cluster = SUCCESS
+
+Headless secondary cluster
+==========================
+# Writer instance in the primary cannot be deleted
+
+# Delete the instance 
+* Possible to delete from the console
+* Delete the CloudFormation stack used to create the instance
+
+Remove cluster
+==============
+* When DB cluster is removed from the Global DB it is promoted to a standalone cluster
+    - A Reader takes over as a Writer
+
+* Simply remove the cluster
+
+Managed RPO
+===========
+https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-database-disaster-recovery.html#aurora-global-database-set-rpo
+
+
+Cross Account Cloning
+=====================
+https://aws.amazon.com/about-aws/whats-new/2019/07/amazon_aurora_supportscloningacrossawsaccounts-/
+
+https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Managing.Clone.html#Aurora.Managing.Clone.Cross-Account
 

@@ -1,0 +1,58 @@
+---
+## 
+## Creates Aurora PostgreSQL Cluster Replica
+##
+## Changelog:
+##
+## Dependencies:
+## none
+##
+## This sample code is made available under the MIT-0 license. See the LICENSE file.
+AWSTemplateFormatVersion: 2010-09-09
+Description: Amazon RDS PostgreSQL Database Cluster Replica Creation
+## Parameters
+Parameters:
+  TemplateName:
+    Type: String
+    Default: global-rdsa-instance
+    Description: Name used for different elements created.
+  ReplicaNodeName:
+    Type: String
+    Default: global-rdsa-instance-2
+    Description: Name of the node
+  DBInstanceClass:
+    Description: 'The instance type of database server.'
+    Type: String
+    Default: 'db.r4.large'
+    AllowedValues: ['db.t3.medium','db.r4.large','db.r5.large','db.r6g.large']
+  DBCluster:
+    Type: String
+    Description: Name of the DB cluster
+
+    # Version of the Database engine
+  DBEngineVersion:
+    Description: Select Database Engine Version
+    Type: String
+    Default: 11.9
+    AllowedValues:
+      - 11.6
+      - 11.7
+      - 11.8
+      - 11.9
+      - 12.4
+
+Resources:
+  ## Deploy a reader node
+  DBSecondaryNode:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBClusterIdentifier: !Ref DBCluster
+      DBInstanceIdentifier: !Sub ${ReplicaNodeName}
+      DBInstanceClass: !Ref DBInstanceClass
+      EngineVersion : !Ref DBEngineVersion
+      Engine: aurora-postgresql
+      PubliclyAccessible: false
+      Tags:
+        - Key: Name
+          Value: !Sub ${ReplicaNodeName}
+
