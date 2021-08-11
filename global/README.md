@@ -25,4 +25,11 @@ Use the CloudFormation template in both region
 Template : vpc/bastion-host.yml
 Stack name: rdsa-host
 
+# Download Bastion script for 
+curl https://raw.githubusercontent.com/acloudfan/Amazon-RDS-Aurora-Postgres-v1/master/bin/install/setup-bastion.sh --output setup-bastion.sh 
+
+chmod u+x ./setup-bastion.sh 
+
+./setup-bastion.sh us-west-2   global-rdsa-cluster
+
 
