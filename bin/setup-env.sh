@@ -16,6 +16,8 @@ if [ -z "$1" ]; then
   export PG_CLUSTER_ID=rdsa-postgresql-cluster
 fi
 
+echo "Using the PG_CLUSTER_ID=$PG_CLUSTER_ID"
+
 echo "export PG_CLUSTER_ID=\"$PG_CLUSTER_ID\"" >> /home/ec2-user/.bashrc
 
 export PGWRITEREP="$(aws rds describe-db-clusters  --db-cluster-identifier $PG_CLUSTER_ID | jq -r .DBClusters[0].Endpoint)"
