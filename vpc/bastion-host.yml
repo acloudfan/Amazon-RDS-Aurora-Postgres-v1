@@ -126,7 +126,7 @@ Resources:
       IamInstanceProfile: !Ref BastionHostInstanceProfile
       Tags:
         - Key: Name
-          Value: "Private Instance"
+          Value: "RDSA Bastion Host Instance"
       # KeyName: !Ref KeyName
       KeyName: !If [HasNoKeyName,  !Ref AWS::NoValue , !Ref KeyName]
 
