@@ -1,0 +1,335 @@
+---
+## 
+## Creates the VPC for DB Cluster
+##
+## Changelog:
+##
+## Dependencies:
+## none
+##
+## This sample code is made available under the MIT-0 license. See the LICENSE file.
+
+AWSTemplateFormatVersion: 2010-09-09
+Description: Creates the VPC for creating Aurora cluster
+
+## Parameters
+Parameters:
+  TemplateName:
+    Type: String
+    Default: primary-rdsa-cluster
+    Description: Name used for different elements created.
+  # This is the ingress port for the cluster
+  RdsIngressPort:
+    Type: Number
+    AllowedValues: [3306, 5432]
+    Default: 5432
+    Description: This is the Listener port (3306 for MySQL and 5432 for PostgreSQL)
+  # Master user name created for the cluster
+  DBMasterUsername:
+    Description: 'The master user name for the DB instance (ignored when DBSnapshotIdentifier is set, value used from snapshot).'
+    Type: String
+    Default: masteruser
+  # Password
+  DBMasterUserPassword:
+    Description: 'This is the password for the master user'
+    Type: String
+    Default: masteruserpw
+  # Version of the Database engine
+  DBEngineVersion:
+    Description: Select Database Engine Version
+    Type: String
+    Default: 11.9
+    AllowedValues:
+      - 11.6
+      - 11.7
+      - 11.8
+      - 11.9
+      - 12.4
+  # Instance class
+  # Global Database does not work with smaller instances like db.t3
+  DBInstanceClass:
+    Description: 'The instance type of database server.'
+    Type: String
+    Default: 'db.r4.large'
+    AllowedValues: ['db.t3.medium','db.r4.large','db.r5.large','db.r6g.large']
+
+## Mappings
+Mappings:
+  NetworkSettings:
+    global:
+      vpcCidr: 10.0.0.0/16
+  ClusterSettings:
+    global:
+      dbSchema: labdb
+      dbDriver: pgsql
+      dbFamily: aurora-postgresql11
+
+## Resources
+Resources:
+## The VPC
+  MainVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      InstanceTenancy: default
+      CidrBlock: !FindInMap [ NetworkSettings, global, vpcCidr ]
+      Tags:
+        - Key: Name
+          Value:  !Sub ${TemplateName}-vpc
+
+## Create an IGW & attach it to the VPC
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    DependsOn: MainVPC
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Sub ${TemplateName}-igw
+  attachIGW:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref MainVPC
+      InternetGatewayId: !Ref InternetGateway
+
+  PublicSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MainVPC
+      CidrBlock: !Select [ 0, !Cidr [ !GetAtt MainVPC.CidrBlock, 4, 8 ]]
+      AvailabilityZone: !Select [ 0, !GetAZs ]    # Get the first AZ in the list
+      MapPublicIpOnLaunch: true
+      Tags:
+      - Key: Name
+        Value: !Sub ${TemplateName}-PublicA
+  PublicSubnetB:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MainVPC
+      CidrBlock: !Select [ 1, !Cidr [ !GetAtt MainVPC.CidrBlock, 4, 8 ]]
+      AvailabilityZone: !Select [ 1, !GetAZs ]    
+      MapPublicIpOnLaunch: true
+      Tags:
+      - Key: Name
+        Value: !Sub ${TemplateName}-PublicB
+  
+  PrivateSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MainVPC
+      #CidrBlock: !FindInMap [ NetworkSettings, global, PrivateSubnetACidr ]
+      CidrBlock: !Select [ 2, !Cidr [ !GetAtt MainVPC.CidrBlock, 4, 8 ]]
+      AvailabilityZone: !Select [ 0, !GetAZs ]    # Get the first AZ in the list
+      Tags:
+      - Key: Name
+        Value: !Sub ${TemplateName}-PrivateA
+
+  PrivateSubnetB:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MainVPC
+      #CidrBlock: !FindInMap [ NetworkSettings, global, PrivateSubnetBCidr ]
+      CidrBlock: !Select [ 3, !Cidr [ !GetAtt MainVPC.CidrBlock, 4, 8 ]]
+      AvailabilityZone: !Select [ 1, !GetAZs ]    # Get the second AZ in the list
+      Tags:
+      - Key: Name
+        Value: !Sub ${TemplateName}-PrivateB
+
+  
+  
+# Here is a private route table:
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref MainVPC
+      Tags:
+      - Key: Name
+        Value: !Sub ${TemplateName}-private-rtb
+  PrivateRoute1:            # Private route table can access web via NAT (created below)
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      # Route traffic through the NAT Gateway:
+      NatGatewayId: !Ref NATGateway
+
+  PrivateSubnetARouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnetA
+      RouteTableId: !Ref PrivateRouteTable
+  PrivateSubnetBRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnetB
+      RouteTableId: !Ref PrivateRouteTable
+
+
+# Some route tables for our subnets:
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref MainVPC
+      Tags:
+      - Key: Name
+        Value: !Sub ${TemplateName}-public-rtb
+  PublicRouteToIGW:   # Public route table has direct routing to IGW:
+    Type: AWS::EC2::Route
+    DependsOn: attachIGW
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+# Attach the public subnets to public route tables,
+  # and attach the private subnets to private route tables:
+  PublicSubnetARouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnetA
+      RouteTableId: !Ref PublicRouteTable
+  PublicSubnetBRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnetB
+      RouteTableId: !Ref PublicRouteTable
+
+# A NAT Gateway:
+  NATGateway:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt ElasticIPAddress.AllocationId
+      SubnetId: !Ref PublicSubnetA
+      Tags:
+      - Key: Name
+        Value: !Sub ${TemplateName}-natgw
+  ElasticIPAddress:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+
+# Security Group for the Global DB Cluster
+# Create DB security group for DB Cluster
+  RDSSecurityGroupCluster:
+    Type: AWS::EC2::SecurityGroup
+    DependsOn: MainVPC
+    Properties:
+      VpcId: !Ref MainVPC
+      GroupName: !Sub ${TemplateName}-internal
+      GroupDescription: Global DB cluster firewall
+      Tags:
+        - Key: Name
+          Value: !Sub ${TemplateName}-rdsa-internal
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: !Ref RdsIngressPort
+          ToPort: !Ref RdsIngressPort
+          # CidrIp: !Ref PubSubnetCidrA
+          CidrIp: !Select [ 0, !Cidr [ !GetAtt MainVPC.CidrBlock, 4, 8 ]]
+          Description: Allows hosts in public subnet A to connect with the cluster
+        - IpProtocol: tcp
+          FromPort: !Ref RdsIngressPort
+          ToPort: !Ref RdsIngressPort
+          # CidrIp: !Ref PubSubnetCidrB
+          CidrIp: !Select [ 1, !Cidr [ !GetAtt MainVPC.CidrBlock, 4, 8 ]]
+          Description: Allows hosts in public subnet B to connect with the cluster
+
+  # Create the cluster 
+  # DB Cluster Subnet Group
+  ClusterDBSubnetGroup:
+      Type: AWS::RDS::DBSubnetGroup
+      DependsOn: MainVPC
+      Description: Subnet group
+      Properties:
+        DBSubnetGroupDescription: !Sub ${TemplateName}-db-subnet-group
+        DBSubnetGroupName: !Sub ${TemplateName}-db-subnet-group
+        SubnetIds: 
+          - !Ref PrivateSubnetA
+          - !Ref PrivateSubnetB
+        Tags:
+          - Key: Name
+            Value: !Sub ${TemplateName}-db-subnet-group
+
+  # Create Aurora cluster
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html
+  DBCluster:
+    Type: AWS::RDS::DBCluster
+    DependsOn: [ClusterDBSubnetGroup]
+    Properties:
+      DBClusterIdentifier: !Sub ${TemplateName}-cluster
+      Engine: aurora-postgresql
+      EngineVersion : !Ref DBEngineVersion
+      Port: 5432
+      DBSubnetGroupName: !Ref ClusterDBSubnetGroup
+      BackupRetentionPeriod: 7
+      MasterUsername: !Ref DBMasterUsername
+      MasterUserPassword: !Ref DBMasterUserPassword
+      DatabaseName: !FindInMap [ ClusterSettings, global, dbSchema ]
+      StorageEncrypted: true
+      VpcSecurityGroupIds: [ !Ref RDSSecurityGroupCluster ]
+      Tags:
+        - Key: Name
+          Value: !Sub ${TemplateName}-cluster
+
+  ## Deploy an instance
+  DBInstance:
+    Type: AWS::RDS::DBInstance
+    DependsOn: DBCluster
+    Properties:
+      DBClusterIdentifier: !Ref DBCluster
+      DBInstanceIdentifier: !Sub ${TemplateName}-cluster-node-1
+      DBInstanceClass: !Ref DBInstanceClass
+      EngineVersion : !Ref DBEngineVersion
+      Engine: aurora-postgresql
+      PubliclyAccessible: false
+      Tags:
+        - Key: Name
+          Value: !Sub ${TemplateName}-cluster-node-1
+
+
+## Outputs
+Outputs:
+  MainVPC:
+    Description: ImmDays Lab VPC
+    Value: !Ref MainVPC
+    Export:
+        Name: !Sub "${AWS::Region}-${AWS::StackName}-MainVPC"
+  PublicSubnetCidrA:
+    Description: PublicSubnetA CIDR for LAB
+    Value: !Select [ 0, !Cidr [ !GetAtt MainVPC.CidrBlock, 4, 8 ]]
+    Export:
+        Name: !Sub "${AWS::Region}-${AWS::StackName}-PublicSubnetACidr"
+  PublicSubnetCidrA:
+    Description: PublicSubnetA CIDR for LAB
+    Value: !Select [ 1, !Cidr [ !GetAtt MainVPC.CidrBlock, 4, 8 ]]
+    Export:
+        Name: !Sub "${AWS::Region}-${AWS::StackName}-PublicSubnetBCidr"
+  PublicSubnetA:
+    Description: PublicSubnetA for LAB
+    Value: !Ref PublicSubnetA
+    Export:
+        Name: !Sub "${AWS::Region}-${AWS::StackName}-PublicSubnetA"
+  PublicSubnetB:
+    Description: PublicSubnetB for LAB
+    Value: !Ref PublicSubnetB
+    Export:
+        Name: !Sub "${AWS::Region}-${AWS::StackName}-PublicSubnetB"
+  PrivateSubnetA:
+    Description: PrivateSubnetA for LAB
+    Value: !Ref PrivateSubnetA
+    Export:
+        Name: !Sub "${AWS::Region}-${AWS::StackName}-PrivateSubnetA"
+  PrivateSubnetB:
+    Description: PrivateSubnetB for LAB
+    Value: !Ref PrivateSubnetB
+    Export:
+        Name: !Sub "${AWS::Region}-${AWS::StackName}-PrivateSubnetB"
+  PrivateSubnets:
+    Description: 'VPCs Subnets private'
+    Value: !Join [',', [!Ref PrivateSubnetA, !Ref PrivateSubnetB]]
+    Export:
+      Name: !Sub '${AWS::StackName}-SubnetsPrivate'
+  DBSecurityGroupCluster:
+    Description: This is the Security group to be used for the DB cluster
+    Value: !Ref RDSSecurityGroupCluster
+    Export:
+        Name: !Sub "${AWS::Region}-${AWS::StackName}-SecurityGroupDBCluster"

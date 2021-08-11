@@ -3,17 +3,22 @@
 Create Global DB Clusing using the console
 ==========================================
 
-### Setup the VPC & Bastion in us-west-1
-1. Setup the VPC using CloudFormation
-2. Setup the Bastion Host using CloudFormation
-3. Setup the DB cluster using the CloudFormation
+# Create the primary cluster - Region 1 e.g., us-west-1
+Use the CloudFormation template : global/primary-cluster.yml
+Stack name: primary-rdsa-cluster
 
-us-east-1
-1. Create a new cluster in us-west-1
-* Use the rdsa-vpc, SG, Subnet group etc
-2. Create a VPC in us-west-2
-* Use the CloudFormation
-3. Add a region 
-2. Add a region to the DB cluster
-* us-east-1
-3. 
+# Create the VPC in secondary region - Region 2 e.g., us-west-2
+Use the CloudFormation template : vpc/secondary-vpc-sg.yml
+Stack name: seondary-rdsa-cluster
+
+# Go to the us-west-2 
+Use console to add it as the region to Global database
+Global cluster ID  : global-rdsa
+Select the VPC: rdsa-vpc
+Select the SG: rdsa-sg
+Select the instance: db.r4.large
+
+Global cluster becomes available in all region in the console.
+
+
+
