@@ -20,5 +20,9 @@ Select the instance: db.r4.large
 
 Global cluster becomes available in all region in the console.
 
+# Setup bastion hosts in the VPC
+Use the CloudFormation template in both region
+Template : vpc/bastion-host.yml
+Stack name: rdsa-host
 
 

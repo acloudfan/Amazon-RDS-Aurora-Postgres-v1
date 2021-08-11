@@ -31,7 +31,7 @@ Parameters:
 Mappings:
   NetworkSettings:
     global:
-      vpcCidr: 10.0.0.0/16
+      vpcCidr: 10.1.0.0/16
   ClusterSettings:
     global:
       dbSchema: labdb
