@@ -61,7 +61,7 @@ Copy and paste the commands in shell prompt on your bastion host
 curl https://raw.githubusercontent.com/acloudfan/Amazon-RDS-Aurora-Postgres-v1/master/bin/install/setup-bastion.sh --output setup-bastion-host.sh 
 
 #3
-chmod u+x ./setup-bastion.sh 
+chmod u+x ./setup-bastion-host.sh 
 
 #4
 ./setup-bastion-host.sh <<Provide AWS Region>>   <<Provide DB Cluster ID>>
@@ -77,4 +77,4 @@ psql    -h $PGWRITEREP                <<Will give error in secondary region in c
 psql    -h $PGREADEREP
 
 Note: 
-In case of error: Make sure to provide the correct AWS Region & Cluster name 
+In case of error: Make sure to provide the correct AWS Region & Cluster name ; Run the script again

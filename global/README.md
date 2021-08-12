@@ -96,3 +96,6 @@ Managed RPO
 ===========
 https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-database-disaster-recovery.html#aurora-global-database-set-rpo
 
+SELECT * FROM aurora_global_db_status();
+
+select * from aurora_global_db_instance_status();
