@@ -180,8 +180,8 @@ Outputs:
     Value: !Select [ 0, !Cidr [ !GetAtt MainVPC.CidrBlock, 4, 8 ]]
     Export:
         Name: !Sub "${AWS::Region}-${AWS::StackName}-PublicSubnetACidr"
-  PublicSubnetCidrA:
-    Description: PublicSubnetA CIDR for LAB
+  PublicSubnetCidrB:
+    Description: PublicSubnetB CIDR for LAB
     Value: !Select [ 1, !Cidr [ !GetAtt MainVPC.CidrBlock, 4, 8 ]]
     Export:
         Name: !Sub "${AWS::Region}-${AWS::StackName}-PublicSubnetBCidr"
