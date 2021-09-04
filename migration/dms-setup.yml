@@ -1,0 +1,10 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation Template for DB Setup
+
+Parameters:
+  DmsVpc:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC to be used for DMS 
+    
+Resources:
+  

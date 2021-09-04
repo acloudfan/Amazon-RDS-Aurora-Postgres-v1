@@ -78,3 +78,8 @@ psql    -h $PGREADEREP
 
 Note: 
 In case of error: Make sure to provide the correct AWS Region & Cluster name ; Run the script again
+
+
+
+Windows Bastion Host
+====================
