@@ -83,3 +83,26 @@ In case of error: Make sure to provide the correct AWS Region & Cluster name ; R
 
 Windows Bastion Host
 ====================
+
+1. Use the console to setup a windows EC2 instance
+2. Instance in the public subnet  (Public Subnet A or B)
+3. Use the Security group for the Bastion
+4. Setup Internet Explorer security to enable file download
+
+Install PgAdmin
+---------------
+1. Google for "pgadmin"
+https://www.postgresql.org/ftp/pgadmin/pgadmin4/v5.6/windows/
+
+2. Download installation exe for Windows
+3. Install PgAdmin
+4. Test PgAdmin with the existing cluster
+
+References:
+1. Windows EC2 IE not allowing file download
+https://aws.amazon.com/premiumsupport/knowledge-center/ec2-windows-file-download-ie/
+
+2. Download and install PgAdmin
+https://www.postgresql.org/ftp/pgadmin/pgadmin4/v5.6/windows/
+
+
