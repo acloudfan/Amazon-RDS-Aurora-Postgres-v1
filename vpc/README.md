@@ -84,7 +84,7 @@ In case of error: Make sure to provide the correct AWS Region & Cluster name ; R
 Windows Bastion Host
 ====================
 
-1. Use the console to setup a windows EC2 instance
+1. Use the AWS console to setup a windows EC2 instance
 2. Instance in the public subnet  (Public Subnet A or B)
 3. Use the Security group for the Bastion
 4. Setup Internet Explorer security to enable file download

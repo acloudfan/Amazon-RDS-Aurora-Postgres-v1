@@ -1,8 +1,10 @@
 SCT Installation
 ================
-1. Launch the Windows based Bastion Host
+1. Start the Windows based Bastion Host
+2. Connect to the bastion host using RDP client
 2. Google for "AWS Schema Conversion Tool"
-3. Download & Install the tool
+https://docs.aws.amazon.com/SchemaConversionTool/latest/userguide/CHAP_Installing.html
+3. Download & Install SCT
 
 Conversion Example
 ==================
@@ -18,7 +20,7 @@ https://dev.mysql.com/downloads/installer/
 
 Setup the test database (sakila)
 --------------------------------
-https://dev.mysql.com/doc/index-other.html
+https://dev.mysql.com/doc/sakila/
 
 1. Google for "MySQL Sakila schema"
 2. Download the zip file & extract to the folder Documents/MySQL

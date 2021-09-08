@@ -1,0 +1,8 @@
+Schema,Action item,Number of occurrences,Learning curve efforts,Efforts to convert an occurrence of the action item
+sakila,8706,3,8.0,160.0
+sakila,8795,6,0.0,1.0
+sakila,8811,1,8.0,8.0
+sakila,8825,15,0.0,0.5
+sakila,8844,1,1.0,4.0
+sakila,8851,2,0.1,2.0
+sakila,9996,3,40.0,40.0
