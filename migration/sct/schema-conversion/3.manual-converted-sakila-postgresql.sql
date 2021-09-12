@@ -2,6 +2,8 @@
 -- PostgreSQL database dump
 --
 
+-- MANUALLY Updated & Tested Schema file for Target PostgreSQL DB Cluster
+
 -- Dumped from database version 13beta3
 -- Dumped by pg_dump version 13beta3
 

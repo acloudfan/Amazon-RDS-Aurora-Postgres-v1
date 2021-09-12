@@ -1,3 +1,14 @@
+SQL Files
+=========
+(1) sakila-schema-mysql.sql
+Original source schema downloaded from SCT
+
+(2) automatic-converted-sakila-postgresql
+SCT converted schema to PostgreSQL
+
+(3) manual-converted-sakila-postgresql.sql
+Manually adjusted sakila schema 
+
 SCT Installation
 ================
 1. Start the Windows based Bastion Host
@@ -52,3 +63,6 @@ https://github.com/devrimgunduz/pagila
 
 * Sample database MySQL Sakila & PostgreSQL Pagila
 https://www.postgresqltutorial.com/postgresql-sample-database/
+
+* Link for downloading the PostgreSQL JDBC driver
+https://jdbc.postgresql.org/download.html
