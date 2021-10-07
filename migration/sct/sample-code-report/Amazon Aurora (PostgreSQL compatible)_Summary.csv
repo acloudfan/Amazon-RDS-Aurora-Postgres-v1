@@ -1,0 +1,7 @@
+"Category","Number of objects","Objects automatically converted","Objects with simple actions","Objects with medium-complexity actions","Objects with complex actions","Total lines of code"
+"SQL_CONVERTED_STATEMENT","0","0","0","0","0",""
+"EXTRACTED_STATEMENT","9","0","4","0","5",""
+"SQL_syntax_elements_number","0","","","",""
+
+"Source schema: sakila"
+"MySQL Community Server - GPL 8.0.26"

@@ -97,12 +97,9 @@ def update():
                 msg = 'Account already exists !'
             elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
                 msg = 'Invalid email address !'
-            elif not re.match(r'[A-Za-z0-9]+', username):
-                msg = 'name must contain only characters and numbers !'
             else:
-                cursor.execute('UPDATE accounts SET  username =% s, password =% s, email =% s, organisation =% s, address =% s, city =% s, state =% s, country =% s, postalcode =% s WHERE id =% s', (username, password, email, organisation, address, city, state, country, postalcode, (session['id'], ), ))
-                mysql.connection.commit()
-                msg = 'You have successfully updated !'
+                msg = 'name must contain only characters and numbers !'
+
         elif request.method == 'POST':
             msg = 'Please fill out the form !'
         return render_template("update.html", msg = msg)

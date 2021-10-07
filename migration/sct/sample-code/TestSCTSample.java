@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 public class TestSCTSample {
 
-    public static void test1(String[] args, int actor_id) {
+    public static void test1(String[] args, int actor_id,String fname, String lname) {
 
         String cs = "jdbc:mysql://localhost:3306/testdb?useSSL=false";
         String user = "testuser";
@@ -25,7 +25,7 @@ public class TestSCTSample {
 
             for (int i = 1; i <= 5000; i++) {
 
-                String sql = "INSERT INTO actor VALUES(" + actor_id +","+ "\"fname\""+ ","+ "\"lname\""+ ")";
+                String sql = "INSERT INTO actor VALUES(" + actor_id +","+ "\""+fname+"\""+ ","+ "\""+lname+"\""+ ")";
                 st.executeUpdate(sql);
             }
 
@@ -42,7 +42,7 @@ public class TestSCTSample {
         String user = "testuser";
         String password = "test623";
 
-        String sql = "INSERT INTO Testing(Id) VALUES(?)";
+        String sql = "INSERT INTO actor(actor_id) VALUES(?)";
 
         try (Connection con = DriverManager.getConnection(cs, user, password);
                 PreparedStatement pst = con.prepareStatement(sql)) {
@@ -93,9 +93,9 @@ public class TestSCTSample {
         String user = "testuser";
         String password = "test623";
 
-        String query = "SELECT Id, Name FROM actor WHERE Id=1;"
-                + "SELECT Id, Name FROM actor WHERE Id=2;"
-                + "SELECT Id, Name FROM actor WHERE Id=3";
+        String query = "SELECT actor_id, first_name FROM actor WHERE actor_id=1;"
+                + "SELECT actor_id, first_name FROM actor WHERE actor_id=2;"
+                + "SELECT actor_id, first_name FROM actor WHERE actor_id=3";
 
         try (Connection con = DriverManager.getConnection(cs, user, password);
                 PreparedStatement pst = con.prepareStatement(query);) {
@@ -119,14 +119,16 @@ public class TestSCTSample {
         }
     }
 
-    public static void test5(String[] args, int actor_id) {
+    // String fieldList = " last_name, first_name "
+    public static void test5(String[] args, String fieldList, int id) {
 
         String cs = "jdbc:mysql://localhost:3306/testdb?useSSL=false";
         String user = "testuser";
         String password = "test623";
 
-        String query = "SELECT last_name, first_name From actor "
-                + " WHERE id=actor_id";
+        
+        String query = "SELECT "+fieldList+" From actor "
+                + " WHERE actor_id=actor";
 
         try (Connection con = DriverManager.getConnection(cs, user, password);
                 PreparedStatement pst = con.prepareStatement(query);
