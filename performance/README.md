@@ -10,6 +10,8 @@ Running the test
 ================
 https://www.postgresql.org/docs/11/pgbench.html
 
+The following commands assume that a database with the name 'pgbenchtest' exists
+
 * Initialize with 100x100,000 accounts, 100x1 branches, 100x10 tellers
 pgbench -i -d --scale=100  pgbenchtest
 
