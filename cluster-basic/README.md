@@ -30,9 +30,8 @@ The role created is used for manually enabling the Enhanced monitoring on DB ins
 
 Login as ec2-user using System Manager (SSM) connect
 ====================================================
-sudo su -
-su ec2-user
-cd
+sudo su - ec2-user
+
 
 
 PgAdmin4
