@@ -1,3 +1,4 @@
+=========================
 PostgreSQL Stat Collector
 =========================
 https://www.postgresql.org/docs/12/monitoring-stats.html
@@ -19,6 +20,7 @@ Hands on with static views
 1. In psql Session#1 get the details of pg_stat_user_tables
 - \d pg_stat_user_tables
 2. Get the current value for tuple counters for the test tables
+- \x
 - SELECT seq_scan, n_tup_ins, idx_scan FROM pg_stat_user_tables WHERE relname = 'test';
 3. Run a query against table and check the counts again
 - SELECT * from test;
@@ -31,6 +33,15 @@ Hands on with static views
 
 Hands on with dynamic views
 ===========================
+1. In psql Session#1 get the details of pg_stat_user_tables
+- \d pg_stat_activity
+2. In psql Session#2 start a transaction
+- SELECT pg_backend_pid();
+- BEGIN;
+- SELECT * FROM test;
+3. In Session#1 
+- \x
+- SELECT * FROM pg_stat_activity WHERE pid=<<Pid of Session#2>>
 
 SQL
 ===
@@ -51,8 +62,19 @@ Returns output like:
 Analysis: For each row, because "idx_tup_pct" is low than it means that essentially no indexes are being used. In the case of "facebook_oauths"
  it turns out we are commonly running a query like "SELECT * FROM facebook_oauths WHERE fb_user_id = X" and it turns out there isnt an index on "fb_user_id"
  
- 
- 
+============================================================
+pg_stat_statements
+https://www.postgresql.org/docs/12/pgstatstatements.html
+============================================================
+1. CREATE EXTENSION pg_stat_statements;
+2. \d pg_stat_statements
+
+
+
+
+
+===============================================================================
+Using the stats queries
 ===============================================================================
 
 ** Find the INSERT/UPDATE/DELETE statistics for tables:
