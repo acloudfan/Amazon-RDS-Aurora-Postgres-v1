@@ -57,34 +57,38 @@ Hands on with pg_stat_statements
 Part-1  Create database & extension
 ------
 1. Create DB 
-=> CREATE database  teststatements
+=> CREATE database  teststatements;
 => \c  teststatements
-=> CREATE EXTENSION pg_stat_statements
+=> CREATE EXTENSION pg_stat_statements;
 
 2. Checkout the parameters for extension
-=> SHOW pg_stat_statements.max
-=> SHOW pg_stat_statements.track
+=> SHOW pg_stat_statements.max;
+=> SHOW pg_stat_statements.track;
 
 Part-2   Get the stats for queries against specific table
-------
-1. Run a query and gets its stats from the pg_stat_statements view
-psql=> \x
-psql=> SELECT * FROM test;
-psql=> SELECT * FROM pg_stat_statements WHERE query LIKE '%test%'
-
-2. Reset the stats
-psql=> SELECT pg_stat_statements_reset();
-
-3. Run a query a couple of times to see the change in stats
-psql=> SELECT * FROM test;
-psql=> SELECT * FROM pg_stat_statements WHERE query LIKE '%test%'
-
-Part-3   Checkout the top 5 slowest queries 
 ------
 1. Create the benchmark tables
 $ pgbench -i -s 100 teststatements
 
+2. Get stats for a specific table from the pg_stat_statements view
+$ psql -d teststatements
+psql=> \x
+psql=> SELECT * FROM pg_stat_statements WHERE query LIKE '%pgbench%';
+
+3. Reset the stats
+psql=> SELECT pg_stat_statements_reset();
+
+4. Run a query a couple of times to see the change in stats
+psql=> SELECT * FROM pg_stat_statements WHERE query LIKE '%pgbench%';
+
+Part-3   Checkout the top 5 slowest queries 
+------
+1. Run a load test against the database
+$ pgbench -i -s 100 teststatements
+
 2. Checkout the top 5 slowest (by mean_time) query/commands
+$ psql -d teststatements
+psql=> \x
 psql=> SELECT query, calls, mean_time, rows, 
                 100.0 * shared_blks_hit /nullif(shared_blks_hit + shared_blks_read, 0) 
                 AS hit_percent 
