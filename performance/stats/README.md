@@ -43,8 +43,75 @@ Hands on with dynamic views
 - \x
 - SELECT * FROM pg_stat_activity WHERE pid=<<Pid of Session#2>>
 
-SQL
-===
+
+============================================================
+pg_stat_statements
+https://www.postgresql.org/docs/12/pgstatstatements.html
+============================================================
+1. \dx 
+2. CREATE EXTENSION pg_stat_statements;
+3. \d pg_stat_statements
+
+Hands on with pg_stat_statements
+================================
+Part-1  Create database & extension
+------
+1. Create DB 
+=> CREATE database  teststatements
+=> \c  teststatements
+=> CREATE EXTENSION pg_stat_statements
+
+2. Checkout the parameters for extension
+=> SHOW pg_stat_statements.max
+=> SHOW pg_stat_statements.track
+
+Part-2   Get the stats for queries against specific table
+------
+1. Run a query and gets its stats from the pg_stat_statements view
+psql=> \x
+psql=> SELECT * FROM test;
+psql=> SELECT * FROM pg_stat_statements WHERE query LIKE '%test%'
+
+2. Reset the stats
+psql=> SELECT pg_stat_statements_reset();
+
+3. Run a query a couple of times to see the change in stats
+psql=> SELECT * FROM test;
+psql=> SELECT * FROM pg_stat_statements WHERE query LIKE '%test%'
+
+Part-3   Checkout the top 5 slowest queries 
+------
+1. Create the benchmark tables
+$ pgbench -i -s 100 teststatements
+
+2. Checkout the top 5 slowest (by mean_time) query/commands
+psql=> SELECT query, calls, mean_time, rows, 
+                100.0 * shared_blks_hit /nullif(shared_blks_hit + shared_blks_read, 0) 
+                AS hit_percent 
+        FROM pg_stat_statements ORDER BY mean_time DESC LIMIT 5;
+
+Part-4   Checkout the top 5 frequently run queries
+------
+1. Run a Load test 
+$ pgbench   -c 10  -T 60 -P 3
+
+2. Find tyhe top 5 most frequently run queries
+psql=> SELECT query, calls, mean_time, rows, 
+                100.0 * shared_blks_hit / nullif(shared_blks_hit + shared_blks_read, 0) 
+                AS hit_percent
+        FROM pg_stat_statements ORDER BY calls 
+        DESC LIMIT 5;
+
+Part-5   Checkout the top 5 queries with lowest blk_hit ratio
+------
+psql=> SELECT query, calls, mean_time, rows, 
+                100.0 * shared_blks_hit / nullif(shared_blks_hit + shared_blks_read, 0) 
+                AS hit_percent
+          FROM pg_stat_statements ORDER BY hit_percent ASC LIMIT 5;
+
+===============================================================================
+Using the stats queries
+===============================================================================
 ** Find commmonly accessed tables and their use of indexes:
 
 SELECT relname,seq_tup_read,idx_tup_fetch,cast(idx_tup_fetch AS numeric) / (idx_tup_fetch + seq_tup_read) AS idx_tup_pct FROM pg_stat_user_tables WHERE (idx_tup_fetch + seq_tup_read)>0 ORDER BY idx_tup_pct;
@@ -62,20 +129,6 @@ Returns output like:
 Analysis: For each row, because "idx_tup_pct" is low than it means that essentially no indexes are being used. In the case of "facebook_oauths"
  it turns out we are commonly running a query like "SELECT * FROM facebook_oauths WHERE fb_user_id = X" and it turns out there isnt an index on "fb_user_id"
  
-============================================================
-pg_stat_statements
-https://www.postgresql.org/docs/12/pgstatstatements.html
-============================================================
-1. CREATE EXTENSION pg_stat_statements;
-2. \d pg_stat_statements
-
-
-
-
-
-===============================================================================
-Using the stats queries
-===============================================================================
 
 ** Find the INSERT/UPDATE/DELETE statistics for tables:
 
