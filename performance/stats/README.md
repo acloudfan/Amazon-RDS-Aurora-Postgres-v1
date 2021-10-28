@@ -81,37 +81,122 @@ psql=> SELECT pg_stat_statements_reset();
 4. Run a query a couple of times to see the change in stats
 psql=> SELECT * FROM pg_stat_statements WHERE query LIKE '%pgbench%';
 
+5. Checkout queries run by background processes
+psql=> SELECT * FROM pg_stat_statements ;
+
 Part-3   Checkout the top 5 slowest queries 
 ------
 1. Run a load test against the database
-$ pgbench -i -s 100 teststatements
+$ pgbench   -c 10  -T 60 -P 3 teststatements
 
 2. Checkout the top 5 slowest (by mean_time) query/commands
 $ psql -d teststatements
-psql=> \x
-psql=> SELECT query, calls, mean_time, rows, 
-                100.0 * shared_blks_hit /nullif(shared_blks_hit + shared_blks_read, 0) 
-                AS hit_percent 
-        FROM pg_stat_statements ORDER BY mean_time DESC LIMIT 5;
+psql=> SELECT query, calls, mean_time, rows
+        FROM pg_stat_statements 
+        WHERE query LIKE '%SELECT%pgbench%' 
+              OR query LIKE '%INSERT%pgbench%' 
+              OR query LIKE '%UPDATE%pgbench%'
+        ORDER BY mean_time DESC LIMIT 5;
 
-Part-4   Checkout the top 5 frequently run queries
-------
-1. Run a Load test 
-$ pgbench   -c 10  -T 60 -P 3
+Exercise#1   Checkout the top 5 frequently run queries
+----------
 
-2. Find tyhe top 5 most frequently run queries
+psql=> SELECT query, calls, mean_time, rows
+        FROM pg_stat_statements 
+        WHERE query LIKE '%SELECT%pgbench%' 
+              OR query LIKE '%INSERT%pgbench%' 
+              OR query LIKE '%UPDATE%pgbench%'
+        ORDER BY calls  DESC LIMIT 5;
+
+Exercise#2   Checkout the top 5 queries with lowest blk_hit ratio
+----------
 psql=> SELECT query, calls, mean_time, rows, 
                 100.0 * shared_blks_hit / nullif(shared_blks_hit + shared_blks_read, 0) 
                 AS hit_percent
-        FROM pg_stat_statements ORDER BY calls 
-        DESC LIMIT 5;
+          FROM pg_stat_statements 
+          WHERE query LIKE '%SELECT%pgbench%' 
+              OR query LIKE '%INSERT%pgbench%' 
+              OR query LIKE '%UPDATE%pgbench%'
+          ORDER BY hit_percent ASC LIMIT 5;
 
-Part-5   Checkout the top 5 queries with lowest blk_hit ratio
+
+Clean up
+--------
+$ psql -c "DROP DATABASE teststatements"
+
+
+===============================================================================
+pg_stat_activity
+Understanding the Wait Events
+===============================================================================
+
+Refresher  Check out the pg_stat_activity view
+---------
+1. Get the PID
+psql#1=> select pg_backend_pid();
+
+2. Get the current state of connection
+psql#1=> \x
+psql#1=> SELECT * FROM pg_stat_activity WHERE pid=<<Process pid>>
+
+Part-1  Start an explicit transaction and check the wait_event_type
 ------
-psql=> SELECT query, calls, mean_time, rows, 
-                100.0 * shared_blks_hit / nullif(shared_blks_hit + shared_blks_read, 0) 
-                AS hit_percent
-          FROM pg_stat_statements ORDER BY hit_percent ASC LIMIT 5;
+Launch 2nd psql session
+1. Get the PID
+psql#1=> select pg_backend_pid();
+
+2. Start a transaction in session#1
+psql#1=> BEGIN;
+
+3. In session#2 check the wait event for session#1
+psql#2=> SELECT * FROM pg_stat_activity WHERE pid=<<Process pid session#1>>
+
+4. End the transaction in session#1
+psql#2=> COMMIT;
+
+Part-2  Lock a table and check out the state
+------
+Launch a 3rd psql session
+
+1. In session#2 start a transaction
+psql#2=> BEGIN;
+psql#2=> LOCK TABLE test;
+
+2. In session#1 start a transaction
+psql#1=> BEGIN;
+psql#1=> LOCK TABLE test;
+
+3. In session#3 check the wait event for session#1
+psql#3=> \x
+psql#3=> SELECT * FROM pg_stat_activity WHERE pid=<<Process pid session#1>>
+
+Part-3 Check out different locks on DB server
+------
+
+1. Create a test database & setup pgbench db tables
+$ psql -c "CREATE DATABASE testactivity"
+$ pgbench -i -s 100 testactivity
+
+2.Run pgbench load
+$ pgbench   -c 50  -T 300 -P 3 teststatements
+
+3. Check out locks and wait states
+In a 2nd SSH session start psql
+
+psql#2=> SELECT   wait_event_type, state, count(*) 
+       FROM     pg_stat_activity 
+       GROUP BY wait_event_type, state;
+
+===============================================================================
+pg_locks
+===============================================================================
+SELECT pid, locktype, relation, mode, granted 
+FROM pg_locks 
+WHERE (relation = (select relid from pg_stat_user_tables where relname = 'test') OR relation is null);
+
+SELECT locktype,count(*)  FROM pg_locks GROUP BY locktype;
+
+SELECT * FROM pg_locks WHERE locktype='tuple';
 
 ===============================================================================
 Using the stats queries
@@ -230,3 +315,9 @@ FROM pg_stat_user_indexes AS idstat JOIN pg_indexes ON indexrelname = indexname
 JOIN pg_stat_user_tables AS tabstat ON idstat.relname = tabstat.relname
 WHERE idstat.idx_scan < 200 AND indexdef !~* 'unique'
 ORDER BY idstat.relname, indexrelname;
+
+
+===================
+Cheatsheet for psql
+https://karloespiritu.github.io/cheatsheets/postgresql/
+===================
