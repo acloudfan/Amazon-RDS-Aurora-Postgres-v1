@@ -29,7 +29,7 @@ CREATE TYPE public.mpaa_rating AS ENUM (
 );
 
 
-ALTER TYPE public.mpaa_rating OWNER TO postgres;
+ALTER TYPE public.mpaa_rating OWNER TO masteruser;
 
 --
 -- Name: year; Type: DOMAIN; Schema: public; Owner: postgres
@@ -39,7 +39,7 @@ CREATE DOMAIN public.year AS integer
 	CONSTRAINT year_check CHECK (((VALUE >= 1901) AND (VALUE <= 2155)));
 
 
-ALTER DOMAIN public.year OWNER TO postgres;
+ALTER DOMAIN public.year OWNER TO masteruser;
 
 --
 -- Name: _group_concat(text, text); Type: FUNCTION; Schema: public; Owner: postgres
@@ -56,7 +56,7 @@ END
 $_$;
 
 
-ALTER FUNCTION public._group_concat(text, text) OWNER TO postgres;
+ALTER FUNCTION public._group_concat(text, text) OWNER TO masteruser;
 
 --
 -- Name: film_in_stock(integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
@@ -73,7 +73,7 @@ CREATE FUNCTION public.film_in_stock(p_film_id integer, p_store_id integer, OUT 
 $_$;
 
 
-ALTER FUNCTION public.film_in_stock(p_film_id integer, p_store_id integer, OUT p_film_count integer) OWNER TO postgres;
+ALTER FUNCTION public.film_in_stock(p_film_id integer, p_store_id integer, OUT p_film_count integer) OWNER TO masteruser;
 
 --
 -- Name: film_not_in_stock(integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
@@ -90,7 +90,7 @@ CREATE FUNCTION public.film_not_in_stock(p_film_id integer, p_store_id integer, 
 $_$;
 
 
-ALTER FUNCTION public.film_not_in_stock(p_film_id integer, p_store_id integer, OUT p_film_count integer) OWNER TO postgres;
+ALTER FUNCTION public.film_not_in_stock(p_film_id integer, p_store_id integer, OUT p_film_count integer) OWNER TO masteruser;
 
 --
 -- Name: get_customer_balance(integer, timestamp without time zone); Type: FUNCTION; Schema: public; Owner: postgres
@@ -135,7 +135,7 @@ END
 $$;
 
 
-ALTER FUNCTION public.get_customer_balance(p_customer_id integer, p_effective_date timestamp without time zone) OWNER TO postgres;
+ALTER FUNCTION public.get_customer_balance(p_customer_id integer, p_effective_date timestamp without time zone) OWNER TO masteruser;
 
 --
 -- Name: inventory_held_by_customer(integer); Type: FUNCTION; Schema: public; Owner: postgres
@@ -157,7 +157,7 @@ BEGIN
 END $$;
 
 
-ALTER FUNCTION public.inventory_held_by_customer(p_inventory_id integer) OWNER TO postgres;
+ALTER FUNCTION public.inventory_held_by_customer(p_inventory_id integer) OWNER TO masteruser;
 
 --
 -- Name: inventory_in_stock(integer); Type: FUNCTION; Schema: public; Owner: postgres
@@ -194,7 +194,7 @@ BEGIN
 END $$;
 
 
-ALTER FUNCTION public.inventory_in_stock(p_inventory_id integer) OWNER TO postgres;
+ALTER FUNCTION public.inventory_in_stock(p_inventory_id integer) OWNER TO masteruser;
 
 --
 -- Name: last_day(timestamp without time zone); Type: FUNCTION; Schema: public; Owner: postgres
@@ -212,7 +212,7 @@ CREATE FUNCTION public.last_day(timestamp without time zone) RETURNS date
 $_$;
 
 
-ALTER FUNCTION public.last_day(timestamp without time zone) OWNER TO postgres;
+ALTER FUNCTION public.last_day(timestamp without time zone) OWNER TO masteruser;
 
 --
 -- Name: last_updated(); Type: FUNCTION; Schema: public; Owner: postgres
@@ -227,7 +227,7 @@ BEGIN
 END $$;
 
 
-ALTER FUNCTION public.last_updated() OWNER TO postgres;
+ALTER FUNCTION public.last_updated() OWNER TO masteruser;
 
 --
 -- Name: payment_id_change_handler(integer, integer, smallint, smallint, integer, numeric, timestamp with time zone); Type: FUNCTION; Schema: public; Owner: postgres
@@ -257,7 +257,7 @@ END
 $$;
 
 
-ALTER FUNCTION public.payment_id_change_handler(old_payment_id integer, new_payment_id integer, new_customer_id smallint, new_staff_id smallint, new_rental_id integer, new_amount numeric, new_payment_date timestamp with time zone) OWNER TO postgres;
+ALTER FUNCTION public.payment_id_change_handler(old_payment_id integer, new_payment_id integer, new_customer_id smallint, new_staff_id smallint, new_rental_id integer, new_amount numeric, new_payment_date timestamp with time zone) OWNER TO masteruser;
 
 --
 -- Name: rewards_report(integer, numeric, date, refcursor, refcursor); Type: PROCEDURE; Schema: public; Owner: postgres
@@ -325,7 +325,7 @@ END
 $_$;
 
 
-ALTER PROCEDURE public.rewards_report(min_monthly_purchases integer, min_dollar_amount_purchased numeric, report_month date, INOUT refcur_client refcursor, INOUT refcur_count refcursor) OWNER TO postgres;
+ALTER PROCEDURE public.rewards_report(min_monthly_purchases integer, min_dollar_amount_purchased numeric, report_month date, INOUT refcur_client refcursor, INOUT refcur_count refcursor) OWNER TO masteruser;
 
 --
 -- Name: group_concat(text); Type: AGGREGATE; Schema: public; Owner: postgres
@@ -337,7 +337,7 @@ CREATE AGGREGATE public.group_concat(text) (
 );
 
 
-ALTER AGGREGATE public.group_concat(text) OWNER TO postgres;
+ALTER AGGREGATE public.group_concat(text) OWNER TO masteruser;
 
 --
 -- Name: actor_actor_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -351,7 +351,7 @@ CREATE SEQUENCE public.actor_actor_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.actor_actor_id_seq OWNER TO postgres;
+ALTER TABLE public.actor_actor_id_seq OWNER TO masteruser;
 
 SET default_tablespace = '';
 
@@ -369,7 +369,7 @@ CREATE TABLE public.actor (
 );
 
 
-ALTER TABLE public.actor OWNER TO postgres;
+ALTER TABLE public.actor OWNER TO masteruser;
 
 --
 -- Name: category_category_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -383,7 +383,7 @@ CREATE SEQUENCE public.category_category_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.category_category_id_seq OWNER TO postgres;
+ALTER TABLE public.category_category_id_seq OWNER TO masteruser;
 
 --
 -- Name: category; Type: TABLE; Schema: public; Owner: postgres
@@ -396,7 +396,7 @@ CREATE TABLE public.category (
 );
 
 
-ALTER TABLE public.category OWNER TO postgres;
+ALTER TABLE public.category OWNER TO masteruser;
 
 --
 -- Name: film_film_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -410,7 +410,7 @@ CREATE SEQUENCE public.film_film_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.film_film_id_seq OWNER TO postgres;
+ALTER TABLE public.film_film_id_seq OWNER TO masteruser;
 
 --
 -- Name: film; Type: TABLE; Schema: public; Owner: postgres
@@ -434,7 +434,7 @@ CREATE TABLE public.film (
 );
 
 
-ALTER TABLE public.film OWNER TO postgres;
+ALTER TABLE public.film OWNER TO masteruser;
 
 --
 -- Name: film_actor; Type: TABLE; Schema: public; Owner: postgres
@@ -447,7 +447,7 @@ CREATE TABLE public.film_actor (
 );
 
 
-ALTER TABLE public.film_actor OWNER TO postgres;
+ALTER TABLE public.film_actor OWNER TO masteruser;
 
 --
 -- Name: film_category; Type: TABLE; Schema: public; Owner: postgres
@@ -460,7 +460,7 @@ CREATE TABLE public.film_category (
 );
 
 
-ALTER TABLE public.film_category OWNER TO postgres;
+ALTER TABLE public.film_category OWNER TO masteruser;
 
 --
 -- Name: actor_info; Type: VIEW; Schema: public; Owner: postgres
@@ -483,7 +483,7 @@ CREATE VIEW public.actor_info AS
   GROUP BY a.actor_id, a.first_name, a.last_name;
 
 
-ALTER TABLE public.actor_info OWNER TO postgres;
+ALTER TABLE public.actor_info OWNER TO masteruser;
 
 --
 -- Name: address_address_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -497,7 +497,7 @@ CREATE SEQUENCE public.address_address_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.address_address_id_seq OWNER TO postgres;
+ALTER TABLE public.address_address_id_seq OWNER TO masteruser;
 
 --
 -- Name: address; Type: TABLE; Schema: public; Owner: postgres
@@ -515,7 +515,7 @@ CREATE TABLE public.address (
 );
 
 
-ALTER TABLE public.address OWNER TO postgres;
+ALTER TABLE public.address OWNER TO masteruser;
 
 --
 -- Name: city_city_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -529,7 +529,7 @@ CREATE SEQUENCE public.city_city_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.city_city_id_seq OWNER TO postgres;
+ALTER TABLE public.city_city_id_seq OWNER TO masteruser;
 
 --
 -- Name: city; Type: TABLE; Schema: public; Owner: postgres
@@ -543,7 +543,7 @@ CREATE TABLE public.city (
 );
 
 
-ALTER TABLE public.city OWNER TO postgres;
+ALTER TABLE public.city OWNER TO masteruser;
 
 --
 -- Name: country_country_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -557,7 +557,7 @@ CREATE SEQUENCE public.country_country_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.country_country_id_seq OWNER TO postgres;
+ALTER TABLE public.country_country_id_seq OWNER TO masteruser;
 
 --
 -- Name: country; Type: TABLE; Schema: public; Owner: postgres
@@ -570,7 +570,7 @@ CREATE TABLE public.country (
 );
 
 
-ALTER TABLE public.country OWNER TO postgres;
+ALTER TABLE public.country OWNER TO masteruser;
 
 --
 -- Name: customer_customer_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -584,7 +584,7 @@ CREATE SEQUENCE public.customer_customer_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.customer_customer_id_seq OWNER TO postgres;
+ALTER TABLE public.customer_customer_id_seq OWNER TO masteruser;
 
 --
 -- Name: customer; Type: TABLE; Schema: public; Owner: postgres
@@ -601,14 +601,14 @@ CREATE TABLE public.customer (
     create_date date DEFAULT ('now'::text)::date NOT NULL,
     last_update timestamp without time zone DEFAULT now(),
     active smallint GENERATED ALWAYS AS (
-CASE
-    WHEN (activebool IS TRUE) THEN 1
-    ELSE 0
-END) STORED
+        CASE
+            WHEN (activebool IS TRUE) THEN 1
+            ELSE 0
+        END) STORED
 );
 
 
-ALTER TABLE public.customer OWNER TO postgres;
+ALTER TABLE public.customer OWNER TO masteruser;
 
 --
 -- Name: customer_list; Type: VIEW; Schema: public; Owner: postgres
@@ -633,7 +633,7 @@ CREATE VIEW public.customer_list AS
      JOIN public.country ON ((city.country_id = country.country_id)));
 
 
-ALTER TABLE public.customer_list OWNER TO postgres;
+ALTER TABLE public.customer_list OWNER TO masteruser;
 
 --
 -- Name: film_list; Type: VIEW; Schema: public; Owner: postgres
@@ -656,7 +656,7 @@ CREATE VIEW public.film_list AS
   GROUP BY film.film_id, film.title, film.description, category.name, film.rental_rate, film.length, film.rating;
 
 
-ALTER TABLE public.film_list OWNER TO postgres;
+ALTER TABLE public.film_list OWNER TO masteruser;
 
 --
 -- Name: inventory_inventory_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -670,7 +670,7 @@ CREATE SEQUENCE public.inventory_inventory_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.inventory_inventory_id_seq OWNER TO postgres;
+ALTER TABLE public.inventory_inventory_id_seq OWNER TO masteruser;
 
 --
 -- Name: inventory; Type: TABLE; Schema: public; Owner: postgres
@@ -684,7 +684,7 @@ CREATE TABLE public.inventory (
 );
 
 
-ALTER TABLE public.inventory OWNER TO postgres;
+ALTER TABLE public.inventory OWNER TO masteruser;
 
 --
 -- Name: language_language_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -698,7 +698,7 @@ CREATE SEQUENCE public.language_language_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.language_language_id_seq OWNER TO postgres;
+ALTER TABLE public.language_language_id_seq OWNER TO masteruser;
 
 --
 -- Name: language; Type: TABLE; Schema: public; Owner: postgres
@@ -711,7 +711,7 @@ CREATE TABLE public.language (
 );
 
 
-ALTER TABLE public.language OWNER TO postgres;
+ALTER TABLE public.language OWNER TO masteruser;
 
 --
 -- Name: nicer_but_slower_film_list; Type: VIEW; Schema: public; Owner: postgres
@@ -734,7 +734,7 @@ CREATE VIEW public.nicer_but_slower_film_list AS
   GROUP BY film.film_id, film.title, film.description, category.name, film.rental_rate, film.length, film.rating;
 
 
-ALTER TABLE public.nicer_but_slower_film_list OWNER TO postgres;
+ALTER TABLE public.nicer_but_slower_film_list OWNER TO masteruser;
 
 --
 -- Name: payment_payment_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -748,7 +748,7 @@ CREATE SEQUENCE public.payment_payment_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.payment_payment_id_seq OWNER TO postgres;
+ALTER TABLE public.payment_payment_id_seq OWNER TO masteruser;
 
 --
 -- Name: payment; Type: TABLE; Schema: public; Owner: postgres
@@ -765,7 +765,7 @@ CREATE TABLE public.payment (
 PARTITION BY RANGE (payment_date);
 
 
-ALTER TABLE public.payment OWNER TO postgres;
+ALTER TABLE public.payment OWNER TO masteruser;
 
 --
 -- Name: payment_p0000_default; Type: TABLE; Schema: public; Owner: postgres
@@ -775,7 +775,7 @@ CREATE TABLE public.payment_p0000_default PARTITION OF public.payment
 DEFAULT; 
 
 
-ALTER TABLE public.payment_p0000_default OWNER TO postgres;
+ALTER TABLE public.payment_p0000_default OWNER TO masteruser;
 
 
 --
@@ -786,7 +786,7 @@ CREATE TABLE public.payment_p2007_01 PARTITION OF public.payment
 FOR VALUES FROM ('2007-01-01 00:00:00') TO ('2007-02-01 00:00:00');
 
 
-ALTER TABLE public.payment_p2007_01 OWNER TO postgres;
+ALTER TABLE public.payment_p2007_01 OWNER TO masteruser;
 
 --
 -- Name: payment_p2007_02; Type: TABLE; Schema: public; Owner: postgres
@@ -796,7 +796,7 @@ CREATE TABLE public.payment_p2007_02 PARTITION OF public.payment
 FOR VALUES FROM ('2007-02-01 00:00:00') TO ('2007-03-01 00:00:00');
 
 
-ALTER TABLE public.payment_p2007_02 OWNER TO postgres;
+ALTER TABLE public.payment_p2007_02 OWNER TO masteruser;
 
 --
 -- Name: payment_p2007_03; Type: TABLE; Schema: public; Owner: postgres
@@ -806,7 +806,7 @@ CREATE TABLE public.payment_p2007_03 PARTITION OF public.payment
 FOR VALUES FROM ('2007-03-01 00:00:00') TO ('2007-04-01 00:00:00');
 
 
-ALTER TABLE public.payment_p2007_03 OWNER TO postgres;
+ALTER TABLE public.payment_p2007_03 OWNER TO masteruser;
 
 --
 -- Name: payment_p2007_04; Type: TABLE; Schema: public; Owner: postgres
@@ -816,7 +816,7 @@ CREATE TABLE public.payment_p2007_04 PARTITION OF public.payment
 FOR VALUES FROM ('2007-04-01 00:00:00') TO ('2007-05-01 00:00:00');
 
 
-ALTER TABLE public.payment_p2007_04 OWNER TO postgres;
+ALTER TABLE public.payment_p2007_04 OWNER TO masteruser;
 
 --
 -- Name: payment_p2007_05; Type: TABLE; Schema: public; Owner: postgres
@@ -826,7 +826,7 @@ CREATE TABLE public.payment_p2007_05 PARTITION OF public.payment
 FOR VALUES FROM ('2007-05-01 00:00:00') TO ('2007-06-01 00:00:00');
 
 
-ALTER TABLE public.payment_p2007_05 OWNER TO postgres;
+ALTER TABLE public.payment_p2007_05 OWNER TO masteruser;
 
 --
 -- Name: payment_p2007_06; Type: TABLE; Schema: public; Owner: postgres
@@ -836,7 +836,7 @@ CREATE TABLE public.payment_p2007_06 PARTITION OF public.payment
 FOR VALUES FROM ('2007-06-01 00:00:00') TO ('2007-07-01 00:00:00');
 
 
-ALTER TABLE public.payment_p2007_06 OWNER TO postgres;
+ALTER TABLE public.payment_p2007_06 OWNER TO masteruser;
 
 --
 -- Name: payment_p2007_07; Type: TABLE; Schema: public; Owner: postgres
@@ -846,7 +846,7 @@ CREATE TABLE public.payment_p2007_07_max PARTITION OF public.payment
 FOR VALUES FROM ('2007-07-01 00:00:00') TO (MAXVALUE);
 
 
-ALTER TABLE public.payment_p2007_07_max OWNER TO postgres;
+ALTER TABLE public.payment_p2007_07_max OWNER TO masteruser;
 
 --
 -- Name: rental_rental_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -860,7 +860,7 @@ CREATE SEQUENCE public.rental_rental_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.rental_rental_id_seq OWNER TO postgres;
+ALTER TABLE public.rental_rental_id_seq OWNER TO masteruser;
 
 --
 -- Name: rental; Type: TABLE; Schema: public; Owner: postgres
@@ -877,7 +877,7 @@ CREATE TABLE public.rental (
 );
 
 
-ALTER TABLE public.rental OWNER TO postgres;
+ALTER TABLE public.rental OWNER TO masteruser;
 
 --
 -- Name: staff_staff_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -891,7 +891,7 @@ CREATE SEQUENCE public.staff_staff_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.staff_staff_id_seq OWNER TO postgres;
+ALTER TABLE public.staff_staff_id_seq OWNER TO masteruser;
 
 --
 -- Name: staff; Type: TABLE; Schema: public; Owner: postgres
@@ -912,7 +912,7 @@ CREATE TABLE public.staff (
 );
 
 
-ALTER TABLE public.staff OWNER TO postgres;
+ALTER TABLE public.staff OWNER TO masteruser;
 
 --
 -- Name: staff_list; Type: VIEW; Schema: public; Owner: postgres
@@ -933,7 +933,7 @@ CREATE VIEW public.staff_list AS
      JOIN public.country USING (country_id));
 
 
-ALTER TABLE public.staff_list OWNER TO postgres;
+ALTER TABLE public.staff_list OWNER TO masteruser;
 
 --
 -- Name: store_store_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -947,7 +947,7 @@ CREATE SEQUENCE public.store_store_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.store_store_id_seq OWNER TO postgres;
+ALTER TABLE public.store_store_id_seq OWNER TO masteruser;
 
 --
 -- Name: store; Type: TABLE; Schema: public; Owner: postgres
@@ -961,7 +961,7 @@ CREATE TABLE public.store (
 );
 
 
-ALTER TABLE public.store OWNER TO postgres;
+ALTER TABLE public.store OWNER TO masteruser;
 
 --
 -- Name: payment_p2007_01 payment_id; Type: DEFAULT; Schema: public; Owner: postgres

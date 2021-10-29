@@ -32,3 +32,6 @@ SELECT last_vacuum, last_autovacuum, last_autoanalyze, vacuum_count from pg_stat
 
 * Session# 1
 DELETE FROM wait_test;
+
+
+

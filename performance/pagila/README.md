@@ -13,3 +13,8 @@ The pagila-data.sql file and the pagila-insert-data.sql both contain the same
 data, the former using COPY commands, the latter using INSERT commands, so you 
 only need to install one of them. Both formats are provided for those who have
 trouble using one version or another.
+
+
+
+https://www.datadoghq.com/blog/aws-rds-postgresql-monitoring/
+

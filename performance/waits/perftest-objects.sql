@@ -10,6 +10,10 @@ CREATE SCHEMA perftest;
 
 set search_path to 'perftest';
 
+--Sequence for updatble_seq
+CREATE SEQUENCE IF NOT EXISTS perftest.updatable_seq;
+
+
 --Table for update test
 CREATE TABLE perftest.updtable (id  int, sometext  varchar, somenumber int);
 
