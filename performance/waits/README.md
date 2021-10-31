@@ -1,7 +1,29 @@
 ===================
 Pagila setup steps
 ===================
-Populate the category, actor, language
+
+
+1. Setup up database pagilla
+$ cd performance/waits
+$ chmod u+x set-test-database.sh
+$ ./set-test-database.sh
+
+2. Insert data into the film table in pagila database
+The data will be inserted into the film table using the user function. Pgbench will repeatedly call the function by simulating 50 clients.
+
+$ pgbench -n -d -c 50 -T 120 -f pagila-insert-1.sql pagila > /tmp/pagila-insert-1.log
+
+3. Check the count of rows in the film table
+
+$ psql -d pagila -c "SELECT COUNT(*) FROM film"
+
+3. Checkout the Performance Metrics for the database metrics
+
+====================
+set-test-database.sh
+====================
+Utility script for the database setup.
+Please check out the Pagila schema to understand the sqls.
 
 1. Create a new database for testing
 psql -c "DROP DATABASE IF EXISTS pagila "
@@ -20,14 +42,14 @@ psql -d pagila -f pagila-category-actor.sql
 5. Create functions that will be used from pgbench
 psql -d pagila -f pagila-functions.sql
 
-7. Insert some films data
+
 
 ================
 Simulations
 ================
 1. Inserts Load:
 
-pgbench -n -d -c 50 -T 60 -f pagila-insert-1.sql pagila > /tmp/pagila-insert-1.log
+
 pgbench -n -d -c 50 -T 60 -f pagila-insert-50.sql pagila > /tmp/pagila-insert-50.log
 
 pgbench -n -d -c 100 -T 60 -f pagila-insert-1.sql pagila > /tmp/pagila-insert-c100-1.log
