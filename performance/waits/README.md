@@ -17,7 +17,7 @@ $ pgbench -n -d -c 50 -T 120 -f pagila-insert-1.sql pagila > /tmp/pagila-insert-
 
 $ psql -d pagila -c "SELECT COUNT(*) FROM film"
 
-3. Checkout the Performance Metrics for the database metrics
+4. Checkout the Performance Metrics for the database metrics
 
 ====================
 set-test-database.sh
