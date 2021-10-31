@@ -5,8 +5,8 @@ Pagila setup steps
 
 1. Setup up database pagilla
 $ cd performance/waits
-$ chmod u+x set-test-database.sh
-$ ./set-test-database.sh
+$ chmod u+x ./setup-test-database.sh
+$ ./setup-test-database.sh
 
 2. Insert data into the film table in pagila database
 The data will be inserted into the film table using the user function. Pgbench will repeatedly call the function by simulating 50 clients.
