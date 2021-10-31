@@ -1,3 +1,64 @@
+===================
+Pagila setup steps
+===================
+Populate the category, actor, language
+
+1. Create a new database for testing
+psql -c "DROP DATABASE IF EXISTS pagila "
+psql -c "create database pagila"
+
+2. Setup the extension in the database
+psql -c "create extension pg_stat_statements"
+
+3. Create the tables, indexes etc
+psql -f pagila-schema.sql  -d pagila
+
+4. Populate the database with some test data
+* Populate just the table : actor, category
+psql -d pagila -f pagila-category-actor.sql  
+
+5. Create functions that will be used from pgbench
+psql -d pagila -f pagila-functions.sql
+
+7. Insert some films data
+
+================
+Simulations
+================
+1. Inserts Load:
+
+pgbench -n -d -c 50 -T 60 -f pagila-insert-1.sql pagila > /tmp/pagila-insert-1.log
+pgbench -n -d -c 50 -T 60 -f pagila-insert-50.sql pagila > /tmp/pagila-insert-50.log
+
+pgbench -n -d -c 100 -T 60 -f pagila-insert-1.sql pagila > /tmp/pagila-insert-c100-1.log
+
+Update load:
+
+pgbench -n -d -c 50 -T 60 -f pagila-update-1.sql pagila > /tmp/pagila-update-1.log
+pgbench -n -d -c 50 -T 60 -f pagila-update-50.sql pagila > /tmp/pagila-update-50.log
+
+Update common film_id:
+
+pgbench -n -d -c 50 -T 60 -f pagila-update-common_id.sql pagila > /tmp/pagila-update-common_id.log
+
+Timeout
+
+pgbench -n -d -c 50 -T 60 -f pagila-sleep-select.sql pagila > /tmp/pagila-sleep-select.log
+
+Mix Select & Update
+pgbench -n -d -c 10 -T 60 -f pagila-sleep-select.sql@2 -f pagila-update-1.sql@49 -f pagila-insert-1.sql@49    pagila > /tmp/pagila-temp.log
+
+Select ORDER By
+Causes a lot of Buf waits, ClientWrite waits
+pgbench -n -d -c 50 -T 60 -f pagila-select-order.sql pagila > /tmp/pagila-select-order.log
+
+Select ORDER By with LIMIT
+Causes a lot of Buf waits, but reduces the number of ClientWrite
+pgbench -n -d -c 10 -T 60 -f pagila-select-order-with-limit.sql pagila > /tmp/pagila-select-ordert.log
+
+
+
+
 * Create a test table
 CREATE TABLE wait_test (i1 int, i2 int, i3 int);
 
@@ -35,50 +96,3 @@ DELETE FROM wait_test;
 
 
 
-===================
-Pagila setup
-===================
-Populate the category, actor, language
-
-psql -c "DROP DATABASE pagila "
-
-psql -c "create database pagila"
-
-psql -c "create extension pg_stat_statements"
-
-psql -f pagila-schema.sql  -d pagila
- 
-psql -d pagila -f pagila-category-actor.sql  
-
-psql -d pagila -f pagila-functions.sql
-
-Inserts Load:
-
-pgbench -n -d -c 50 -T 60 -f pagila-insert-1.sql pagila > /tmp/pagila-insert-1.log
-pgbench -n -d -c 50 -T 60 -f pagila-insert-50.sql pagila > /tmp/pagila-insert-50.log
-
-pgbench -n -d -c 100 -T 60 -f pagila-insert-1.sql pagila > /tmp/pagila-insert-c100-1.log
-
-Update load:
-
-pgbench -n -d -c 50 -T 60 -f pagila-update-1.sql pagila > /tmp/pagila-update-1.log
-pgbench -n -d -c 50 -T 60 -f pagila-update-50.sql pagila > /tmp/pagila-update-50.log
-
-Update common film_id:
-
-pgbench -n -d -c 50 -T 60 -f pagila-update-common_id.sql pagila > /tmp/pagila-update-common_id.log
-
-Timeout
-
-pgbench -n -d -c 50 -T 60 -f pagila-sleep-select.sql pagila > /tmp/pagila-sleep-select.log
-
-Mix Select & Update
-pgbench -n -d -c 10 -T 60 -f pagila-sleep-select.sql@2 -f pagila-update-1.sql@49 -f pagila-insert-1.sql@49    pagila > /tmp/pagila-temp.log
-
-Select ORDER By
-Causes a lot of Buf waits, ClientWrite waits
-pgbench -n -d -c 50 -T 60 -f pagila-select-order.sql pagila > /tmp/pagila-select-order.log
-
-Select ORDER By with LIMIT
-Causes a lot of Buf waits, but reduces the number of ClientWrite
-pgbench -n -d -c 10 -T 60 -f pagila-select-order-with-limit.sql pagila > /tmp/pagila-select-ordert.log
