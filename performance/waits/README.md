@@ -1,9 +1,8 @@
 ===================
 Pagila setup steps
 ===================
-
-
 1. Setup up database pagilla
+Change directory under under the eproject root.
 $ cd performance/waits
 $ chmod u+x ./setup-test-database.sh
 $ ./setup-test-database.sh
@@ -16,6 +15,8 @@ $ pgbench -n -d -c 50 -T 120 -f pagila-insert-1.sql pagila > /tmp/pagila-insert-
 3. Check the count of rows in the film table
 
 $ psql -d pagila -c "SELECT COUNT(*) FROM film"
+
+4. Check th eoutput of pgbench
 
 4. Checkout the Performance Metrics for the database metrics
 
@@ -47,7 +48,19 @@ psql -d pagila -f pagila-functions.sql
 ================
 Simulations
 ================
-1. Inserts Load:
+
+-----------------------------------------
+1. A query fetching large number of rows
+-----------------------------------------
+pgbench -n -d -c 30 -T 60 -f pagila-select-order.sql pagila > /tmp/pagila-select-order.log
+
+Performance Insights:
+1. Enable counter metrics for temp files
+2. Look for the wait events BufRead and BufWrites
+
+Fix the problem:
+1. Create an index on the description field
+
 
 
 pgbench -n -d -c 50 -T 60 -f pagila-insert-50.sql pagila > /tmp/pagila-insert-50.log
@@ -72,7 +85,7 @@ pgbench -n -d -c 10 -T 60 -f pagila-sleep-select.sql@2 -f pagila-update-1.sql@49
 
 Select ORDER By
 Causes a lot of Buf waits, ClientWrite waits
-pgbench -n -d -c 50 -T 60 -f pagila-select-order.sql pagila > /tmp/pagila-select-order.log
+pgbench -n -d -c 50 -T 120 -f pagila-select-order.sql pagila > /tmp/pagila-select-order.log
 
 Select ORDER By with LIMIT
 Causes a lot of Buf waits, but reduces the number of ClientWrite

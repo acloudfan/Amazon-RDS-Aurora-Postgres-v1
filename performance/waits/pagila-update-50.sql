@@ -1,3 +1,3 @@
 BEGIN;
-    SELECT insert_film(50);
+    SELECT update_film_description(50);
 END;
