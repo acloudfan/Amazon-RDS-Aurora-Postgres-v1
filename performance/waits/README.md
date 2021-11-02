@@ -50,9 +50,25 @@ Simulations
 ================
 
 -----------------------------------------
-1. A query fetching large number of rows
+IO:XactSync
 -----------------------------------------
-pgbench -n -d -c 30 -T 60 -f pagila-select-order.sql pagila > /tmp/pagila-select-order.log
+Run update statements against Pagila to update the film description. The update is carried out by a user function.
+
+Part-1  Run an update load with a batch size 1
+------
+pgbench -n -d -c 50 -T 60 -f pagila-update-1.sql pagila > /tmp/pagila-update-1.log
+
+Part-2  Run an update load with a batch size 50
+------
+pgbench -n -d -c 50 -T 60 -f pagila-update-50.sql pagila > /tmp/pagila-update-50.log
+
+
+
+
+-----------------------------------------
+IO:BufReadWait  IO:BufWriteWait
+-----------------------------------------
+pgbench -n -d -c 2 -T 60 -f pagila-select-order.sql pagila > /tmp/pagila-select-order.log
 
 Performance Insights:
 1. Enable counter metrics for temp files
@@ -60,8 +76,6 @@ Performance Insights:
 
 Fix the problem:
 1. Create an index on the description field
-
-
 
 pgbench -n -d -c 50 -T 60 -f pagila-insert-50.sql pagila > /tmp/pagila-insert-50.log
 
