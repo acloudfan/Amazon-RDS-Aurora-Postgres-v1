@@ -68,23 +68,20 @@ pgbench -n -d -c 50 -T 60 -f pagila-update-50.sql pagila > /tmp/pagila-update-50
 -----------------------------------------
 IO:BufReadWait  IO:BufWriteWait
 -----------------------------------------
-pgbench -n -d -c 2 -T 60 -f pagila-select-order.sql pagila > /tmp/pagila-select-order.log
+pgbench -n -d -c 10 -T 60 -f pagila-select-order.sql pagila > /tmp/pagila-select-order.log
 
 Performance Insights:
 1. Enable counter metrics for temp files
 2. Look for the wait events BufRead and BufWrites
 
-Fix the problem:
+Potential fix for the problem:
 1. Create an index on the description field
 
-pgbench -n -d -c 50 -T 60 -f pagila-insert-50.sql pagila > /tmp/pagila-insert-50.log
 
-pgbench -n -d -c 100 -T 60 -f pagila-insert-1.sql pagila > /tmp/pagila-insert-c100-1.log
 
-Update load:
 
-pgbench -n -d -c 50 -T 60 -f pagila-update-1.sql pagila > /tmp/pagila-update-1.log
-pgbench -n -d -c 50 -T 60 -f pagila-update-50.sql pagila > /tmp/pagila-update-50.log
+
+
 
 Update common film_id:
 
