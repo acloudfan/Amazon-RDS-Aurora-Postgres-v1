@@ -16,9 +16,9 @@ $ pgbench -n -d -c 50 -T 120 -f pagila-insert-1.sql pagila > /tmp/pagila-insert-
 
 $ psql -d pagila -c "SELECT COUNT(*) FROM film"
 
-4. Check th eoutput of pgbench
+4. Check the output of pgbench
 
-4. Checkout the Performance Metrics for the database metrics
+5. Checkout the Performance Metrics for the database metrics
 
 ====================
 set-test-database.sh
@@ -43,7 +43,8 @@ psql -d pagila -f pagila-category-actor.sql
 5. Create functions that will be used from pgbench
 psql -d pagila -f pagila-functions.sql
 
-
+6. Insert the rows
+pgbench -n -d -c 50 -T 120 -f pagila-insert-1.sql pagila > /tmp/pagila-insert-1.log
 
 ================
 Simulations
@@ -62,20 +63,49 @@ Part-2  Run an update load with a batch size 50
 ------
 pgbench -n -d -c 50 -T 60 -f pagila-update-50.sql pagila > /tmp/pagila-update-50.log
 
-
-
-
 -----------------------------------------
-IO:BufReadWait  IO:BufWriteWait
+IO:BufFileRead  IO:BufFileWrite
 -----------------------------------------
-pgbench -n -d -c 10 -T 60 -f pagila-select-order.sql pagila > /tmp/pagila-select-order.log
+
+Part-1 Run a SELECT load on film table
+------
+$ pgbench -n -d -c 15per -T 60 -f pagila-select-order.sql pagila > /tmp/pagila-select-order.log
 
 Performance Insights:
 1. Enable counter metrics for temp files
 2. Look for the wait events BufRead and BufWrites
 
-Potential fix for the problem:
-1. Create an index on the description field
+Part-2 CLUSTER the film table to reduce CPU
+------
+1. Create an index on the fil table for the description field
+=> psql -d pagila
+=> CREATE INDEX idx_film_description ON film (description);
+
+2. Cluster the table
+
+=> CLUSTER VERBOSE film USING idx_film_description;
+
+3. Run the test again & observe the change in CPU/BufRead/BufWrite 
+
+$ pgbench -n -d -c 15per -T 60 -f pagila-select-order.sql pagila > /tmp/pagila-select-order-cluster.log
+
+
+Cleanup
+-------
+1. Drop the index
+$ psql -d pagila -c "DROP INDEX idx_film_description"
+
+2. Truncate the film table
+$ psql -d pagila -c "TRUNCATE TABLE film CASCADE" 
+
+3. Populate the film table with new data
+$ pgbench -n -d -c 50 -T 120 -f pagila-insert-50.sql pagila > /tmp/pagila-insert-50.log
+
+------------------------------------------------
+buffer_content
+------------------------------------------------
+pgbench -n -d -c 50 -T 120 -f pagila-insert-1.sql pagila > /tmp/pagila-insert-1.log
+
 
 
 
