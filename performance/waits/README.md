@@ -124,6 +124,9 @@ pgbench -n -d -c 50 -T 60 -f pagila-sleep-select.sql pagila > /tmp/pagila-sleep-
 --------------------------------------------------
 Client:ClientRead, Client:ClientWrite waits
 --------------------------------------------------
+Must have above a million rows to see the effect
+
+pgbench -n -d -c 3 -T 60 -f pagila-select.sql pagila > /tmp/pagila-select.log
 
 ================================
 Reader-Writer Lock : Simulation
