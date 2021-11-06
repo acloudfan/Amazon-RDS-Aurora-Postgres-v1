@@ -139,17 +139,20 @@ RETURNS void
 AS
 $BODY$
 DECLARE
-    v_min_film_id   film.film_id%TYPE;
-    v_new_description      film.title%TYPE;
+    v_min_film_id           film.film_id%TYPE;
+    v_new_description       film.title%TYPE;
 BEGIN
 
-    -- Get the min & max for the film
+    -- Get the min_id  for the film and use it for identifying the common row
     SELECT  min(film_id) into v_min_film_id from film;
     
-    
-    SELECT array_to_string(ARRAY(SELECT chr((97 + round(random() * 25)) :: integer)  INTO v_new_description FROM generate_series(1,230)), '');
-        v_new_description := CONCAT_WS('-', (v_min_film_id)::TEXT, v_new_description);
+    -- Create a random string
+    SELECT array_to_string(ARRAY(SELECT chr((97 + round(random() * 25)) :: integer)  
+                                    INTO v_new_description FROM generate_series(1,230)), '');
+                                    
+    v_new_description := CONCAT_WS('-', (v_min_film_id)::TEXT, v_new_description);
         
+    -- Update the film on film_id
     UPDATE film SET description = v_new_description WHERE film_id=v_min_film_id;
 
     

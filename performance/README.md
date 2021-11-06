@@ -1,3 +1,37 @@
+========================
+pg_buffercache
+========================
+https://www.postgresql.org/docs/12/pgbuffercache.html
+
+Steps to setup and try out the extension.
+
+=> CREATE EXTENSION pg_buffer_cache
+=> SELECT n.nspname, c.relname, count(*) AS buffers
+             FROM pg_buffercache b JOIN pg_class c
+             ON b.relfilenode = pg_relation_filenode(c.oid) AND
+                b.reldatabase IN (0, (SELECT oid FROM pg_database
+                                      WHERE datname = current_database()))
+             JOIN pg_namespace n ON n.oid = c.relnamespace
+             GROUP BY n.nspname, c.relname
+             ORDER BY 3 DESC
+             LIMIT 10;
+=> SELECT bufferid,
+        CASE relforknumber
+            WHEN 0 THEN 'main'
+            WHEN 1 THEN 'fsm'
+            WHEN 2 THEN 'vm'
+        END relfork,
+        relblocknumber,
+        isdirty,
+        usagecount,
+        pinning_backends
+        FROM pg_buffercache
+        WHERE relfilenode = pg_relation_filenode('test'::regclass);
+
+
+
+
+
 Initializing the pgbench
 ========================
 1. Set up a test database

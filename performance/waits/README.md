@@ -102,24 +102,57 @@ $ psql -d pagila -c "TRUNCATE TABLE film CASCADE"
 $ pgbench -n -d -c 50 -T 120 -f pagila-insert-50.sql pagila > /tmp/pagila-insert-50.log
 
 ------------------------------------------------
-buffer_content
+LWLock:buffer_content
 ------------------------------------------------
+Heavy load of commit volume on Update can cause the buffer_content wait.
+
 pgbench -n -d -c 50 -T 120 -f pagila-insert-1.sql pagila > /tmp/pagila-insert-1.log
 
+-------------------------------------------------
+Lock:transactionid
+-------------------------------------------------
+Update the row in film table i.e., update on a single film_id.
 
+pgbench -n -d -c 50 -T 60 -f pagila-update-common-id.sql pagila > /tmp/pagila-update-common-id.log
 
-
-
-
-
-
-Update common film_id:
-
-pgbench -n -d -c 50 -T 60 -f pagila-update-common_id.sql pagila > /tmp/pagila-update-common_id.log
-
+--------------------------------------------------
 Timeout
+--------------------------------------------------
 
 pgbench -n -d -c 50 -T 60 -f pagila-sleep-select.sql pagila > /tmp/pagila-sleep-select.log
+
+--------------------------------------------------
+Client:ClientRead, Client:ClientWrite waits
+--------------------------------------------------
+
+================================
+Reader-Writer Lock : Simulation
+================================
+You need a Reader and a Writer for this test
+
+Session-1   Against the Writer
+---------
+$ psql
+=> BEGIN;
+=> LOCK TABLE test;
+
+Session-2   Against the Reader
+---------
+$ psql -h $PGREADEREP
+=> SELECT * FROM test;
+
+The above command will lead to blocking of the SELECT on the reader. The lock timeout will not occur as the 
+
+Session-3  Against the Reader
+---------
+In this session we will set the lock_timeout and then use the NOWAIT option, so the session is not blocked.
+
+$ psql -h $PGREADEREP
+=> SHOW  lock_timeout
+=> SET   lock_timeout=3
+=> SELECT * FROM test  NOWAIT;
+
+
 
 Mix Select & Update
 pgbench -n -d -c 10 -T 60 -f pagila-sleep-select.sql@2 -f pagila-update-1.sql@49 -f pagila-insert-1.sql@49    pagila > /tmp/pagila-temp.log
