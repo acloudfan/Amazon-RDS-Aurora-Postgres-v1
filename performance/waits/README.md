@@ -121,6 +121,8 @@ Timeout
 
 pgbench -n -d -c 50 -T 60 -f pagila-sleep-select.sql pagila > /tmp/pagila-sleep-select.log
 
+pgbench -n -d -c 1 -T 10 -f pagila-sleep.sql pagila > /tmp/pagila-sleep-select.log
+
 --------------------------------------------------
 Client:ClientRead, Client:ClientWrite waits
 --------------------------------------------------
