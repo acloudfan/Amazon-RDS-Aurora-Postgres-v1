@@ -1,4 +1,4 @@
-\set sleep_seconds random(1, 10)
+\set sleep_seconds random(5, 15)
 
 BEGIN;
     LOCK TABLE film;
