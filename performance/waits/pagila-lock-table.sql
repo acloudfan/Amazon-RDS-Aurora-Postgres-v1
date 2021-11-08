@@ -1,0 +1,4 @@
+BEGIN;
+    LOCK TABLE film;
+    COMMIT;
+END;
