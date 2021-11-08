@@ -113,7 +113,7 @@ Lock:transactionid
 -------------------------------------------------
 Update the row in film table i.e., update on a single film_id.
 
-pgbench -n -d -c 50 -T 60 -f pagila-update-common-id.sql pagila > /tmp/pagila-update-common-id.log
+pgbench -n -d -c 10 -T 60 -f pagila-update-common-id.sql pagila > /tmp/pagila-update-common-id.log
 
 --------------------------------------------------
 Timeout
@@ -126,7 +126,7 @@ Client:ClientRead, Client:ClientWrite waits
 --------------------------------------------------
 Must have above a million rows to see the effect
 
-pgbench -n -d -c 3 -T 60 -f pagila-select.sql pagila > /tmp/pagila-select.log
+pgbench -n -d -c 1 -T 60 -f pagila-select.sql pagila > /tmp/pagila-select.log
 
 ================================
 Reader-Writer Lock : Simulation
