@@ -116,12 +116,14 @@ Update the row in film table i.e., update on a single film_id.
 pgbench -n -d -c 10 -T 60 -f pagila-update-common-id.sql pagila > /tmp/pagila-update-common-id.log
 
 --------------------------------------------------
-Timeout
+Timeout-Lock Simulation
 --------------------------------------------------
+* Script pagila-sleep.sql locks the table and sleeps for random duration
+* Other scripts update the lock table | explicitly tries to lock the same table
+* In PI you will observe the Timeout:PgSleep and the Lock:relation wait events as top events
 
-pgbench -n -d -c 50 -T 60 -f pagila-sleep-select.sql pagila > /tmp/pagila-sleep-select.log
 
-pgbench -n -d -c 10 -T 5 -f pagila-sleep.sql@1 -f pagila-lock-table.sql@9 pagila > /tmp/pagila-sleep-lock.log
+pgbench -n -d -c 2 -T 60 -f pagila-sleep.sql@1 -f pagila-lock-table.sql@1 -f pagila-update-1.sql@1 pagila > /tmp/pagila-sleep-lock.log
 
 --------------------------------------------------
 Client:ClientRead, Client:ClientWrite waits

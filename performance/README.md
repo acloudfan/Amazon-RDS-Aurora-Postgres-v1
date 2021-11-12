@@ -1,3 +1,56 @@
+================================
+Performance Insights Walkthrough
+================================
+
+1. Simulate the "idle in transaction"
+-------------------------------------
+* On PI : Enable the counter = DB Metrics ->  State -> idle_in_transaction_count
+* Start 3 psql sessions
+* In all 3 sessions copy/paste & run the following script
+
+BEGIN;
+
+* Now check out the PI Dashboard for the chart for idle_in_transaction_count
+* To end the transaction in each session run the command
+
+COMMIT;
+
+2. Simulate the CPU wait
+-------------------------
+On PI : Enable the counter = OS Metrics -> cpuUtilization -> total
+        Enable the counter = OS Metrics -> loadAverageMinute -> five
+        Enable the counter = DB Metrics -> SQL -> tup_inserted
+
+* Start 3 psql sessions
+* In all 3 sessions copy/paste & run the following script
+
+INSERT INTO test 
+SELECT * 
+FROM generate_series(1,9000000);
+
+* Checkout the DB Load:
+  - Pay attention to CPU Waits
+  - Which other waits do you see
+
+3. Simulate the lock events
+---------------------------
+On PI : Enable the counter = OS Metrics -> cpuUtilization -> total
+* Start 3 psql sessions
+* In all 3 sessions copy/paste & run the following script
+
+DELETE FROM test
+WHERE id > 50000;
+
+* Checkout the DB Load:
+  - Is CPU wait an issue in this run?
+  - Which other waits do you see the mosyt?
+
+
+
+
+
+
+
 ========================
 pg_buffercache
 ========================

@@ -7,7 +7,7 @@ if [ -z $SUDO_USER ]; then
     exit 0
 fi
 
-
+# CHANGE THE Version to 13 otherwise psql will misbehave !!!
 echo "Installing the postgresql11 tools"
 amazon-linux-extras install postgresql11 vim epel -y
 
