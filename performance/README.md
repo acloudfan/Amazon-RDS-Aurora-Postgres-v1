@@ -11,6 +11,7 @@ Performance Insights Walkthrough
 BEGIN;
 
 * Now check out the PI Dashboard for the chart for idle_in_transaction_count
+
 * To end the transaction in each session run the command
 
 COMMIT;
@@ -46,10 +47,81 @@ WHERE id > 50000;
   - Which other waits do you see the mosyt?
 
 
+===============================
+Explain command : Query Planner
+===============================
+## Setup the test table & index
+=> CREATE TABLE a (id INTEGER, text VARCHAR(10));
+=> CREATE TABLE b (id INTEGER, text VARCHAR(10));
 
+=> INSERT INTO a SELECT generate_series(1,100000), 'A';
+=> INSERT INTO b SELECT generate_series(1,100000), 'B';
 
+* Setup index on id column for table a
+=> CREATE INDEX idx_a_id ON a(id);
 
+## Try out explain
 
+1. EXPLAIN select for specific id against both tables
+-----------------------------------------------------
+
+=> EXPLAIN SELECT * FROM a WHERE id=1;
+=> EXPLAIN SELECT * FROM b WHERE id=1;
+
+Which scan type was used?
+Which query requires a filter?
+What is the difference in the cost?
+
+2. Checkout aggregate function
+------------------------------
+
+=> EXPLAIN SELECT min(id) FROM a;
+=> EXPLAIN SELECT sum(id) FROM a;
+
+* Limit = Aborts the underlying operations when the desired number of rows has been fetched.
+* The index will not help with all aggregations e.g., sum(..) would require sequential scans
+* To improve performance, consider using materialized views
+
+3. Sorting using "ORDER BY"
+---------------------------
+
+=> EXPLAIN SELECT * FROM a ORDER BY id;
+=> EXPLAIN SELECT * FROM b ORDER BY id;
+
+Review the cost statistics for the plans
+
+4. Grouping using "GROUP BY"
+----------------------------
+* Not all queries with GROUP BY take advantage of the index
+=> EXPLAIN SELECT id, text FROM a GROUP BY id, text;
+=> EXPLAIN SELECT id, text FROM b GROUP BY id, text;
+
+* Here is an example of query that can take advantage of index
+=> EXPLAIN SELECT id, count(id) FROM a GROUP BY id;
+
+5. Join
+-------
+* There are multiple join algos - check out the one that is used by this statement
+=> EXPLAIN SELECT a.text, b.text FROM a, b WHERE a.id=b.id;
+
+6. Parallel scan
+----------------
+* Add a million rows ONLY to table b
+=> INSERT INTO b SELECT generate_series(1,1000000), 'B';
+
+=> EXPLAIN SELECT * FROM a WHERE id=1;
+=> EXPLAIN SELECT * FROM b WHERE id=1;
+
+* This time for b parallel workers will be used
+
+* Gather is applied to merge the results fom parallel workers
+* Maximum number of workers controlled by max_parallel_workers
+
+=> SHOW max_parallel_workers;
+
+## Cleanup
+DROP TABLE a ;
+DROP TABLE b ;
 
 ========================
 pg_buffercache
@@ -59,7 +131,7 @@ https://www.postgresql.org/docs/12/pgbuffercache.html
 Steps to setup and try out the extension.
 
 => CREATE EXTENSION pg_buffer_cache
-=> SELECT n.nspname, c.relname, count(*) AS buffers
+=> SELECT n.nspname, c.relname, count(*) AS buffers 
              FROM pg_buffercache b JOIN pg_class c
              ON b.relfilenode = pg_relation_filenode(c.oid) AND
                 b.reldatabase IN (0, (SELECT oid FROM pg_database
