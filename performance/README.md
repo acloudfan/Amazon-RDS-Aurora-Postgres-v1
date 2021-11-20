@@ -102,6 +102,7 @@ Review the cost statistics for the plans
 5. Join
 -------
 * There are multiple join algos - check out the one that is used by this statement
+
 => EXPLAIN SELECT a.text, b.text FROM a, b WHERE a.id=b.id;
 
 6. Parallel scan
@@ -122,6 +123,119 @@ Review the cost statistics for the plans
 ## Cleanup
 DROP TABLE a ;
 DROP TABLE b ;
+
+=======================
+Isolation Levels
+=======================
+1. Dirty Reads
+--------------
+NOT Possible in Postgres
+
+2. Nonrepeatble Reads are possible
+----------------------------------
+That is in the same transaction, SELECT is invoked twice and for each time the result is different as another transaction updated the result concurrently.
+
+[Simulate phenomena]
+Simulation assumes that test table does not have a row with id=1000
+
+Session#1
+BEGIN TRANSACTION ISOLATION LEVEL READ COMMITTED;
+SELECT * FROM test ;
+
+Session#2
+BEGIN;
+INSERT INTO test values(1000);
+COMMIT;
+
+Session#1
+/** Has not ended the transaction with rollback/commit **/
+/** It will see the new row !! **/
+SELECT * FROM test ;
+
+[Address issue]
+
+* To avoid this scenario set the transaction level for session#1 to 
+BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+* In a separate transaction INSERT a new row with id=2000 and commit
+* This time you won't see the new data in the uncommitted read transaction
+
+3. Phantom Reads
+----------------
+A transaction rexecutes a query with the same WHERE clause and receieves a different result as another transaction running concurrently committed updates to the data.
+
+[Simulate phenomena]
+Session#1
+BEGIN TRANSACTION ISOLATION LEVEL READ COMMITTED;
+SELECT * FROM test WHERE id=1000;
+
+Session#2
+BEGIN;
+UPDATE test SET id=1000;
+COMMIT;
+
+Session#1
+/** Has not ended the transaction with rollback/commit **/
+/** It will see the new row !! **/
+SELECT * FROM test WHERE id=1000;
+
+=======================
+Extension: pg_freespace
+=======================
+* Please note the output of pg_freespace(...) is not accurate
+
+* Create the extension
+=> CREATE EXTENSION pg_freespacemap
+
+* Truncate the test table & check free space for it
+=> TRUNCATE TABLE test;
+=> SELECT * FROM pg_freespace('test');
+
+* Insert some data in test and check free space again
+=> INSERT INTO test SELECT generate_series(1,1000);
+
+* Get the count of pages created in the table
+=> SELECT COUNT(*) FROM pg_freespace('test');
+
+* Delete some rows
+=> DELETE FROM test WHERE id > 1 AND id < 500;
+
+* Check out the free space map
+=> SELECT COUNT * FROM pg_freespace('test');
+
+* Drop the extension once done
+=> DROP EXTENSION pg_freespacemap
+
+
+=======================
+Sample complex query
+=======================
+* Without ANALYZE
+=> EXPLAIN SELECT n.nspname, c.relname, count(*) AS buffers 
+             FROM pg_buffercache b JOIN pg_class c
+             ON b.relfilenode = pg_relation_filenode(c.oid) AND
+                b.reldatabase IN (0, (SELECT oid FROM pg_database
+                                      WHERE datname = current_database()))
+             JOIN pg_namespace n ON n.oid = c.relnamespace
+             GROUP BY n.nspname, c.relname
+             ORDER BY 3 DESC
+             LIMIT 10;
+* With ANALYZE
+=> EXPLAIN (ANALYZE) SELECT n.nspname, c.relname, count(*) AS buffers 
+             FROM pg_buffercache b JOIN pg_class c
+             ON b.relfilenode = pg_relation_filenode(c.oid) AND
+                b.reldatabase IN (0, (SELECT oid FROM pg_database
+                                      WHERE datname = current_database()))
+             JOIN pg_namespace n ON n.oid = c.relnamespace
+             GROUP BY n.nspname, c.relname
+             ORDER BY 3 DESC
+             LIMIT 10;
+
+
+
+
+
+
 
 ========================
 pg_buffercache
