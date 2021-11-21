@@ -201,11 +201,61 @@ Extension: pg_freespace
 => DELETE FROM test WHERE id > 1 AND id < 500;
 
 * Check out the free space map
-=> SELECT COUNT * FROM pg_freespace('test');
+=> SELECT  * FROM pg_freespace('test');
 
-* Drop the extension once done
+Check free space ratio
+----------------------
+Query for checking the ratio of total pages to total 
+free space available across the pages in the table
+
+=> SELECT count(*) as npages, round(100 * avg(avail)/8192 ,2) as average_freespace_ratio FROM pg_freespace('test');
+
+Drop the extension 
+------------------
+
 => DROP EXTENSION pg_freespacemap
 
+=======================
+Vacuum command
+=======================
+
+1. Create pg_freespacemap extension
+=> CREATE EXTENSION pg_freespacemap;
+
+2. Simple vacuum
+----------------
+Checkout the working of the concurrent vacuum using the commands below
+On per table basis - you will see number of dead rows, cleaned row versions ...
+=> VACUUM VERBOSE;
+=> VACUUM VERBOSE test;
+
+3. Add & Delete some data 
+-------------------------
+=> INSERT INTO test SELECT generate_series(1,1000000);
+=> CREATE INDEX IF NOT EXISTS idx_test ON test(id);
+
+* Delete some rows
+=> DELETE FROM test WHERE id > 1000 AND id < 600000;
+
+4. Concurrent VACUUM
+--------------------
+* Check number of pages in table
+=> SELECT COUNT(*) FROM pg_freespace('test');
+
+=> VACUUM VERBOSE test;
+
+* Run command & check number of pages again, you wont see any change
+* As concurrent vacuum does not free the page space 
+=> SELECT COUNT(*) FROM pg_freespace('test');
+
+5. Full VACUUM
+--------------
+You will see a reduction in the number of pages after the full vacuum
+
+=> DELETE FROM test WHERE id > 900000;
+=> SELECT COUNT(*) FROM pg_freespace('test');
+=> VACUUM (VERBOSE, FULL) test;
+=> SELECT COUNT(*) FROM pg_freespace('test');
 
 =======================
 Sample complex query
