@@ -215,46 +215,71 @@ Drop the extension
 
 => DROP EXTENSION pg_freespacemap
 
+===================================================
+Extension : pgstattuple
+https://www.postgresql.org/docs/12/pgstattuple.html
+====================================================
+Provides tuple level stats for the table
+=> CREATE EXTENSION pgstattuple;
+
+=> SELECT * FROM pgstattuple('test')
+
+=> DROP EXTENSION pgstattuple;
+
+* Get the size of table
+SELECT  pg_size_pretty(table_len)  from pgstattuple('test');
+
+* Another way to get the table size
+* Number of pages times the size of the page
+SELECT pg_size_pretty(count(*)*8192) size  FROM pg_freespace('test');
+
 =======================
 Vacuum command
 =======================
 
-1. Create pg_freespacemap extension
+Part-1 Setup the test environment 
+
+* Create pg_freespacemap & pgstatuple extension; ignore warning
 => CREATE EXTENSION pg_freespacemap;
+=> CREATE EXTENSION pgstattuple;
 
-2. Simple vacuum
-----------------
-Checkout the working of the concurrent vacuum using the commands below
-On per table basis - you will see number of dead rows, cleaned row versions ...
-=> VACUUM VERBOSE;
-=> VACUUM VERBOSE test;
-
-3. Add & Delete some data 
--------------------------
+* Setup the test data
+=> TRUNCATE table test;
 => INSERT INTO test SELECT generate_series(1,1000000);
 => CREATE INDEX IF NOT EXISTS idx_test ON test(id);
 
-* Delete some rows
+* Add & Delete some data 
 => DELETE FROM test WHERE id > 1000 AND id < 600000;
 
-4. Concurrent VACUUM
---------------------
-* Check number of pages in table
+* Check the size of the table & number of pages
+=> SELECT pg_size_pretty(table_len) AS tuple_size FROM pgstattuple('test');
 => SELECT COUNT(*) FROM pg_freespace('test');
 
+2. Concurrent VACUUM
+--------------------
+* Check the size of the table & number of pages
+=> SELECT pg_size_pretty(table_len) AS tuple_size FROM pgstattuple('test');
+=> SELECT COUNT(*) FROM pg_freespace('test');
+
+* Run vacuum
 => VACUUM VERBOSE test;
 
 * Run command & check number of pages again, you wont see any change
 * As concurrent vacuum does not free the page space 
+=> SELECT pg_size_pretty(table_len) AS tuple_size FROM pgstattuple('test');
 => SELECT COUNT(*) FROM pg_freespace('test');
 
-5. Full VACUUM
+3. Full VACUUM
 --------------
 You will see a reduction in the number of pages after the full vacuum
 
+* Delete some rows and run full vacuum
 => DELETE FROM test WHERE id > 900000;
-=> SELECT COUNT(*) FROM pg_freespace('test');
 => VACUUM (VERBOSE, FULL) test;
+
+* check number of pages & size again, you wont see a change
+* As full vacuum frees the page storage to OS
+=> SELECT pg_size_pretty(table_len) AS tuple_size FROM pgstattuple('test');
 => SELECT COUNT(*) FROM pg_freespace('test');
 
 =======================
