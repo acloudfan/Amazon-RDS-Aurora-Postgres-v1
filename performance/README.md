@@ -252,13 +252,13 @@ Part-1 Setup the test environment
 => DELETE FROM test WHERE id > 1000 AND id < 600000;
 
 * Check the size of the table & number of pages
-=> SELECT pg_size_pretty(table_len) AS tuple_size FROM pgstattuple('test');
+=> SELECT pg_size_pretty(table_len) AS table_size FROM pgstattuple('test');
 => SELECT COUNT(*) FROM pg_freespace('test');
 
 2. Concurrent VACUUM
 --------------------
 * Check the size of the table & number of pages
-=> SELECT pg_size_pretty(table_len) AS tuple_size FROM pgstattuple('test');
+=> SELECT pg_size_pretty(table_len) AS table_size FROM pgstattuple('test');
 => SELECT COUNT(*) FROM pg_freespace('test');
 
 * Run vacuum
@@ -266,7 +266,7 @@ Part-1 Setup the test environment
 
 * Run command & check number of pages again, you wont see any change
 * As concurrent vacuum does not free the page space 
-=> SELECT pg_size_pretty(table_len) AS tuple_size FROM pgstattuple('test');
+=> SELECT pg_size_pretty(table_len) AS table_size FROM pgstattuple('test');
 => SELECT COUNT(*) FROM pg_freespace('test');
 
 3. Full VACUUM
@@ -279,8 +279,12 @@ You will see a reduction in the number of pages after the full vacuum
 
 * check number of pages & size again, you wont see a change
 * As full vacuum frees the page storage to OS
-=> SELECT pg_size_pretty(table_len) AS tuple_size FROM pgstattuple('test');
+=> SELECT pg_size_pretty(table_len) AS table_size FROM pgstattuple('test');
 => SELECT COUNT(*) FROM pg_freespace('test');
+
+4. Cleaup the table
+-------------------
+=> TRUNCATE TABLE test;
 
 =======================
 Sample complex query
