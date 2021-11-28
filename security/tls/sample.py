@@ -11,8 +11,8 @@ PASSWORD = os.environ.get('PGPASSWORD')
 DATABASE = os.environ.get('PGDATABASE')
 HOST = os.environ.get('PGHOST')
 
-SSL_MODE = 'require'
-# SSL_MODE = 'verify-full'
+# SSL_MODE = 'require'
+SSL_MODE = 'verify-full'
 
 # Create the connection to the database
 conn = psycopg2.connect(
