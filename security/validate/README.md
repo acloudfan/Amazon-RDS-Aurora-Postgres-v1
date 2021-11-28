@@ -15,18 +15,7 @@ Depends on the test table. Selects 5 rows from table & prints.
 $ cd ~/Amazon-RDS-Aurora-Postgres-v1/security
 $ pip3 sample.py
 
-3. Create a 'DB Cluster Parameter' Group
-----------------------------------------
-* Use the console to create the parameter group
-* Name = ssl-test-cluster-pg
-* Type = DB Cluster Parameter Group; select the righ Aurora PG version
-* Edit the parameter rds.force_ssl=1
-
-4. Modify test cluster to use the new PG
-----------------------------------------
-Modify the cluster to use the cluster PG - ssl-test-cluster-pg
-
-5. Test the code again
+3. Test the code again
 ----------------------
 It will fail as the client will not be able to validate the server certificate !!!
 
