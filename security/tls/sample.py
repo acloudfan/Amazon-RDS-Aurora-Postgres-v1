@@ -26,6 +26,6 @@ rows = cur.fetchall()
 for row in rows:
     print ("ID = ", row[0])
 
-print "Done.";
+print ("Done.")
 
 conn.close()
