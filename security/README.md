@@ -1,14 +1,17 @@
 # Security related tasks
 
-
-
 ==============
 Enforce SSL
 ==============
-PGSSLMODE=require PGSSLROOTCERT=/fullpath/rds-ca-2019-root.pem psql -h $PGHOST -U masteruser -d labdb
+PGSSLMODE=disable
 
 
-PGSSLMODE=require PGSSLROOTCERT=/fullpath/rds-ca-2019-root.pem psql -h $PGHOST -U $PGHOST -d $PGDATABASE
+==================================
+Client - Validate RDS Certificate
+==================================
+Check out the instructions in tls/README.md
+
+
 
 Cross Account Cloning
 =====================
