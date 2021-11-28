@@ -1,15 +1,14 @@
 # Security related tasks
 
-==============
-Enforce SSL
-==============
-PGSSLMODE=disable
-
 
 ==================================
 Client - Validate RDS Certificate
 ==================================
 Check out the instructions in tls/README.md
+
+==============
+Enforce SSL
+==============
 
 1. By default psql uses SSL/TLS
 -------------------------------
