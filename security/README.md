@@ -2,6 +2,14 @@
 
 
 
+==============
+Enforce SSL
+==============
+PGSSLMODE=require PGSSLROOTCERT=/fullpath/rds-ca-2019-root.pem psql -h $PGHOST -U masteruser -d labdb
+
+
+
+
 Cross Account Cloning
 =====================
 https://aws.amazon.com/about-aws/whats-new/2019/07/amazon_aurora_supportscloningacrossawsaccounts-/

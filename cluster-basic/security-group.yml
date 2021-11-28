@@ -46,7 +46,7 @@ Parameters:
 
 
 Resources:
-  # Create DB security group for PostgreSQL
+  # Create VPC security group for RDS/Aurora PostgreSQL
   RDSSecurityGroupCluster:
     Type: AWS::EC2::SecurityGroup
     Properties:
