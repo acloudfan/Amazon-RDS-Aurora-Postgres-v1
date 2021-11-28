@@ -11,6 +11,17 @@ Client - Validate RDS Certificate
 ==================================
 Check out the instructions in tls/README.md
 
+1. By default psql uses SSL/TLS
+-------------------------------
+$ psql
+
+2. Disable the SSL mode for PG and try again
+---------------------------------------------
+export PGSSLMODE=disable
+$ psql
+
+* No issues with the connection
+
 3. Create a 'DB Cluster Parameter' Group
 ----------------------------------------
 * Use the console to create the parameter group
@@ -21,6 +32,22 @@ Check out the instructions in tls/README.md
 4. Modify test cluster to use the new PG
 ----------------------------------------
 Modify the cluster to use the cluster PG - ssl-test-cluster-pg
+
+5. Disable the SSL mode for PG and try again
+export PGSSLMODE=disable
+$ psql
+
+* This time there will be an error
+
+6. Enable SSL Mode and try again
+---------------------------------
+$ unset   PGSSLMODE
+$ psql
+
+7. Cleanup
+----------
+* Modify the instance to use the default Cluster Parameter Group
+* Delete the Cluster parameter group created in this exercise
 
 Cross Account Cloning
 =====================
