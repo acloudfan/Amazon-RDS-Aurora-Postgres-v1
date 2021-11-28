@@ -17,7 +17,7 @@ conn = psycopg2.connect(
     database = DATABASE,
     user = USER,
     password = PASSWORD,
-    sslmode='require'
+    sslmode='verify-full'
 )
 
 # create a cursor
