@@ -1,7 +1,10 @@
-# Install package otherwise import error
-# pip3 install psycopg2
+# Install package otherwise erro = ModuleNotFoundError: No module named 'psycopg2'
+# sudo yum install postgresql-devel
+# pip3 install psycopg2-binary
+
 
 import psycopg2
+import os
 
 USER = os.getenv('PGUSER')
 PASSWORD = os.environ.get('PGPASSWORD')
