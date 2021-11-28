@@ -24,7 +24,7 @@ cur.execute("SELECT * FROM test LIMIT 5")
 rows = cur.fetchall()
 
 for row in rows:
-    print "ID = ", row[0]
+    print ("ID = ", row[0])
 
 print "Done.";
 
