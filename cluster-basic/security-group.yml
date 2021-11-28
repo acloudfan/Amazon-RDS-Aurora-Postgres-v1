@@ -67,6 +67,7 @@ Resources:
           ToPort: !Ref RdsIngressPort
           CidrIp: !Ref PubSubnetCidrB
           Description: Allows hosts in public subnet B to connect with the cluster
+  
   # Add self reference for the SG
   # RDSASecurityGroupClusterIngress:
   #   Type: 'AWS::EC2::SecurityGroupIngress'

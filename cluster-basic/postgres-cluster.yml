@@ -44,7 +44,7 @@ Parameters:
     Type: String
     Default: masteruser
 
-  DBSecurityGroupCluster:
+  VPCSecurityGroupCluster:
     Description: 'Security group for the DB cluster instances'
     Type: AWS::EC2::SecurityGroup::Id
 
@@ -105,7 +105,7 @@ Resources:
       MasterUserPassword: !Ref DBMasterUserPassword
       DatabaseName: !FindInMap [ ClusterSettings, global, dbSchema ]
       StorageEncrypted: true
-      VpcSecurityGroupIds: [ !Ref DBSecurityGroupCluster ]
+      VpcSecurityGroupIds: [ !Ref VPCSecurityGroupCluster ]
       Tags:
         - Key: Name
           Value: !Sub ${TemplateName}-cluster
