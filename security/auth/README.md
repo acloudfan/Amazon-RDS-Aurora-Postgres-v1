@@ -4,10 +4,18 @@ psql for Roles
 \du                                   List roles
 \drds                                 List per database role setting
 \l+                                   Check access priveleges
-SELECT current_user, session_user     Provides name of the current user
-SET ROLE <<some-existing-role>>       Switch role 
-SELECT * FROM pg_roles where rolname='user_role_1';   Checkout role details 
-SELECT * FROM information_schema.role_table_grants ;  Access granted
+
+* Provides name of the current user
+SELECT current_user, session_user 
+
+* Switch role
+SET ROLE <<some-existing-role>>    
+
+* Checkout role details 
+SELECT * FROM pg_roles where rolname='user_role_1';   
+
+* Access granted on tables
+SELECT * FROM information_schema.role_table_grants ;  
 
 * Prints the grants on per table basis
 SELECT grantee AS user, CONCAT(table_schema, '.', table_name) AS table, 
