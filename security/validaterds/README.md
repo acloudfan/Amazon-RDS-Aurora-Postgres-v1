@@ -16,7 +16,8 @@ $ pip3 install psycopg2-binary
 Depends on the test table. Selects 5 rows from table & prints.
 
 $ cd ~/Amazon-RDS-Aurora-Postgres-v1/security
-$ python3  ./validaterds/sample.py
+$ python3  ./validaterds/sample.py  require
+$ python3  ./validaterds/sample.py  verify-full
 
 * Test will fail if the root.crt is not available under ~/.postgresql
 
@@ -35,4 +36,4 @@ $ wget <<Paste the link for the certificate>> -O ~/.postgresql/root.crt
 ----------------------
 This time the code will work as the RDS certificates will be validated successfully
 
-$ python3   ./validaterds/sample.py
+$ python3  ./validaterds/sample.py  verify-full

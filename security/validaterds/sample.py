@@ -12,8 +12,7 @@ PASSWORD = os.environ.get('PGPASSWORD')
 DATABASE = os.environ.get('PGDATABASE')
 HOST = os.environ.get('PGHOST')
 
-SSL_MODE = 'require'
-# SSL_MODE = 'verify-full'
+# Check if a valid argument was provided. If not abort th execution of program.
 if len(sys.argv) == 1:
     print("Error : Argument missing !!")
     print("        Valid values : disable, allow, prefer, require, verify-ca, verify-full")
