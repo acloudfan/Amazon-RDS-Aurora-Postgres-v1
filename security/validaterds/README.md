@@ -1,9 +1,8 @@
-# Demostrates the use of TLS
+####################################################
 # Client validates the identity of the RDS DB Server
+####################################################
 
 * Log onto the EC2/Bastion
-* Change folder to project root/security
-
 
 1. Setup the psycopg2
 ---------------------
@@ -17,7 +16,7 @@ $ pip3 install psycopg2-binary
 Depends on the test table. Selects 5 rows from table & prints.
 
 $ cd ~/Amazon-RDS-Aurora-Postgres-v1/security
-$ python3  ./validate/sample.py
+$ python3  ./validaterds/sample.py
 
 * Test will fail if the root.crt is not available under ~/.postgresql
 
@@ -36,4 +35,4 @@ $ wget <<Paste the link for the certificate>> -O ~/.postgresql/root.crt
 ----------------------
 This time the code will work as the RDS certificates will be validated successfully
 
-$ python3   ./validate/sample.py
+$ python3   ./validaterds/sample.py

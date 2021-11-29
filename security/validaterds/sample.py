@@ -5,14 +5,21 @@
 
 import psycopg2
 import os
+import sys
 
 USER = os.getenv('PGUSER')
 PASSWORD = os.environ.get('PGPASSWORD')
 DATABASE = os.environ.get('PGDATABASE')
 HOST = os.environ.get('PGHOST')
 
-# SSL_MODE = 'require'
-SSL_MODE = 'verify-full'
+SSL_MODE = 'require'
+# SSL_MODE = 'verify-full'
+if len(sys.argv) == 1:
+    print("Error : Argument missing !!")
+    print("        Valid values : disable, allow, prefer, require, verify-ca, verify-full")
+    sys.exit()
+else:
+    SSL_MODE=sys.argv[1]
 
 # Create the connection to the database
 conn = psycopg2.connect(
