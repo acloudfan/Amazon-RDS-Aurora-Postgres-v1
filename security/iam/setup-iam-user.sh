@@ -1,8 +1,14 @@
 #!/bin/bash
 # Script sets up a policy and an IAM user
 
-$AWS_ACCOUNT=$1
+if [$# -ne 2];
+    echo "Aborting !!  Usage: setup-iam-user  AWS_ACC_NUMBER   DB_RESOURCE_ID"
+    exit
+fi
+
+AWS_ACCOUNT=$1
 DB_RESOURCE_ID=$2
+AWSREGION=$AWS_DEFAULT_REGION
 
 read -r -d '' JSON_POLICY << EOL
 {
@@ -22,3 +28,6 @@ read -r -d '' JSON_POLICY << EOL
 EOL
 
 echo $JSON_POLICY
+
+jq <<< '$JSON_POLICY'
+
