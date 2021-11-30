@@ -20,8 +20,29 @@ Using IAM Authentication
 
 4. Attach the IAM policy to the IAM user/role
 
+aws sts assume-role --role-arn <<Copy paste role arn>>  --role-session-name AWSCLI-Session
+
 
 
 Connect pgAdmin using IAM 
 -------------------------
 https://aws.amazon.com/blogs/database/using-iam-authentication-to-connect-with-pgadmin-amazon-aurora-postgresql-or-amazon-rds-for-postgresql/
+
+============
+CLI Commands
+============
+
+Using the CLI to create a policy
+--------------------------------
+https://docs.aws.amazon.com/cli/latest/reference/iam/create-policy.html
+
+
+Delete the policy
+-----------------
+aws iam delete-policy --policy-arn arn:aws:iam::123456789012:policy/rdsa-iam-dbuser-policy
+
+
+Using the CLI to assume a role
+------------------------------
+https://aws.amazon.com/premiumsupport/knowledge-center/iam-assume-role-cli/
+
