@@ -22,6 +22,10 @@ Using IAM Authentication
 
 aws sts assume-role --role-arn <<Copy paste role arn>>  --role-session-name AWSCLI-Session
 
+aws sts get-caller-identity
+unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
+
+
 
 
 Connect pgAdmin using IAM 
