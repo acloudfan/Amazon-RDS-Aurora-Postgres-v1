@@ -4,7 +4,7 @@
 $AWS_ACCOUNT=$1
 DB_RESOURCE_ID=$2
 
-read -r -r '' JSON_POLICY << EOL
+read -r -d '' JSON_POLICY << EOL
 {
    "Version": "2012-10-17",
    "Statement": [
