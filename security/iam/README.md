@@ -14,6 +14,7 @@ Using IAM Authentication
     * Login to psql as masteruser
 => CREATE ROLE iam_dbuser WITH LOGIN;
 => GRANT rds_iam TO iam_dbuser
+=> \du
 
 3. Create an IAM Role for iam_dbuser
 ------------------------------------
