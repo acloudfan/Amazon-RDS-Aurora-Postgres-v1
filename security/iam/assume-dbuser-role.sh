@@ -17,7 +17,8 @@ export AWS_SECRET_ACCESS_KEY=$(jq -r '.Credentials.SecretAccessKey' <<< $ENV_VAR
 export AWS_SESSION_TOKEN=$(jq -r '.Credentials.SessionToken' <<< $ENV_VARS_JSON )
 
 # Dump the caller identity - it should be the DB user
-aws sts get-caller-identity
+# aws sts get-caller-identity
 
-echo "Please validate identity. Is it set to assumed-role/rdsa-iam-dbuser-role/AWSCLI-DBUser-Session ?"
+echo "Please validate identity on shell prompt by running command 'aws sts get-caller-identity' "
+echo "         Is it is not assumed-role/rdsa-iam-dbuser-role/AWSCLI-DBUser-Session ?"
 echo "If NOT then you missed the keword 'source' before the script name - run again  'source assume-role.sh'"
