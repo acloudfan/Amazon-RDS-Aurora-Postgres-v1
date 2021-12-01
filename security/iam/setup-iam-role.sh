@@ -1,11 +1,13 @@
 #!/bin/bash
 # Script sets up a policy and an IAM user
 
+# Check if the two required args were provided
 if [ "$#" -ne 2 ]; then
     echo "Aborting !!  Usage: setup-iam-user  AWS_ACC_NUMBER   DB_RESOURCE_ID"
     exit
 fi
 
+# Sets the args in local vars
 AWS_ACCOUNT=$1
 DB_RESOURCE_ID=$2
 AWSREGION=$AWS_DEFAULT_REGION
@@ -52,11 +54,10 @@ aws iam create-policy --policy-name  $IAM_DBUSER_POLICY --policy-document "$JSON
 
 # Get the policy ARN
 IAM_DBUSER_POLICY_ARN=$(aws iam list-policies --query "Policies[?PolicyName=='$IAM_DBUSER_POLICY'].Arn" --output text)
-
 echo "IAM_DBUSER_POLICY ARN=$IAM_DBUSER_POLICY_ARN"
 
 # Create the role trust policy
-# Any user/role in the account can assume this role - NOT a good idea in real world
+# This trust policy will allow the Role used for Bastion host to assume the IAM DB Role
 BASTION_HOST_ROLE=($(jq -r '.Arn' <<< $(aws sts get-caller-identity)))
 
 read -r -d ''  ASSUME_ROLE_POLICY << EOL
@@ -70,14 +71,13 @@ read -r -d ''  ASSUME_ROLE_POLICY << EOL
 }
 EOL
 
+# Write out the trust policy to temp file
 echo "$ASSUME_ROLE_POLICY" > /tmp/assume-policy.json
 
 
 # Create the role with the trust policy
 aws iam create-role --role-name $IAM_DBUSER_ROLE --assume-role-policy-document  file:///tmp/assume-policy.json
-
 IAM_DBUSER_ROLE_ARN=$(aws iam list-roles --query "Roles[?RoleName=='$IAM_DBUSER_ROLE'].Arn" --output text)
-
 echo "IAM_DBUSER_ROLE Arn=$IAM_DBUSER_ROLE_ARN"
 
 # Attach the role to policy IAM_DBUSER_POLICY
