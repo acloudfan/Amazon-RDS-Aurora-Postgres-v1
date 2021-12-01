@@ -76,7 +76,7 @@ echo "$ASSUME_ROLE_POLICY" > /tmp/assume-policy.json
 
 
 # Create the role with the trust policy
-aws iam create-role --role-name $IAM_DBUSER_ROLE --assume-role-policy-document  file:///tmp/assume-policy.json
+aws iam create-role --role-name $IAM_DBUSER_ROLE --assume-role-policy-document  file:///tmp/assume-policy.json  > /dev/null
 IAM_DBUSER_ROLE_ARN=$(aws iam list-roles --query "Roles[?RoleName=='$IAM_DBUSER_ROLE'].Arn" --output text)
 echo "IAM_DBUSER_ROLE Arn=$IAM_DBUSER_ROLE_ARN"
 
