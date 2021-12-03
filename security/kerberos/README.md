@@ -24,11 +24,26 @@ https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/postgresql-kerberos
 
 aws iam create-role --role-name rdsa-kerberos-role --assume-role-policy-document file://trust-policy.json 
 
-aws iam put-role-policy --role-name role-example --policy-name rdsa-ad-policy --policy-document file://ad-policy.json
+aws iam put-role-policy --role-name  rdsa-kerberos-role --policy-name rdsa-ad-policy --policy-document file://ad-policy.json
+
+2. Modify the DB Cluster
+Modify the cluster to 
+aws rds  modify-db-cluster --db-cluster-identifier rdsa-postgresql-cluster --domain <<get the directory ID d-xxxx>>  --domain-iam-role-name rdsa-kerberos-role
+
+3. Reboot the instances in the cluster
+=========================================
+Part-4  Connect from psql on Bastion host
+=========================================
+
+CREATE ROLE "ad_dbuser@awsad.com" WITH LOGIN;
+GRANT rds_ad TO "ad_dbuser@awsad.com";
 
 
+1. Install Kerberos Client on EC2
 
-aws rds  modify-db-cluster --db-cluster-identifier <<mydbinstance>> --domain <<d-Directory-ID>> --domain-iam-role-name <<role-name >>
+sudo yum install krb5-workstation krb5-libs krb5-auth-dialog
+
+2. 
 
 
 Quick start for Managed AD
