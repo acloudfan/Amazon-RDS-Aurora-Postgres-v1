@@ -43,7 +43,8 @@ GRANT rds_ad TO "ad_dbuser@awsad.com";
 
 sudo yum install krb5-workstation krb5-libs krb5-auth-dialog
 
-2. 
+2. krb5.conf file has the AD settings
+
 
 
 Quick start for Managed AD
