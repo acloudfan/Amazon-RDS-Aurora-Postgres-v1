@@ -28,9 +28,9 @@ https://aws-labs.net/winlab2-managedad/admin-mad.html
 
 PDF Version of the Lab: workshop/Administer-AWS-Managed-AD.pdf
 
-===========================================================
-Part-3 Configure Aurora Postgres to use Kerberos/Managed AD
-===========================================================
+=========================================================
+Modify Aurora Postgres to enable Kerberos/Managed AD auth
+=========================================================
 
 Using Kerberos Authentication
 https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/postgresql-kerberos.html
@@ -42,7 +42,7 @@ When a new Cluster is created with Kerberos enabled, RDS/Aurora create the role 
 
 $ aws iam create-role --role-name rdsa-kerberos-role --assume-role-policy-document file://trust-policy.json 
 
-$ aws iam put-role-policy --role-name  rdsa-kerberos-role --policy-name rdsa-ad-policy --policy-document file://ad-policy.json
+$ aws iam put-role-policy --role-name  rdsa-kerberos-role --policy-name rdsa-kerberos-policy --policy-document file://ad-policy.json
 
 2. Modify the DB Cluster
 ------------------------
@@ -58,14 +58,14 @@ $ aws rds reboot-db-instance --db-instance-identifier rdsa-postgresql-node-01
 ---------------------------------
 aws rds describe-db-instances --db-instance-identifier rdsa-postgresql-node-01 | grep kerber
 
-==================================================
-Part-4 Setup a user on Aurora/PG for Kerberos auth
-==================================================
+
+5. Setup a user on Aurora/PG for Kerberos auth
+----------------------------------------------
 => CREATE USER  "ad_dbuser@AWSAD.COM" WITH LOGIN;
 => GRANT rds_ad TO "ad_dbuser@AWSAD.COM";
 
 ============================================
-Part-5  Connect from psql on Management host
+Part-2  Connect from psql on Management host
 =============================================
 * Install pgAdmin
 * (optional) Install PostgreSQL 
@@ -88,14 +88,18 @@ Try it out
 Cleanup
 =======
 1. Modify the cluster to disable Kerberos
+$ aws rds  modify-db-cluster --db-cluster-identifier rdsa-postgresql-cluster --domain none 
 
-2. Delete thr IAM policy and role
+2. Delete the role
+$ aws iam delete-role-policy --role-name  rdsa-kerberos-role --policy-name rdsa-kerberos-policy
+$ aws iam delete-role --role-name rdsa-kerberos-role 
 
-3. Delete the role : ad_dbuser
+3. On Aurora Postgres, delete the role : ad_dbuser
+=> DROP ROLE "ad_dbuser@AWSAD.COM"
 
 4. Terminate the Windows management server
 
-5. Delete the AWS managed directory
+5. Delete the AWS Managed AD instance
 
 
 
