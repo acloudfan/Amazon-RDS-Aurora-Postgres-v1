@@ -22,6 +22,10 @@ Parameters:
     Default: ''
     # Type: AWS::EC2::KeyPair::KeyName
     Type: String
+  BastionHostInstanceName:
+    Description: Name of the Bastion Host Instance
+    Default: 'RDSA Bastion Host Instance'
+    Type: String
   VpcId:
     Description: Enter the VPC ID
     Type: AWS::EC2::VPC::Id
@@ -132,7 +136,8 @@ Resources:
       IamInstanceProfile: !Ref BastionHostInstanceProfile
       Tags:
         - Key: Name
-          Value: "RDSA Bastion Host Instance"
+          #Value: "RDSA Bastion Host Instance"
+          Value: !Ref BastionHostInstanceName
       # KeyName: !Ref KeyName
       KeyName: !If [HasNoKeyName,  !Ref AWS::NoValue , !Ref KeyName]
 

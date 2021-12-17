@@ -92,6 +92,8 @@ In case of error: Make sure to provide the correct AWS Region & Cluster name ; R
 
 Windows Bastion Host
 ====================
+AMI used:
+Windows_Server-2019-English-Full-Base-2021.08.11(ami-0a727a421bd5a51a3)
 
 1. Use the AWS console to setup a windows EC2 instance
 2. Instance in the public subnet  (Public Subnet A or B)
