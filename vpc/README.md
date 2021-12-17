@@ -44,10 +44,19 @@ jq --version
 6. Setup environment variables in .bashrc
 
 ./bin/setup-env.sh  <<AWS REGION>>
+
 source ~/.bashrc
 
 6. Test with psql
 psql
+
+Common Error
+------------
+If you missed the step below then you will get an error: 
+"psql: could not connect to server: No such file or directory"
+
+source ~/.bashrc
+
 
 Bastion Host Setup Script
 =========================

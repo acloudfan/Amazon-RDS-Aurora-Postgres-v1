@@ -8,8 +8,8 @@ if [ -z $SUDO_USER ]; then
 fi
 
 # CHANGE THE Version to 13 otherwise psql will misbehave !!!
-echo "Installing the postgresql11 tools"
-amazon-linux-extras install postgresql11 vim epel -y
+echo "Installing the postgresql13 tools"
+amazon-linux-extras install postgresql13 vim epel -y
 
 echo "Install the pgbench"
 yum install postgresql-contrib -y
