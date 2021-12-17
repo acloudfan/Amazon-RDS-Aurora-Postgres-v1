@@ -76,13 +76,24 @@ source ~/.bashrc
 
 Windows Bastion Host
 ====================
-AMI used:
-Windows_Server-2019-English-Full-Base-2021.08.11(ami-0a727a421bd5a51a3)
 
+Manual creation
+---------------
 1. Use the AWS console to setup a windows EC2 instance
 2. Instance in the public subnet  (Public Subnet A or B)
 3. Use the Security group for the Bastion
 4. Setup Internet Explorer security to enable file download
+
+CloudFormation Template (preferred)
+-----------------------------------
+1. In CloudFormation console create a new stack
+   * Upload the YML - vpc/bastion-host-windows.yml
+2. Select the name of the KEY  (required)
+3. Set the template name = rdsa-bastion-host-windows
+4. Select the subnet as PublicSubnetA or PublicSubnetB
+5. Select the rdsa VPC
+6. Check the acknowledge box
+7. Click on create stack
 
 Install PgAdmin
 ---------------
@@ -97,9 +108,22 @@ References:
 1. Windows EC2 IE not allowing file download
 https://aws.amazon.com/premiumsupport/knowledge-center/ec2-windows-file-download-ie/
 
-2. Download and install PgAdmin
-https://www.postgresql.org/ftp/pgadmin/pgadmin4/v5.6/windows/
+1.Connect to your EC2 Windows instance.
+2.Open the Windows Start menu, and then open Server Manager.
+3.Follow the instructions for the Windows Server: 
+  * Choose Local Server from the left navigation pane. 
+  * For IE Enhanced Security Configuration
+4.For Administrators & Users, select Off - Choose OK.
+5.Close Server Manager. 
 
+
+2. Download and install PgAdmin
+https://www.pgadmin.org/download/
+
+Video created with versions < v6.3
+https://www.postgresql.org/ftp/pgadmin/pgadmin4/v6.3/windows/
+
+3. (Optional) Install psql tools
 
 
 Bastion Host Setup Utility Script

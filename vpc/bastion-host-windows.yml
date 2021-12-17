@@ -1,0 +1,143 @@
+---
+## 
+## Creates an EC2 host to interact with DB cluster
+##
+## Changelog:
+##
+## Dependencies:
+## none
+##
+## This sample code is made available under the MIT-0 license. See the LICENSE file.
+
+AWSTemplateFormatVersion: 2010-09-09
+Description: Host for interacting with the DB cluster
+## Parameters
+Parameters:
+  TemplateName:
+    Type: String
+    Default: rdsa-bastion-host-windows
+    Description: Name used for different elements created.
+  KeyName:
+    Description: Amazon EC2 KeyPair
+    # Default: ''
+    Type: AWS::EC2::KeyPair::KeyName
+    # Type: String
+  BastionHostInstanceName:
+    Description: Name of the Bastion Host Instance
+    Default: 'RDSA Windows Bastion Host Instance'
+    Type: String
+  VpcId:
+    Description: Enter the VPC ID
+    Type: AWS::EC2::VPC::Id
+  PublicSubnetIds:
+    Description: Enter the Public Subnets
+    Type: AWS::EC2::Subnet::Id
+  InstanceType:
+    Description: Instance family for the test instance
+    Default: t3.large
+    Type: String
+    AllowedValues: 
+      - "t2.small"
+      - "t3.small"
+      - "t3.medium"
+      - "t3.large"
+  #https://aws.amazon.com/blogs/mt/query-for-the-latest-windows-ami-using-systems-manager-parameter-store/
+  LatestAmiId:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    # Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
+    Default: '/aws/service/ami-windows-latest/Windows_Server-2019-English-Full-Base'
+# Conditions
+Conditions:
+  HasNoKeyName: !Equals [!Ref KeyName, '']
+
+# Resources
+Resources:
+
+  # Bastion Host Security Group
+  HostSecurityGroupWindows:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Open Port 22 for ssh
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: "22"
+          ToPort: "22"
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: "8080"  # Used for PgAdmin
+          ToPort: "8080"
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: "3389"
+          ToPort: "3389"
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: "8082"  # Used for Nginx
+          ToPort: "8082"
+          CidrIp: 0.0.0.0/0
+
+  # Bastion host role
+  BastionHostRoleWindows:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${TemplateName}-bastion-${AWS::Region}
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - sts:AssumeRole
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+
+
+  # Bastion host profile
+  BastionHostInstanceProfile: 
+    Type: "AWS::IAM::InstanceProfile"
+    DependsOn: BastionHostRoleWindows
+    Properties: 
+      Path: "/"
+      Roles: 
+        - !Ref BastionHostRoleWindows
+
+  # Bastion host EC2 instance
+  BastionEC2Instance:
+    Type: AWS::EC2::Instance
+    DependsOn: [BastionHostInstanceProfile, HostSecurityGroupWindows, BastionHostRoleWindows]
+    Properties:
+      InstanceType: !Ref InstanceType
+      # ImageId:
+        # Fn::FindInMap:
+        #   - RegionMap
+        #   - !Ref AWS::Region
+        #   - AMI
+      ImageId: !Ref LatestAmiId
+      SecurityGroupIds:
+        - !Ref HostSecurityGroupWindows
+      SubnetId: !Ref PublicSubnetIds
+      IamInstanceProfile: !Ref BastionHostInstanceProfile
+      Tags:
+        - Key: Name
+          #Value: "RDSA Bastion Host Instance"
+          Value: !Ref BastionHostInstanceName
+      # KeyName: !Ref KeyName
+      KeyName: !If [HasNoKeyName,  !Ref AWS::NoValue , !Ref KeyName]
+
+Outputs:
+  BastionHostIP:
+    Description: The Public Ip
+    Value: !GetAtt BastionEC2Instance.PublicIp
+  ConnectionCMD:
+    Value:
+      !Join [
+        "",
+        [
+          ssh -A -J ec2-user@,
+          !GetAtt BastionEC2Instance.PublicIp
+        ],
+      ]
+    Description: Copy and run it in your shell
