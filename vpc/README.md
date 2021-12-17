@@ -27,8 +27,8 @@ sudo su -
 yum install git -y
 
 3. Clone the repository
-su ec2-user
-cd ~
+su - ec2-user
+
 git clone https://github.com/acloudfan/Amazon-RDS-Aurora-Postgres-v1.git
 
 4. Install the tools
@@ -105,4 +105,8 @@ https://aws.amazon.com/premiumsupport/knowledge-center/ec2-windows-file-download
 2. Download and install PgAdmin
 https://www.postgresql.org/ftp/pgadmin/pgadmin4/v5.6/windows/
 
+
+CloudFormation Latest AMI for Linux2
+====================================
+https://aws.amazon.com/blogs/compute/query-for-the-latest-amazon-linux-ami-ids-using-aws-systems-manager-parameter-store/
 

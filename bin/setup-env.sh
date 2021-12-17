@@ -12,7 +12,7 @@ export AWS_DEFAULT_REGION=$1
 echo "export AWS_DEFAULT_REGION=\"$AWS_DEFAULT_REGION\"" >> /home/ec2-user/.bashrc
 
 # If the cluster ID is already setup then use it, otherwise set to default
-if [ -z "$1" ]; then
+if [ -z "$PG_CLUSTER_ID" ]; then
   export PG_CLUSTER_ID=rdsa-postgresql-cluster
 fi
 
