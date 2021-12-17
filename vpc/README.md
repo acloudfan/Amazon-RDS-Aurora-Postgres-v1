@@ -1,14 +1,26 @@
+====================
 cluster-vpc-2-az.yml
 ====================
 Creates the VPC with 2 private & 2 public subnets across 2 AZ
 
+PS: In videos I am using this template
+
+====================
 cluster-vpc-3-az.yml
 ====================
 Creates the VPC with 3 private & 3 public subnets across 3 AZ
 
+PS: Use this template for your own experimentation
+
+================
 bastion-host.yml
 ================
-Sets up an EC2 instance that is used for connecting/testing the cluster
+Sets up an EC2 instance that is used for connecting/testing the cluster. 
+
+Stack deletion: 
+---------------
+The stack creates a Host Security group that is used by other bastion hosts etc. So if you try to delete the stack, you may get an error. To resolve it first delete the resources that have a dependency on the Security group and then delete this stack 
+
 
 Tools
 =====
@@ -58,35 +70,7 @@ If you missed the step below then you will get an error:
 source ~/.bashrc
 
 
-Bastion Host Setup Script
-=========================
-This method will setup the tools and all required scripts on your bastion host !!
 
-
-#1 Login to your Bastion Host VM as ec2-user
-Copy and paste the commands in shell prompt on your bastion host
-
-#2
-curl https://raw.githubusercontent.com/acloudfan/Amazon-RDS-Aurora-Postgres-v1/master/bin/install/setup-bastion.sh --output setup-bastion-host.sh 
-
-#3
-chmod u+x ./setup-bastion-host.sh 
-
-#4
-./setup-bastion-host.sh <<Provide AWS Region>>   <<Provide DB Cluster ID>>
-
-If you don't see a message "Using the PG_CLUSTER_ID=.." then probably you have provided a wrong cluster name. Just run the script again with the correct name.
-
-#5
-source ~/.bashrc
-
-#6
-psql                                  <<Uses $PGWRITEREP; Will give error in secondary region in case of global DB>>
-psql    -h $PGWRITEREP                <<Will give error in secondary region in case of global DB>>
-psql    -h $PGREADEREP
-
-Note: 
-In case of error: Make sure to provide the correct AWS Region & Cluster name ; Run the script again
 
 
 
@@ -115,6 +99,39 @@ https://aws.amazon.com/premiumsupport/knowledge-center/ec2-windows-file-download
 
 2. Download and install PgAdmin
 https://www.postgresql.org/ftp/pgadmin/pgadmin4/v5.6/windows/
+
+
+
+Bastion Host Setup Utility Script
+==================================
+This method will setup the tools and all required scripts on your bastion host !! You may setup you own instance and just follow the steps here to setup the bastion host with required tools.
+
+
+#1 Login to your Bastion Host VM as ec2-user
+Copy and paste the commands in shell prompt on your bastion host
+
+#2
+curl https://raw.githubusercontent.com/acloudfan/Amazon-RDS-Aurora-Postgres-v1/master/bin/install/setup-bastion.sh --output setup-bastion-host.sh 
+
+#3
+chmod u+x ./setup-bastion-host.sh 
+
+#4
+./setup-bastion-host.sh <<Provide AWS Region>>   <<Provide DB Cluster ID>>
+
+If you don't see a message "Using the PG_CLUSTER_ID=.." then probably you have provided a wrong cluster name. Just run the script again with the correct name.
+
+#5
+source ~/.bashrc
+
+#6
+psql                                  <<Uses $PGWRITEREP; Will give error in secondary region in case of global DB>>
+psql    -h $PGWRITEREP                <<Will give error in secondary region in case of global DB>>
+psql    -h $PGREADEREP
+
+Note: 
+In case of error: Make sure to provide the correct AWS Region & Cluster name ; Run the script again
+
 
 
 CloudFormation Latest AMI for Linux2

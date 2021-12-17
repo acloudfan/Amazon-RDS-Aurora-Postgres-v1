@@ -47,19 +47,6 @@ Parameters:
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
 
-# Mappings
-# You may add other AMI for your regions of choice
-# Mappings:
-#   RegionMap:
-#     us-east-1:
-#       AMI: ami-0d5eff06f840b45e9
-#     us-east-2:
-#       AMI: ami-077e31c4939f6a2f3  
-#     us-west-1:
-#       AMI: ami-04468e03c37242e1e
-#     us-west-2:
-#       AMI: ami-0cf6f5c8a62fa5da6
-
 # Conditions
 Conditions:
   HasNoKeyName: !Equals [!Ref KeyName, '']
