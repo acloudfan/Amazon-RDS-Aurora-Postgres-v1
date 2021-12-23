@@ -15,14 +15,15 @@ fi
 
 
 if [ -z "$2" ]; then
-    echo "Will use the default cluster ID !!"
+    # echo "Will use the default cluster ID !!"
+    export PG_CLUSTER_ID=rdsa-postgresql-cluster
 else
     export PG_CLUSTER_ID="$2"
 fi
 
 
 echo "Setting  AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION"
-echo "Setting  PG_CLUSTER_ID=$PG_CLUSTER_ID"
+# echo "Setting  PG_CLUSTER_ID=$PG_CLUSTER_ID"
 
 
 # install git
@@ -45,9 +46,9 @@ sudo ./bin/install/psql-pgbench-jq.sh
 
 
 # Setup the environment
-if [ -z "$1" ]; then
-     export PG_CLUSTER_ID="$1"
-fi
+# if [ -z "$1" ]; then
+#      export PG_CLUSTER_ID="$1"
+# fi
 
 # Setup the environment variables in the ~/.bashrc
 source ./bin/setup-env.sh
