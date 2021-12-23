@@ -1,7 +1,7 @@
 #!/bin/bash
 #BEWARE: This will delete the bastion host
 
-CF_HOST_STACK=rdsa-bastion-host
+CF_HOST_STACK="rdsa-bastion-host"
 
 if [ -z "$1" ]; then
     echo "Usage: ./bin/host/delete-host.sh  [linux=default |  windows] "
@@ -15,7 +15,7 @@ fi
 
 # Confirm from user
 while true; do
-    read -p "Are you sure, you want to DELETE this CF stack []?" yn
+    read -p "Are you sure, you want to DELETE this CF stack [$CF_HOST_STACK]?" yn
     case $yn in
         [Nn]* ) exit;;
         [Yy]* ) break;;
@@ -34,6 +34,7 @@ fi
 # delete the stack
 aws cloudformation delete-stack --stack-name "$CF_HOST_STACK"
 
+# wiat for stack to delete
 while [ $? == 0 ]; do
     sleep 5
     STATUS=$(aws  cloudformation describe-stacks --output text --stack-name "$CF_HOST_STACK" --query 'Stacks[0].StackStatus')
