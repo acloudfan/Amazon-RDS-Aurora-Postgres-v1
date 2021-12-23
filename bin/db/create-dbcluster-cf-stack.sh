@@ -11,9 +11,7 @@ TEMPLATE_LOCATION=file:///home/ec2-user/cloudformation/postgres-cluster.yml \
 SLEEP_TIME=5
 
 # Check if the stack already exists
-RDSA_PG_STACK=$(aws cloudformation  describe-stacks --stack-name $RDSA_VPC_CF_STACK_NAME --query 'Stacks[0].Outputs[?ExportName==`us-east-2-rdsa-vpc-MainVPC`].OutputValue | [0]')
-# Check if the stack already exists
-RDSA_PG_STACK=$(aws cloudformation  describe-stacks --stack-name $RDSA_VPC_CF_STACK_NAME --query 'Stacks[0].Outputs[?ExportName==`us-east-2-rdsa-vpc-MainVPC`].OutputValue | [0]')
+RDSA_PG_STACK=$(aws cloudformation  describe-stacks --stack-name $RDSA_CLUSTER_CF_STACK_NAME --query 'Stacks[0].Outputs[?ExportName==`us-east-2-rdsa-vpc-MainVPC`].OutputValue | [0]')
 if [ $? == 0 ]; then
    echo "Stack [$RDSA_PG_STACK] already exist!!"
    echo "Aborting."
@@ -65,3 +63,5 @@ DB_CLUSTER_STATUS=$(aws rds describe-db-clusters  --db-cluster-identifier "$DB_C
 
 echo "Current status of CF Stack: $CF_STACK_STATUS"
 echo "Current status of DB Cluster: $DB_CLUSTER_STATUS"
+echo "Make sure to reset Bastion host environment: source ./bin/setup-env.sh "
+echo "Done."
