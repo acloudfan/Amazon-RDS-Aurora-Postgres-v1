@@ -31,11 +31,7 @@ These tools will be installed on the bastion host.
 4. jq
 
 ======================================
-<<<<<<< HEAD
-(Manual)Setup tools on VM/Bastion Host (Linux)
-=======
 Setup tools on VM/Bastion Host (Linux)
->>>>>>> f5bd9cbfb8991297bc2218186bd47b6b78ce155a
 ======================================
 1. SSH into the VM
 
