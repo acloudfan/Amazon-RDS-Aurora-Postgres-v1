@@ -5,7 +5,7 @@
 RDSA_VPC_CF_STACK_NAME="rdsa-vpc"
 RDSA_SG_CF_STACK_NAME="rdsa-security-group"
 RDSA_CLUSTER_CF_STACK_NAME="rdsa-postgresql"
-TEMPLATE_LOCATION=file://home/ec2-user/cloudformation/postgresql-cluster.yml \
+TEMPLATE_LOCATION=file:///home/ec2-user/cloudformation/postgres-cluster.yml \
 
 # Get the comma seperated list of subnets
 VPC_ID=$(aws cloudformation  describe-stacks --stack-name $RDSA_VPC_CF_STACK_NAME --query 'Stacks[0].Outputs[?ExportName==`us-east-2-rdsa-vpc-MainVPC`].OutputValue | [0]')
