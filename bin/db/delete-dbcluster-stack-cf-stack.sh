@@ -4,6 +4,15 @@
 
 RDSA_CLUSTER_CF_STACK_NAME="rdsa-postgresql"
 
+# Check if the stack already exists
+RDSA_PG_STACK=$(aws cloudformation  describe-stacks --stack-name $RDSA_VPC_CF_STACK_NAME --query 'Stacks[0].Outputs[?ExportName==`us-east-2-rdsa-vpc-MainVPC`].OutputValue | [0]')
+if [ $? != 0 ]; then
+   echo "Stack [$RDSA_PG_STACK] does not exist!!"
+   echo "Aborting."
+   exit
+fi
+
+
 # Confirm from user
 while true; do
     read -p "Are you sure, you want to DELETE the Aurora clust [$RDSA_CLUSTER_CF_STACK_NAME] ?" yn
@@ -23,12 +32,14 @@ aws cloudformation delete-stack --stack-name "$RDSA_CLUSTER_CF_STACK_NAME"
 # Continuously check the delete status
 while [ $? == 0 ]; do
     sleep 5
-    STATUS=$(aws  cloudformation describe-stacks --ouput text --stack-name rdsa-postgresql --query 'Stacks[0].StackStatus')
+    STATUS=$(aws  cloudformation describe-stacks --ouput text --stack-name "$RDSA_CLUSTER_CF_STACK_NAME"
+ --query 'Stacks[0].StackStatus')
     if [[ "$STATUS" == "DELETE_IN_PROGRESS" ]]; then
         echo -n "."
     else
         break
     fi
 done;
+echo "."
 
 echo "Done."

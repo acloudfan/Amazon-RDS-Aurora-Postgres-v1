@@ -2,10 +2,24 @@
 # Creates the RDSA PG Cluster 
 # DEPENDENCY on CloudFormation Stack: rdsa-vpc
 
+
+
 RDSA_VPC_CF_STACK_NAME="rdsa-vpc"
 RDSA_SG_CF_STACK_NAME="rdsa-security-group"
 RDSA_CLUSTER_CF_STACK_NAME="rdsa-postgresql"
 TEMPLATE_LOCATION=file:///home/ec2-user/cloudformation/postgres-cluster.yml \
+SLEEP_TIME=5
+
+# Check if the stack already exists
+RDSA_PG_STACK=$(aws cloudformation  describe-stacks --stack-name $RDSA_VPC_CF_STACK_NAME --query 'Stacks[0].Outputs[?ExportName==`us-east-2-rdsa-vpc-MainVPC`].OutputValue | [0]')
+# Check if the stack already exists
+RDSA_PG_STACK=$(aws cloudformation  describe-stacks --stack-name $RDSA_VPC_CF_STACK_NAME --query 'Stacks[0].Outputs[?ExportName==`us-east-2-rdsa-vpc-MainVPC`].OutputValue | [0]')
+if [ $? == 0 ]; then
+   echo "Stack [$RDSA_PG_STACK] already exist!!"
+   echo "Aborting."
+   exit
+fi
+
 
 # Get the comma seperated list of subnets
 VPC_ID=$(aws cloudformation  describe-stacks --stack-name $RDSA_VPC_CF_STACK_NAME --query 'Stacks[0].Outputs[?ExportName==`us-east-2-rdsa-vpc-MainVPC`].OutputValue | [0]')
@@ -36,7 +50,7 @@ ParameterKey=VPCSecurityGroupCluster,ParameterValue="$RDSA_INTERNAL_SG" \
 --capabilities "CAPABILITY_NAMED_IAM"
 
 while [ $? == 0 ]; do
-    sleep 5
+    sleep $SLEEP_TIME
     CF_STACK_STATUS=$(aws  cloudformation describe-stacks --stack-name $RDSA_CLUSTER_CF_STACK_NAME --output text --query 'Stacks[0].StackStatus')
     if [[ $CF_STACK_STATUS == "CREATE_IN_PROGRESS" ]]; then
         echo -n "."
@@ -44,6 +58,7 @@ while [ $? == 0 ]; do
         break
     fi
 done;
+echo "."
 
 # If no error
 DB_CLUSTER_STATUS=$(aws rds describe-db-clusters  --db-cluster-identifier "$DB_CLUSTER_ID"   --query 'DBClusters[0].Status')
