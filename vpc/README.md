@@ -21,17 +21,18 @@ Stack deletion:
 ---------------
 The stack creates a Host Security group that is used by other bastion hosts etc. So if you try to delete the stack, you may get an error. To resolve it first delete the resources that have a dependency on the Security group and then delete this stack 
 
-
+=====
 Tools
 =====
+These tools will be installed on the bastion host.
 1. git client
 2. psql
 3. pgbench
 4. jq
 
-
-Setup tools on VM
-=================
+======================================
+(Manual)Setup tools on VM/Bastion Host (Linux)
+======================================
 1. SSH into the VM
 
 2. Install git
@@ -71,11 +72,46 @@ source ~/.bashrc
 
 
 
+========================================================
+(Auto install) Bastion Host Setup Utility Script (Linux)
+========================================================
+This method will setup the tools and all required scripts on your bastion host !! You may setup you own instance and just follow the steps here to setup the bastion host with required tools.
 
 
+1. Login to your Bastion Host VM as ec2-user
+--------------------------------------------
+Copy and paste the commands in shell prompt on your bastion host
 
-Windows Bastion Host
-====================
+2. Download the setup script
+----------------------------
+curl https://raw.githubusercontent.com/acloudfan/Amazon-RDS-Aurora-Postgres-v1/master/bin/install/setup-bastion.sh --output setup-bastion-host.sh 
+
+3 Change mod of the file
+------------------------
+chmod u+x ./setup-bastion-host.sh 
+
+4. Setup the environment
+------------------------
+./setup-bastion-host.sh <<Provide AWS Region>>   <<Provide DB Cluster ID>>
+
+If you don't see a message "Using the PG_CLUSTER_ID=.." then probably you have provided a wrong cluster name. Just run the script again with the correct name.
+
+5. Set the environment variables in the current shell
+-----------------------------------------------------
+source ~/.bashrc
+
+7. Use psql
+-----------
+psql                                  <<Uses $PGWRITEREP; Will give error in secondary region in case of global DB>>
+psql    -h $PGWRITEREP                <<Will give error in secondary region in case of global DB>>
+psql    -h $PGREADEREP
+
+Note: 
+In case of error: Make sure to provide the correct AWS Region & Cluster name ; Run the script again
+
+==========================
+Setup Windows Bastion Host
+==========================
 
 Manual creation
 ---------------
@@ -97,15 +133,22 @@ CloudFormation Template (preferred)
 
 Install PgAdmin
 ---------------
-1. Google for "pgadmin"
-https://www.postgresql.org/ftp/pgadmin/pgadmin4/v5.6/windows/
+1. Allow Internet Explorer to download files. Follow instructions at the link below:
+https://aws.amazon.com/premiumsupport/knowledge-center/ec2-windows-file-download-ie/
 
-2. Download installation exe for Windows
-3. Install PgAdmin
-4. Test PgAdmin with the existing cluster
+2. Google for "pgadmin"
+   Or use the link: https://www.pgadmin.org/download/
 
-References:
-1. Windows EC2 IE not allowing file download
+3. Download pgAdmin installation exe for Windows
+4. Install PgAdmin by following the instructions
+5. Test PgAdmin with the Aurora DB cluster
+6. (Optional) Install other tools such psql
+
+================================
+IE Download issue on Windows/EC2
+================================
+By default Windows EC2 IE does not allow file downloads.
+To fixe the issue follow instructions available at the link below:
 https://aws.amazon.com/premiumsupport/knowledge-center/ec2-windows-file-download-ie/
 
 1.Connect to your EC2 Windows instance.
@@ -116,49 +159,28 @@ https://aws.amazon.com/premiumsupport/knowledge-center/ec2-windows-file-download
 4.For Administrators & Users, select Off - Choose OK.
 5.Close Server Manager. 
 
-
-2. Download and install PgAdmin
+============================
+Download and install PgAdmin
+============================
 https://www.pgadmin.org/download/
 
-Video created with versions < v6.3
-https://www.postgresql.org/ftp/pgadmin/pgadmin4/v6.3/windows/
-
-3. (Optional) Install psql tools
-
-
-Bastion Host Setup Utility Script
-==================================
-This method will setup the tools and all required scripts on your bastion host !! You may setup you own instance and just follow the steps here to setup the bastion host with required tools.
-
-
-#1 Login to your Bastion Host VM as ec2-user
-Copy and paste the commands in shell prompt on your bastion host
-
-#2
-curl https://raw.githubusercontent.com/acloudfan/Amazon-RDS-Aurora-Postgres-v1/master/bin/install/setup-bastion.sh --output setup-bastion-host.sh 
-
-#3
-chmod u+x ./setup-bastion-host.sh 
-
-#4
-./setup-bastion-host.sh <<Provide AWS Region>>   <<Provide DB Cluster ID>>
-
-If you don't see a message "Using the PG_CLUSTER_ID=.." then probably you have provided a wrong cluster name. Just run the script again with the correct name.
-
-#5
-source ~/.bashrc
-
-#6
-psql                                  <<Uses $PGWRITEREP; Will give error in secondary region in case of global DB>>
-psql    -h $PGWRITEREP                <<Will give error in secondary region in case of global DB>>
-psql    -h $PGREADEREP
-
-Note: 
-In case of error: Make sure to provide the correct AWS Region & Cluster name ; Run the script again
-
-
-
+====================================
 CloudFormation Latest AMI for Linux2
 ====================================
 https://aws.amazon.com/blogs/compute/query-for-the-latest-amazon-linux-ami-ids-using-aws-systems-manager-parameter-store/
 
+
+===================================
+CloudFormation Dependencies for VPC
+===================================
+1. Terminate all instances in your VPC
+2. Delete all ENI's associated with subnets within your VPC
+3. Detach all Internet and Virtual Private Gateways (you can then delete them and any VPN connections, but that's not required to delete the VPC object)
+3. Disassociate all route tables from all the subnets in your VPC
+4. Delete all route tables other than the "Main" table
+5. Disassociate all Network ACL's from all the subnets in your VPC
+6. Delete all Network ACL's other than the Default one
+7. Delete all Security groups other than the Default one (note: if one group has a rule that references another, you have to delete that rule before you can delete the other security group)
+8. Delete all subnets
+9. Delete your VPC
+10. Delete any DHCP Option Sets that had been used by the VPC
