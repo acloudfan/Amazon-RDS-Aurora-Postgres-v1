@@ -18,6 +18,7 @@ while true; do
     read -p "Are you sure, you want to DELETE this CF stack []?" yn
     case $yn in
         [Nn]* ) exit;;
+        [Yy]* ) break;;
         * ) echo "Please answer yes/y or no/n.";;
     esac
 done
@@ -30,4 +31,18 @@ if [ $? != 0 ]; then
    exit
 fi
 
+# delete the stack
+aws cloudformation delete-stack --stack-name "$CF_HOST_STACK"
 
+while [ $? == 0 ]; do
+    sleep 5
+    STATUS=$(aws  cloudformation describe-stacks --output text --stack-name "$CF_HOST_STACK" --query 'Stacks[0].StackStatus')
+    if [[ "$STATUS" == "DELETE_IN_PROGRESS" ]]; then
+        echo -n "."
+    else
+        break
+    fi
+done;
+echo "."
+
+echo "Done."
