@@ -8,6 +8,18 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
+# Check if backup file exists
+BASHRC_BACKUP_FILE="/home/ec2-user/.bashrc-bup"
+if test -f "$BASHRC_BACKUP_FILE"; then
+  echo "Using $BBASHRC_BACKUP_FILE"
+  # overwrite .bashrc file
+  cp   $BASHRC_BACKUP_FILE /home/ec2-user/.bashrc
+else
+  cp /home/ec2-user/.bashrc  $BASHRC_BACKUP_FILE
+  echo "Created $BBASHRC_BACKUP_FILE"
+fi
+
+
 export AWS_DEFAULT_REGION=$1
 echo "export AWS_DEFAULT_REGION=\"$AWS_DEFAULT_REGION\"" >> /home/ec2-user/.bashrc
 

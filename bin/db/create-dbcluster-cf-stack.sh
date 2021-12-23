@@ -11,9 +11,9 @@ TEMPLATE_LOCATION=file:///home/ec2-user/cloudformation/postgres-cluster.yml \
 SLEEP_TIME=5
 
 # Check if the stack already exists
-RDSA_PG_STACK=$(aws cloudformation  describe-stacks --stack-name $RDSA_CLUSTER_CF_STACK_NAME --query 'Stacks[0].Outputs[?ExportName==`us-east-2-rdsa-vpc-MainVPC`].OutputValue | [0]')
+RDSA_PG_STACK_STATUS=$(aws cloudformation  describe-stacks --stack-name $RDSA_CLUSTER_CF_STACK_NAME --query 'Stacks[0].StackStatus')
 if [ $? == 0 ]; then
-   echo "Stack [$RDSA_PG_STACK] already exist!!"
+   echo "Stack [$RDSA_CLUSTER_CF_STACK_NAME=$RDSA_PG_STACK_STATUS] already exist!!"
    echo "Aborting."
    exit
 fi
