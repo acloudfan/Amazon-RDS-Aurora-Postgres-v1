@@ -17,13 +17,11 @@ if [[ "status" == "$ACTION" ]]; then
 elif [[ "$ACTION" == "stop" ]]; then
      CHECK=$(aws rds stop-db-cluster --db-cluster-identifier $DB_CLUSTER_ID)
      STATUS=$(aws rds describe-db-clusters  --db-cluster-identifier "$DB_CLUSTER_ID"   --query 'DBClusters[0].Status')
-     sleep  5
-     echo "DB Cluster [$DB_CLUSTER_ID]: $STATUS"
+     echo "Attempting to STOP the cluster...check status in 30 seconds!!!"
 elif [[ "$ACTION" == "start" ]]; then
      CHECK=$(aws rds start-db-cluster --db-cluster-identifier $DB_CLUSTER_ID)
      STATUS=$(aws rds describe-db-clusters  --db-cluster-identifier "$DB_CLUSTER_ID"   --query 'DBClusters[0].Status')
-     sleep  5
-     echo "DB Cluster [$DB_CLUSTER_ID]: $STATUS"
+     echo "Attempting to START the cluster...check status in 30 seconds!!!"
 else
     echo "Usage: dbluster [status (default) | start | stop]"
 fi

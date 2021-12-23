@@ -6,14 +6,15 @@ RDSA_CLUSTER_CF_STACK_NAME="rdsa-postgresql"
 
 # Confirm from user
 while true; do
-    read -p "Are you sure, you want to DELETE the Aurora clust [$RDSA_CLUSTER_CF_STACK_NAME]?" yn
+    read -p "Are you sure, you want to DELETE the Aurora clust [$RDSA_CLUSTER_CF_STACK_NAME] ?" yn
     case $yn in
         [Nn]* ) exit;;
         * ) echo "Please answer yes/y or no/n.";;
     esac
 done
 
-echo "Be aware that sometimes, the stack deletion fails. It is your responsibility to ensure that the cluster is successfully deleted !!!"
+echo "Be aware that sometimes, the stack deletion fails !!"
+echo "NOTE: It is your responsibility to ensure that the cluster is successfully deleted."
 
 # Delete the stack
 aws  delete-stack --stack-name $RDSA_CLUSTER_CF_STACK_NAME="rdsa-postgresql"
