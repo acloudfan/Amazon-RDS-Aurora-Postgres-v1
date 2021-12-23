@@ -22,10 +22,11 @@ fi
 echo "VPC ID = $VPC_ID"
 echo "Private Subnet List = $PRIVATE_SUBNETS"
 echo "Security Group = $RDSA_INTERNAL_SG"
+echo "CF Stack Name = $RDSA_CLUSTER_CF_STACK_NAME"
 
 # Create the stack
-aws cloudformation create-stack    \  
---stack-name "$RDSA_CLUSTER_CF_STACK_NAME"   \ 
+aws cloudformation create-stack \
+--stack-name "$RDSA_CLUSTER_CF_STACK_NAME" \ 
 --template-body "$TEMPLATE_LOCATION"  \
 --parameters ParameterKey=TemplateName,ParameterValue="$RDSA_CLUSTER_CF_STACK_NAME"  \
 ParameterKey=TemplateName,ParameterValue=RdsAuroraVPC,ParameterValue="$VPC_ID"  \
