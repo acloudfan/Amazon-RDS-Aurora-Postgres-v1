@@ -5,7 +5,7 @@
 if [ -z "$1" ]; then
     echo "Usage:  ./bin/set-env.sh  <AWS-Region> "
     echo "e.g.,   ./bin/set-env.sh  us-east-1"
-    exit 1
+    exit 
 fi
 
 # Check if backup file exists

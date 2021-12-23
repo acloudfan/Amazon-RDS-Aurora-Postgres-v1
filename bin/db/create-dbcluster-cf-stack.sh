@@ -63,5 +63,7 @@ DB_CLUSTER_STATUS=$(aws rds describe-db-clusters  --db-cluster-identifier "$DB_C
 
 echo "Current status of CF Stack: $CF_STACK_STATUS"
 echo "Current status of DB Cluster: $DB_CLUSTER_STATUS"
-echo "Make sure to reset Bastion host environment: source ./bin/setup-env.sh "
+echo "Make sure to reset Bastion host environment: "
+echo "                   (1)./bin/setup-env.sh <your-aws-region> "
+echo "                   (2) Log out & Log back in"
 echo "Done."
