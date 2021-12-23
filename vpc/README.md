@@ -31,7 +31,11 @@ These tools will be installed on the bastion host.
 4. jq
 
 ======================================
+<<<<<<< HEAD
 (Manual)Setup tools on VM/Bastion Host (Linux)
+=======
+Setup tools on VM/Bastion Host (Linux)
+>>>>>>> f5bd9cbfb8991297bc2218186bd47b6b78ce155a
 ======================================
 1. SSH into the VM
 
@@ -70,6 +74,7 @@ If you missed the step below then you will get an error:
 
 source ~/.bashrc
 
+<<<<<<< HEAD
 
 
 ========================================================
@@ -109,6 +114,8 @@ psql    -h $PGREADEREP
 Note: 
 In case of error: Make sure to provide the correct AWS Region & Cluster name ; Run the script again
 
+=======
+>>>>>>> f5bd9cbfb8991297bc2218186bd47b6b78ce155a
 ==========================
 Setup Windows Bastion Host
 ==========================
@@ -134,6 +141,7 @@ CloudFormation Template (preferred)
 Install PgAdmin
 ---------------
 1. Allow Internet Explorer to download files. Follow instructions at the link below:
+<<<<<<< HEAD
 https://aws.amazon.com/premiumsupport/knowledge-center/ec2-windows-file-download-ie/
 
 2. Google for "pgadmin"
@@ -143,6 +151,63 @@ https://aws.amazon.com/premiumsupport/knowledge-center/ec2-windows-file-download
 4. Install PgAdmin by following the instructions
 5. Test PgAdmin with the Aurora DB cluster
 6. (Optional) Install other tools such psql
+
+================================
+IE Download issue on Windows/EC2
+================================
+By default Windows EC2 IE does not allow file downloads.
+To fixe the issue follow instructions available at the link below:
+=======
+>>>>>>> f5bd9cbfb8991297bc2218186bd47b6b78ce155a
+https://aws.amazon.com/premiumsupport/knowledge-center/ec2-windows-file-download-ie/
+
+2. Google for "pgadmin"
+   Or use the link: https://www.pgadmin.org/download/
+
+<<<<<<< HEAD
+=======
+3. Download pgAdmin installation exe for Windows
+4. Install PgAdmin by following the instructions
+5. Test PgAdmin with the Aurora DB cluster
+6. (Optional) Install other tools such psql
+
+================================================
+(Auto) Bastion Host Setup Utility Script (Linux)
+================================================
+This method will setup the tools and all required scripts on your bastion host !! You may setup you own instance and just follow the steps here to setup the bastion host with required tools.
+
+
+1. Login to your Bastion Host VM as ec2-user
+--------------------------------------------
+Copy and paste the commands in shell prompt on your bastion host
+
+2. Download the setup script
+----------------------------
+curl https://raw.githubusercontent.com/acloudfan/Amazon-RDS-Aurora-Postgres-v1/master/bin/install/setup-bastion.sh --output setup-bastion-host.sh 
+
+3 Change mod of the file
+------------------------
+chmod u+x ./setup-bastion-host.sh 
+
+4. Setup the environment
+------------------------
+./setup-bastion-host.sh <<Provide AWS Region>>   <<Provide DB Cluster ID>>
+
+If you don't see a message "Using the PG_CLUSTER_ID=.." then probably you have provided a wrong cluster name. Just run the script again with the correct name.
+
+5. Set the environment variables in the current shell
+-----------------------------------------------------
+source ~/.bashrc
+
+7. Use psql
+-----------
+psql                                  <<Uses $PGWRITEREP; Will give error in secondary region in case of global DB>>
+psql    -h $PGWRITEREP                <<Will give error in secondary region in case of global DB>>
+psql    -h $PGREADEREP
+
+Note: 
+In case of error: Make sure to provide the correct AWS Region & Cluster name ; Run the script again
+
 
 ================================
 IE Download issue on Windows/EC2
@@ -159,6 +224,7 @@ https://aws.amazon.com/premiumsupport/knowledge-center/ec2-windows-file-download
 4.For Administrators & Users, select Off - Choose OK.
 5.Close Server Manager. 
 
+>>>>>>> f5bd9cbfb8991297bc2218186bd47b6b78ce155a
 ============================
 Download and install PgAdmin
 ============================
