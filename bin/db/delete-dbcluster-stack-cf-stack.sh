@@ -18,9 +18,9 @@ echo "Be aware that sometimes, the stack deletion fails !!"
 echo "NOTE: It is your responsibility to ensure that the cluster is successfully deleted."
 
 # Delete the stack
-aws  delete-stack --stack-name $RDSA_CLUSTER_CF_STACK_NAME="rdsa-postgresql"
+aws cloudformation delete-stack --stack-name "$RDSA_CLUSTER_CF_STACK_NAME"
 
 # Continuously check the delete status
-aws  stack-delete-complete  --stack-name  $RDSA_CLUSTER_CF_STACK_NAME="rdsa-postgresql"
+aws  cloudformation stack-delete-complete  --stack-name  $RDSA_CLUSTER_CF_STACK_NAME="rdsa-postgresql"
 
 echo "Done."
