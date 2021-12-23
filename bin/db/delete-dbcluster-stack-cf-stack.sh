@@ -4,7 +4,7 @@
 
 RDSA_CLUSTER_CF_STACK_NAME="rdsa-postgresql"
 
-# Check if the stack already exists
+# Check if the stack  exists
 RDSA_PG_STACK_STATUS=$(aws cloudformation  describe-stacks --stack-name $RDSA_CLUSTER_CF_STACK_NAME --query 'Stacks[0].Outputs[?ExportName==`us-east-2-rdsa-vpc-MainVPC`].OutputValue | [0]')
 if [ $? != 0 ]; then
    echo "Stack [$RDSA_CLUSTER_CF_STACK_NAME] does not exist!!"
