@@ -164,8 +164,6 @@ https://aws.amazon.com/premiumsupport/knowledge-center/ec2-windows-file-download
 2. Google for "pgadmin"
    Or use the link: https://www.pgadmin.org/download/
 
-<<<<<<< HEAD
-=======
 3. Download pgAdmin installation exe for Windows
 4. Install PgAdmin by following the instructions
 5. Test PgAdmin with the Aurora DB cluster
@@ -224,7 +222,6 @@ https://aws.amazon.com/premiumsupport/knowledge-center/ec2-windows-file-download
 4.For Administrators & Users, select Off - Choose OK.
 5.Close Server Manager. 
 
->>>>>>> f5bd9cbfb8991297bc2218186bd47b6b78ce155a
 ============================
 Download and install PgAdmin
 ============================
