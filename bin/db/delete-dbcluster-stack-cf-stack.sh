@@ -9,6 +9,7 @@ while true; do
     read -p "Are you sure, you want to DELETE the Aurora clust [$RDSA_CLUSTER_CF_STACK_NAME] ?" yn
     case $yn in
         [Nn]* ) exit;;
+        [Yy]* ) break;;
         * ) echo "Please answer yes/y or no/n.";;
     esac
 done
