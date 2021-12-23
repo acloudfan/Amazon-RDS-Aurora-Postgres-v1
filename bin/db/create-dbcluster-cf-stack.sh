@@ -26,8 +26,7 @@ echo "CF Stack Name = $RDSA_CLUSTER_CF_STACK_NAME"
 
 # Create the stack
 aws cloudformation create-stack \
---stack-name "$RDSA_CLUSTER_CF_STACK_NAME" \ 
---template-body "$TEMPLATE_LOCATION"  \
+--stack-name "$RDSA_CLUSTER_CF_STACK_NAME" --template-body "$TEMPLATE_LOCATION"  \
 --parameters ParameterKey=TemplateName,ParameterValue="$RDSA_CLUSTER_CF_STACK_NAME"  \
 ParameterKey=TemplateName,ParameterValue=RdsAuroraVPC,ParameterValue="$VPC_ID"  \
 ParameterKey=PrivateSubnets,ParameterValue="$PRIVATE_SUBNETS" \
