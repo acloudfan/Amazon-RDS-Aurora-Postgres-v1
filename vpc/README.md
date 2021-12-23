@@ -141,24 +141,6 @@ CloudFormation Template (preferred)
 Install PgAdmin
 ---------------
 1. Allow Internet Explorer to download files. Follow instructions at the link below:
-<<<<<<< HEAD
-https://aws.amazon.com/premiumsupport/knowledge-center/ec2-windows-file-download-ie/
-
-2. Google for "pgadmin"
-   Or use the link: https://www.pgadmin.org/download/
-
-3. Download pgAdmin installation exe for Windows
-4. Install PgAdmin by following the instructions
-5. Test PgAdmin with the Aurora DB cluster
-6. (Optional) Install other tools such psql
-
-================================
-IE Download issue on Windows/EC2
-================================
-By default Windows EC2 IE does not allow file downloads.
-To fixe the issue follow instructions available at the link below:
-=======
->>>>>>> f5bd9cbfb8991297bc2218186bd47b6b78ce155a
 https://aws.amazon.com/premiumsupport/knowledge-center/ec2-windows-file-download-ie/
 
 2. Google for "pgadmin"
