@@ -33,10 +33,16 @@ sudo yum install git -y
 cd ~
 git clone https://github.com/acloudfan/Amazon-RDS-Aurora-Postgres-v1.git
 
+# Copy the cloudformation templates
+mkdir cloudformation
+cp -r Amazon-RDS-Aurora-Postgres-v1/vpc/*.yml ./cloudformation
+
 # Install the tools
 cp -r Amazon-RDS-Aurora-Postgres-v1/bin .
 chmod -R u+x bin
 sudo ./bin/install/psql-pgbench-jq.sh
+
+
 
 # Setup the environment
 if [ -z "$1" ]; then
