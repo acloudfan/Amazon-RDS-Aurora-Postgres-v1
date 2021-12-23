@@ -74,48 +74,6 @@ If you missed the step below then you will get an error:
 
 source ~/.bashrc
 
-<<<<<<< HEAD
-
-
-========================================================
-(Auto install) Bastion Host Setup Utility Script (Linux)
-========================================================
-This method will setup the tools and all required scripts on your bastion host !! You may setup you own instance and just follow the steps here to setup the bastion host with required tools.
-
-
-1. Login to your Bastion Host VM as ec2-user
---------------------------------------------
-Copy and paste the commands in shell prompt on your bastion host
-
-2. Download the setup script
-----------------------------
-curl https://raw.githubusercontent.com/acloudfan/Amazon-RDS-Aurora-Postgres-v1/master/bin/install/setup-bastion.sh --output setup-bastion-host.sh 
-
-3 Change mod of the file
-------------------------
-chmod u+x ./setup-bastion-host.sh 
-
-4. Setup the environment
-------------------------
-./setup-bastion-host.sh <<Provide AWS Region>>   <<Provide DB Cluster ID>>
-
-If you don't see a message "Using the PG_CLUSTER_ID=.." then probably you have provided a wrong cluster name. Just run the script again with the correct name.
-
-5. Set the environment variables in the current shell
------------------------------------------------------
-source ~/.bashrc
-
-7. Use psql
------------
-psql                                  <<Uses $PGWRITEREP; Will give error in secondary region in case of global DB>>
-psql    -h $PGWRITEREP                <<Will give error in secondary region in case of global DB>>
-psql    -h $PGREADEREP
-
-Note: 
-In case of error: Make sure to provide the correct AWS Region & Cluster name ; Run the script again
-
-=======
->>>>>>> f5bd9cbfb8991297bc2218186bd47b6b78ce155a
 ==========================
 Setup Windows Bastion Host
 ==========================
