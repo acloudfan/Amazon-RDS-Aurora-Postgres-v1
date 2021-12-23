@@ -21,8 +21,14 @@ echo "NOTE: It is your responsibility to ensure that the cluster is successfully
 aws cloudformation delete-stack --stack-name "$RDSA_CLUSTER_CF_STACK_NAME"
 
 # Continuously check the delete status
-
-while [ $? == 0 ]
-aws  cloudformation describe-stacks --stack-name rdsa-postgresql --query 'Stacks[0].StackStaus'
+while [ $? == 0 ]; do
+    SLEEP 5
+    STATUS=$(aws  cloudformation describe-stacks --stack-name rdsa-postgresql --query 'Stacks[0].StackStaus')
+    if [ $STATUS == "DELETE_IN_PROGRESS" ]]; then
+        echo -n "."
+    else
+        break
+    fi
+done;
 
 echo "Done."
