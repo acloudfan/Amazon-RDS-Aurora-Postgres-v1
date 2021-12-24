@@ -7,7 +7,7 @@
 # Setup the environment
 if [ -z "$1" ]; then
     echo "Must set default region"
-    echo "Usage ./setup-bastion.sh  <<AWS Region>>  <<Cluster ID>>"
+    echo "Usage ./setup-bastion.sh  <<AWS Region>>  "
     exit 1
 else
     export AWS_DEFAULT_REGION="$1"
