@@ -127,7 +127,7 @@ chmod u+x ./setup-bastion-host.sh
 
 4. Setup the environment
 ------------------------
-./setup-bastion-host.sh <<Provide AWS Region>>   rdsa-postgresql-cluster
+./setup-bastion-host.sh <<Provide AWS Region>>  
 
 If you don't see a message "Using the PG_CLUSTER_ID=.." then probably you have provided a wrong cluster name. Just run the script again with the correct name.
 
