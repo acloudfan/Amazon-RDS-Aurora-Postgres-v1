@@ -32,6 +32,8 @@ sudo yum install git -y
 
 # Clone the repository folder
 cd ~
+if [ -d "./Amazon-RDS-Aurora-Postgres-v1" ]; then rm -Rf ./Amazon-RDS-Aurora-Postgres-v1; fi
+if [ -d "./cloudformation" ]; then rm -Rf ./cloudformation; fi
 git clone https://github.com/acloudfan/Amazon-RDS-Aurora-Postgres-v1.git
 
 # Copy the cloudformation templates
