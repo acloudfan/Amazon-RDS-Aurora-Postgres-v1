@@ -5,5 +5,5 @@
 ~/bin/db/dbcluster.sh stop
 
 # Stop the Linux host
-~/bin/host/stop-host linux
+~/bin/host/stop-host.sh linux
 
