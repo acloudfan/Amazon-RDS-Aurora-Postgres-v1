@@ -39,6 +39,7 @@ git clone https://github.com/acloudfan/Amazon-RDS-Aurora-Postgres-v1.git
 # Copy the cloudformation templates
 mkdir cloudformation
 cp -r Amazon-RDS-Aurora-Postgres-v1/vpc/*.yml ./cloudformation
+cp -r Amazon-RDS-Aurora-Postgres-v1/cluster-basic/*.yml ./cloudformation
 
 # Install the tools
 cp -r Amazon-RDS-Aurora-Postgres-v1/bin .
