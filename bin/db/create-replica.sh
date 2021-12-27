@@ -16,7 +16,7 @@ RDSA_REPLICA_CF_STACK_NAME="rdsa-postgresql-$1"
 TEMPLATE_LOCATION=file:///home/ec2-user/cloudformation/postgres-cluster-replica.yml \
 
 # CF Parameters
-RDSA_DB_CLUSTER="rdsa-postgresql"
+RDSA_DB_CLUSTER_ID="rdsa-postgresql-cluster"
 DB_INSTANCE_TYPE="db.t3.medium"
 if [ -z "$2" ]; then
     echo "DB Instance Type=$DB_INSTANCE_TYPE"
@@ -39,7 +39,7 @@ aws cloudformation create-stack \
 --parameters ParameterKey=TemplateName,ParameterValue="$RDSA_CLUSTER_CF_STACK_NAME"  \
 ParameterKey=DBInstanceClass,ParameterValue="$DB_INSTANCE_TYPE"  \
 ParameterKey=DBEngineVersion,ParameterValue="$DB_ENGINE_VERSION"  \
-ParameterKey=DBCluster,ParameterValue="$RDSA_DB_CLUSTER"  
+ParameterKey=DBCluster,ParameterValue="$RDSA_DB_CLUSTER_ID"  
 
 # Wait for the stack to be created
 while [ $? == 0 ]; do
