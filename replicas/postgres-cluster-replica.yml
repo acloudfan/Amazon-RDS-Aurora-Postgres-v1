@@ -33,13 +33,15 @@ Parameters:
   DBEngineVersion:
     Description: Select Database Engine Version
     Type: String
-    Default: 11.9
+    Default: 13.4
     AllowedValues:
       - 11.6
       - 11.7
       - 11.8
       - 11.9
       - 12.4
+      - 13.4
+      
 
 Resources:
   ## Deploy a reader node
