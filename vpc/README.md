@@ -48,6 +48,8 @@ git clone https://github.com/acloudfan/Amazon-RDS-Aurora-Postgres-v1.git
 cp -r Amazon-RDS-Aurora-Postgres-v1/bin .
 mkdir cloudformation
 cp -r Amazon-RDS-Aurora-Postgres-v1/vpc/*.yml ./cloudformation
+cp -r Amazon-RDS-Aurora-Postgres-v1/replicas/*.yml ./cloudformation
+cp -r Amazon-RDS-Aurora-Postgres-v1/cluster-basic/*.yml ./cloudformation
 chmod -R u+x bin
 sudo ./bin/install/psql-pgbench-jq.sh
 
