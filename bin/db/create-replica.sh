@@ -9,7 +9,7 @@ if [ -z "$1" ]; then
     exit
 fi
 
-SLEEP_TIME=5s
+SLEEP_TIME=10s
 RDSA_CLUSTER_CF_STACK_NAME="rdsa-postgresql"
 RDSA_REPLICA_CF_STACK_NAME="rdsa-postgresql-$1"
 
