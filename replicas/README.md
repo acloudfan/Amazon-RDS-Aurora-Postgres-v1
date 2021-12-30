@@ -20,7 +20,28 @@ E.g., DROP TABLE test;  this will throw an error
 
 4. Execute the following psql to get the replication status
 
-select server_id, replica_lag_in_msec,is_current  from aurora_replica_status();
+
+
+==================================
+Check the status of the Replica(s)
+==================================
+* Information accessed using the function aurora_replica_status()
+
+* Simple query - doesn't tell if its master or replica
+SELECT server_id, replica_lag_in_msec,is_current  
+FROM aurora_replica_status();
+
+* Query differentiates between master/standby
+SELECT server_id, 
+    CASE 
+        WHEN session_id= 'MASTER_SESSION_ID' 
+        THEN 'Writer' 
+        ELSE 'Reader' 
+    END AS Role, 
+    replica_lag_in_msec as AuroraReplicaLag 
+FROM aurora_replica_status();
+
+
 
 
 Exercise (Part-1) : Checkout Failover
@@ -55,3 +76,16 @@ Failover using AWS CLI
 ======================
 aws rds failover-db-cluster --db-cluster-identifier rdsa-postgresql-cluster 
 Can work only if there are > 1 instances
+
+
+=============
+pgbench Error
+=============
+"pgbench: error: empty range given to random"
+
+* This indicates a consistency error in the database 'pgbenchtest'
+* Typically happens when the pgbench initialization is aborted
+* To resolve:
+  1. DROP DATABASE pgbenchtest
+  2. CREATE DATABASE pgbenchtest
+  3. Initialize pgbench

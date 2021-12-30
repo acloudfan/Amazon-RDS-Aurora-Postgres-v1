@@ -5,6 +5,8 @@ Creates the VPC with 2 private & 2 public subnets across 2 AZ
 
 PS: In videos I am using this template
 
+* CloudFormation Name = rdsa-vpc
+
 ====================
 cluster-vpc-3-az.yml
 ====================
@@ -131,7 +133,8 @@ chmod u+x ./setup-bastion-host.sh
 ------------------------
 ./setup-bastion-host.sh <<Provide AWS Region>>  
 
-If you don't see a message "Using the PG_CLUSTER_ID=.." then probably you have provided a wrong cluster name. Just run the script again with the correct name.
+If you see a message:
+"An error occurred (DBClusterNotFoundFault) when calling the DescribeDBClusters operation: DBCluster rdsa-postgresql-cluster not found." then that means the DB cluster stack is not created !! 
 
 5. Set the environment variables in the current shell
 -----------------------------------------------------
@@ -187,3 +190,12 @@ CloudFormation Dependencies for VPC
 8. Delete all subnets
 9. Delete your VPC
 10. Delete any DHCP Option Sets that had been used by the VPC
+
+========================================
+CloudFormation VPC Stack Deletion errors
+========================================
+It can happen due to creation of ENI in the VPC/Subnets
+https://aws.amazon.com/premiumsupport/knowledge-center/troubleshoot-dependency-error-delete-vpc/
+* Check for EC2>>Network Interfaces 
+* Delete resources using the ENI
+* Attempt the VPC deletion again

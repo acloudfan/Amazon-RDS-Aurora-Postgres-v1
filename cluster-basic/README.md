@@ -1,18 +1,25 @@
 YML
 ===
-security-group.yml            Creates the SG for the DB cluster instances
-postgres-cluster.yml          Creates the Aurora cluster with 1 instance
 enhanced-monitoring-role.yml  Creates the role for EM
 
 security-group.yml
 ==================
 Sets up the security group for Aurora cluster
 
+security-group.yml            Creates the SG for the DB cluster instances
+Stack name = rdsa-security-group
+
 postgres-cluster.yml
 ====================
+Pre-Requisiste: Must create the security group used for the DB instances
+The cloudformation template creates:
 + Creates the DB Subnet group
 + Create the DB Cluster
 + Creates the DB Instance (primary node)
+
+postgres-cluster.yml          Creates the Aurora cluster with 1 instance
+Stack name = rdsa-postgresql
+
 
 Bastion host
 ============
