@@ -36,7 +36,7 @@ Parameters:
     Description: 'The instance type of database server.'
     Type: String
     Default: 'db.t3.medium'
-    AllowedValues: ['db.t3.medium','db.r4.large','db.r5.large','db.r6g.large']
+    AllowedValues: ['db.t3.medium','db.r3.large','db.r5.large','db.r6g.large']
 
   # Master user name created for the cluster
   DBMasterUsername:
