@@ -41,7 +41,15 @@ SELECT server_id,
     replica_lag_in_msec as AuroraReplicaLag 
 FROM aurora_replica_status();
 
+===============
+Fault injection
+===============
 
+SELECT aurora_inject_replica_failure(
+   100, 
+   20, 
+   'rdsa-postgresql-node-02'
+);
 
 
 Exercise (Part-1) : Checkout Failover
