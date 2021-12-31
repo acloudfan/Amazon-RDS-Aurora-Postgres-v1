@@ -41,15 +41,26 @@ SELECT server_id,
     replica_lag_in_msec as AuroraReplicaLag 
 FROM aurora_replica_status();
 
-===============
-Fault injection
-===============
+=================================
+Replica Failure - Fault injection
+=================================
+https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraPostgreSQL.Managing.FaultInjectionQueries.html
 
+
+* Simulate failure for 20 seconds
 SELECT aurora_inject_replica_failure(
    100, 
    20, 
    'rdsa-postgresql-node-02'
 );
+
+* Simulate failure for 2 minutes
+SELECT aurora_inject_replica_failure(
+   100, 
+   120, 
+   'rdsa-postgresql-node-02'
+);
+
 
 
 Exercise (Part-1) : Checkout Failover
