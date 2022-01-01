@@ -42,6 +42,7 @@ mkdir cloudformation
 cp -r Amazon-RDS-Aurora-Postgres-v1/vpc/*.yml ./cloudformation
 cp -r Amazon-RDS-Aurora-Postgres-v1/cluster-basic/*.yml ./cloudformation
 cp -r Amazon-RDS-Aurora-Postgres-v1/replicas/*.yml ./cloudformation
+cp -rf Amazon-RDS-Aurora-Postgres-v1/pgbench/ pgbench
 
 # Install the tools
 cp -r Amazon-RDS-Aurora-Postgres-v1/bin .
