@@ -34,6 +34,7 @@ psql -c "CREATE database pgbenchtest;"
   - Add 100 times the default data set -s 100
   pgbench -s 100 -i pgbenchtest
 
+* IMPORTANT: For the default TPC-B-like test scenario, the initialization scale factor (-s) should be at least as large as the largest number of clients you intend to test (-c)
 
 Part-2 Run the benchmarking test
 --------------------------------
