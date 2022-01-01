@@ -1,6 +1,6 @@
-# This is a custom script for pgbench
+
 \set test_value  random(1,1000)
 
-BEGIN 
-    INSERT INTO test VALUES(:test_value)
-END
+BEGIN;
+    INSERT INTO test VALUES(:test_value);
+END;
