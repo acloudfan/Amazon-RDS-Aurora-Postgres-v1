@@ -13,7 +13,7 @@ Part-1 Create and Initialize the TPC-B database
 
 * Create a new database
 
-psql -c "CREATE database pgbenchtest;
+psql -c "CREATE database pgbenchtest";
 
 * Initialize the database and populate with data
 
