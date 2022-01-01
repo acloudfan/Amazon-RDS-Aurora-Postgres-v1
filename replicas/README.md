@@ -55,6 +55,7 @@ SELECT aurora_inject_replica_failure(
 );
 
 * Simulate failure for 2 minutes
+* Increase the duration to 4 minutes if you do not see a replica restart
 SELECT aurora_inject_replica_failure(
    100, 
    120, 
