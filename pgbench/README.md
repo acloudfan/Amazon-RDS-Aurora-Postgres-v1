@@ -39,10 +39,12 @@ Part-2 Run the benchmarking test
 --------------------------------
 * Option -c used for specifying the number of DB connections
 * Option -j used for threads (helpful on m/c with multiple cpu)
+* Option -T used for amount of time
+* Option -P used for printing status
 * Option -b for specifying SQL mix; 
   Built in script names : tpcb-like, simple-update, select-only
 
-pgbench 
+pgbench -c 2 -T 15 -P 2 -b tpcb-like pgbenchtest 
 
 
 ==============
