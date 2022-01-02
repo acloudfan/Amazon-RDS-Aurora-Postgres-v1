@@ -1,3 +1,5 @@
+============
+
 
 ============
 Auto scaling
@@ -10,7 +12,7 @@ Auto scaling
 pgbench -h $PGREADEREP  -c 70 -j 2 -n   -M prepared   -T 900 -P 5 -b select-only -r  pgbenchtest
 
 
-
+===============================
 enhanced-monitoring-sample.json
 ===============================
 This is a sample JSON for a log record published by RDS/EM to CloudWatch. Refer to the link below for the details of each metric:
@@ -36,5 +38,4 @@ Set the retention on log group = 6 months
 * E.g., take snapshot
 
 
-Install nginx
-=============
+

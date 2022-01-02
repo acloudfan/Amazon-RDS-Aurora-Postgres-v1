@@ -2,9 +2,9 @@
     "engine": "aurora-postgresql",
     "instanceID": "rdsa-postgresql-node-01",
     "instanceResourceID": "XXXXXXXXXXXXXXXXXXXXX",
-    "timestamp": "2021-06-19T15:59:21Z",
+    "timestamp": "2022-01-1T15:59:21Z",
     "version": 1,
-    "uptime": "24 days, 20:31:58",
+    "uptime": "4 days, 20:31:58",
     "numVCPUs": 2,
     "cpuUtilization": {
         "guest": 0,
