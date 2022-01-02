@@ -1,5 +1,15 @@
-============
-
+==========================
+Enable Enhanced Monitoring
+==========================
+1. Create the role using CloudFormation
+   * Stack name = rds-postgresql-enhanced-monitoring-role
+2. In RDS Console
+   * Select node-01
+   * Click on Modify
+3. In the monitoring tab
+   * Check the box = Enable Enhanced monitoring
+   * Select the role created in #1
+   * Select "Apply Immediately" and apply changes
 
 ============
 Auto scaling
