@@ -43,7 +43,10 @@ aws rds describe-orderable-db-instance-options --engine aurora-postgresql \
 # 2. Provide instance class
 # 3. Apply the change immediately
 
-./bin/db/modify-db-cluster-instance.sh   rdsa-node-01  INSTANCE_CLASS   --apply-immediately
+./bin/db/modify-db-cluster-instance.sh   \
+    rdsa-postgresql-node-01 \
+    db.r5.large    \
+    --apply-immediately
 
 3. Track the failover
 ---------------------
