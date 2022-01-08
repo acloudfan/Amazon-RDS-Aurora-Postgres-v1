@@ -16,8 +16,8 @@ Test setup:
 
 2. Cluster with at least 1 replica: Fails over
     * You may create a replica to try out this scenario
-    
-    $ ./bin/db/create-replica.sh rdsa-postgresql-node-02
+
+    $ ./bin/db/create-replica.sh node-02
 
 1. Get the supported instance type
 -----------------------------------
