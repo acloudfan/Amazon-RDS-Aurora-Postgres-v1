@@ -57,6 +57,24 @@ aws rds describe-orderable-db-instance-options --engine aurora-postgresql \
 
 ./bin/db/dbcluster-dig.sh
 
+
+Cleanup
+-------
+1. Delete the Replica
+
+* Delete will fail if the cluster is in stopped state.
+
+./bin/db/delete-replica.sh    node-02
+
+2. Scale down the DB instance for node-01
+
+* There will be an outage 
+
+./bin/db/modify-db-cluster-instance.sh   \
+    rdsa-postgresql-node-01 \
+    db.t3.medium    \
+    --apply-immediately
+
 ===========
 References:
 ===========

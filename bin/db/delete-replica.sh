@@ -35,6 +35,11 @@ while [ $? == 0 ]; do
     STATUS=$(aws  cloudformation describe-stacks --output text --stack-name "$RDSA_REPLICA_CF_STACK_NAME" --query 'Stacks[0].StackStatus')
     if [[ "$STATUS" == "DELETE_IN_PROGRESS" ]]; then
         echo -n "."
+    elif [[ "$STATUS" == "DELETE_FAILED" ]]; then
+        echo "Delete FAILED!!"
+        echo "This generally happens if the DB Cluster is in STOPPED State."
+        echo "Please START DB cluster & try again. To start use : ./bin/db/dbcluster.sh start"
+        break
     else
         break
     fi
