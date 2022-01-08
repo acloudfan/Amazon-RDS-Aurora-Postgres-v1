@@ -75,6 +75,12 @@ Cleanup
     db.t3.medium    \
     --apply-immediately
 
+* Optionally run the script to see a change in Endpoints
+
+./bin/db/dbcluster-dig.sh
+
+* Optionally try to run psql and you would get an error indicating that DB is unavailable while the instance is getting modified
+
 ===========
 References:
 ===========
