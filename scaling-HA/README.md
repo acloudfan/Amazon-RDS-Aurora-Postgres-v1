@@ -16,6 +16,7 @@ https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Concepts.DBInstance
 
 # Get the instance availability
 PG_VERSION=$(psql -t -c "SHOW server_version" )
+
 aws rds describe-orderable-db-instance-options --engine aurora-postgresql \
     --query "OrderableDBInstanceOptions[].{DBInstanceClass:DBInstanceClass,SupportedEngineModes:SupportedEngineModes[0]}" \
     --output table --engine-version $PG_VERSION   \
