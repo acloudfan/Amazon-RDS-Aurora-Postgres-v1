@@ -1,12 +1,16 @@
 #!/bin/bash
 #DIGs the CLUSTER & READER Endpoints
 
-SLEEP_TIME=5s
-echo "^c to stop the script."
+SLEEP_TIME=5
+
+echo "^C to stop the script."
+
 OLD_WRITER_IP=$(dig $PGWRITEREP +short | tail -n1)
 OLD_READER_IP=$(dig $PGREADEREP +short | tail -n1)
 
+COUNTER=0
 while true; do
+    COUNTER=$(($COUNTER+1))
     NEW_WRITER_IP=$(dig $PGWRITEREP +short | tail -n1)
     NEW_READER_IP=$(dig $PGREADEREP +short | tail -n1)
 
@@ -20,7 +24,8 @@ while true; do
     fi
     OLD_READER_IP=$NEW_READER_IP
 
-    echo "Writer IP=$NEW_WRITER_IP   Reader IP=$NEW_READER_IP"
+    SECS_PASSED=$(($COUNTER*$SLEEP_TIME))
+    echo "$SECS_PASSED s  :  Writer IP=$NEW_WRITER_IP   Reader IP=$NEW_READER_IP"
 
     sleep $SLEEP_TIME
 done;
