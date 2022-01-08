@@ -6,14 +6,6 @@ Check the storage volume status
 SELECT * FROM aurora_show_volume_status();
 
 
-do $$
-begin
-   for true
-      \conninfo
-   end loop;
-end; $$;
-
-
 ========================
 Modify the Instance type
 ========================
@@ -22,18 +14,18 @@ Modify the Instance type
 -----------------------------------
 https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Concepts.DBInstanceClass.html
 
+# Get the instance availability
 PG_VERSION=$(psql -t -c "SHOW server_version" )
 aws rds describe-orderable-db-instance-options --engine aurora-postgresql \
     --query "OrderableDBInstanceOptions[].{DBInstanceClass:DBInstanceClass,SupportedEngineModes:SupportedEngineModes[0]}" \
-    --output table --engine-version $PG_VERSION
+    --output table --engine-version $PG_VERSION   \
+    --region $AWS_DEFAULT_REGION
 
 
-
-* Add the option to check for the region support
-    --region region
 
 2. Modify the instance using CLI
 --------------------------------
+* Applies the modification immediately instead of waiting for the maintenance window
 ./bin/db/modify-db-cluster-instance.sh   rdsa-node-01  INSTANCE_CLASS   --apply-immediately
 
 3. Track the failover
