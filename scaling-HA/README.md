@@ -17,7 +17,7 @@ Test setup:
 2. Cluster with at least 1 replica: Fails over
     * You may create a replica to try out this scenario
 
-    $ ./bin/db/create-replica.sh node-02
+    ./bin/db/create-replica.sh node-02
 
 1. Get the supported instance type
 -----------------------------------
@@ -80,6 +80,83 @@ Cleanup
 ./bin/db/dbcluster-dig.sh
 
 * Optionally try to run psql and you would get an error indicating that DB is unavailable while the instance is getting modified
+
+
+============
+Auto Scaling
+============
+
+Exercise setup
+--------------
+* We will be using pgbench in this exercise so ensure you have the DB pgbenchtest
+
+# Create the pgbench database
+psql -c "CREATE DATABASE pgbenchtest;"
+
+# Initialize the pgbench database
+pgbench -i  pgbenchtest
+
+* Since Auto scaling requires at least 1 Replica, create if you have none
+
+./bin/db/create-replica.sh node-02
+
+
+1. Setup Policy
+---------------
+* RDS Console >> Select the cluster
+* Click on the tab  'Logs & Events'
+* Click on the button 'Add auto scaling policy'
+    - Policy name = rdsa-auto-scaling-policy
+    - Target metrics : 'Average connections to Aurora Replicas'
+    - Target value = 50
+
+* Click on 'Additional configuration'
+  NOTE: 10 seconds is too short - only for testing
+        Set it to a couple of minutes based on workload pattern
+    - Scale in cooldown : 10 seconds
+    - Scale out cooldown : 10 seconds
+* Set the 'Cluster capacity details'
+    - Min capacity = 1
+    - Max capacity = 2
+
+2. Bash Terminal#1  Run a load test with 40 connections
+-------------------------------------------------------
+* This will continuously run the load against the Reader EP
+
+* Create 40 connections
+pgbench -h $PGREADEREP -n -c 40    -T 900 -P 5 -b select-only -r  pgbenchtest
+
+3. Bash Terminal#2  Run a load test with 15
+-------------------------------------------
+* This will lead to creation of an additiona REPLICA
+
+pgbench -h $PGREADEREP -n -c 15    -T 900 -P 5 -b select-only -r  pgbenchtest
+
+* In RDS console check status under 
+  "Logs & events" >> "Auto scaling activities"
+
+    "Event: Adding 1 read replica(s)."
+
+* After a couple of minutes you will see an additional Replica in the cluster
+
+4. Kill the pgbench test on both terminals  using ^C
+----------------------------------------------------
+
+
+5. Observe the scale down in RDS Console
+----------------------------------------
+
+* Under the "Logs & events" >> "Auto scaling activities"
+
+    "Removing 1 read replica(s)."
+
+* After a couple of minutes the new Replica instance will be deleted
+
+
+Cleanup
+-------
+
+* Stop the cluster if you won't be using it
 
 ===========
 References:

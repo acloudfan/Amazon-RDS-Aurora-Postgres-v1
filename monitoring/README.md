@@ -55,12 +55,3 @@ Set the retention on log group = 6 months
 
 
 
-============
-Auto scaling
-============
-* Setup a scaling policy
-    - Target metrics : DB Connections
-    - Cooldown : 10 seconds
-    - Min = 1, Max =2
-* Run a load test against the Reader for 15 minutes
-pgbench -h $PGREADEREP  -c 70 -j 2 -n   -M prepared   -T 900 -P 5 -b select-only -r  pgbenchtest

@@ -5,6 +5,7 @@ There are 2 roles of the replica
 - offload reads from master server to improve its performance
 - takes up role of primary in case of a failover
 
+==========================
 Lab : Setup a READ Replica
 ==========================
 1. Create a replica using the Cloud Formation templte
@@ -63,9 +64,9 @@ SELECT aurora_inject_replica_failure(
 );
 
 
-
+=====================================
 Exercise (Part-1) : Checkout Failover
-============================
+=====================================
 1. Make sure the DB cluster is up with a Primary & Replica instance
 2. Checkout the READER & WRITER endpoints
 dig $PGWRITEREP   <<This will point to node-02>>
@@ -75,7 +76,7 @@ dig $PGREADEREP   <<This will point to node-01>>
 - The WRITER EP should point to node-02
 - The READER EP should point to node-01
 
-
+================================================
 Exercise (Part-2) : Checkout Failover Priorities
 ================================================
 Assumption: Previous exercise was conducted and node-02 is primary
@@ -91,7 +92,7 @@ Assumption: Previous exercise was conducted and node-02 is primary
 - Failover takes roughly a minute
 4. Try out other priority assignments
 
-
+======================
 Failover using AWS CLI
 ======================
 aws rds failover-db-cluster --db-cluster-identifier rdsa-postgresql-cluster 
