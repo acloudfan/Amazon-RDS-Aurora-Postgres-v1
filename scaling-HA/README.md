@@ -10,6 +10,15 @@ SELECT * FROM aurora_show_volume_status();
 Modify the Instance type
 ========================
 
+Test setup: 
+1. Single instance cluster: 
+    * Cluster will become unavailable during modification
+
+2. Cluster with at least 1 replica: Fails over
+    * You may create a replica to try out this scenario
+    
+    $ ./bin/db/create-replica.sh rdsa-postgresql-node-02
+
 1. Get the supported instance type
 -----------------------------------
 https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Concepts.DBInstanceClass.html
