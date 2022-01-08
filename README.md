@@ -52,3 +52,5 @@ psql Cheatsheet
 [Version]
 SELECT version();
 SELECT AURORA_VERSION();
+
+
