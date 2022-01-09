@@ -16,6 +16,10 @@ if [[ "status" == "$ACTION" ]]; then
      echo "DB Cluster [$DB_CLUSTER_ID]: $STATUS"
 elif [[ "$ACTION" == "stop" ]]; then
      CHECK=$(aws rds stop-db-cluster --db-cluster-identifier $DB_CLUSTER_ID)
+     if [ $? <> 0 ]; then
+          echo "FAILED to stop .. Check error message !!!"
+          exit
+     fi
      STATUS=$(aws rds describe-db-clusters  --db-cluster-identifier "$DB_CLUSTER_ID"   --query 'DBClusters[0].Status')
      echo "Attempting to STOP the cluster...if script ends, just run it again"
      # Continuously check the starting status
