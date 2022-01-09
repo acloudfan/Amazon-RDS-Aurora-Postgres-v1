@@ -231,6 +231,57 @@ aws rds failover-db-cluster --db-cluster-identifier rdsa-postgresql-cluster
 * Node-1 should become WRITER after the failover
 
 
+=================================
+Clone a cluster within an Account
+=================================
+
+1. Create the clone using RDS console
+-------------------------------------
+* Select the cluster
+* Select Actions>>Create Clone
+* Set the name = rdsa-postgresql-clone
+* Leave everything else as default and create
+
+2. Setup bastion host environment for clone
+-------------------------------------------
+* Open a Bastion terminal
+* Use the script to set up environment variables for connecting to clone
+
+source  ./bin/db/setup-clone-env.sh
+
+3. Confirm that you are connecting to clone
+-------------------------------------------
+* Verify if writer EP is pointing to the node in the cloned cluster
+
+dig $WRITEREP  +short
+
+4. Create a table & insert some rows
+------------------------------------
+psql -c "CREATE table only_in_clone(id int);"
+psql -c "INSERT INTO only_in_clone VALUES(100);"
+
+5. SELECT from table on source cluster
+--------------------------------------
+* Open a new Bastion Host session
+* Confirm you are connecting to the cluster : rdsa-postgresql-cluster
+* Run the select statement
+
+psql -c "SELECT * FROM only_in_clone;"
+
+* You will get an error as the table is NOT available in the source cluster DB
+
+Cleanup
+-------
+* Delete the Clone cluster
+
+
+
+
+=====================
+Cross Account Cloning
+=====================
+
+
 ===========
 References:
 ===========
