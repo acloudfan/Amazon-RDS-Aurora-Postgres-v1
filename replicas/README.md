@@ -64,17 +64,7 @@ SELECT aurora_inject_replica_failure(
 );
 
 
-=====================================
-Exercise (Part-1) : Checkout Failover
-=====================================
-1. Make sure the DB cluster is up with a Primary & Replica instance
-2. Checkout the READER & WRITER endpoints
-dig $PGWRITEREP   <<This will point to node-02>>
-dig $PGREADEREP   <<This will point to node-01>>
-3. Using the console or CLI execute the failover
-4. Check the WRITER & READER endpoints
-- The WRITER EP should point to node-02
-- The READER EP should point to node-01
+
 
 ================================================
 Exercise (Part-2) : Checkout Failover Priorities

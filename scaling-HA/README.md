@@ -6,9 +6,9 @@ Check the storage volume status
 SELECT * FROM aurora_show_volume_status();
 
 
-========================
-Modify the Instance type
-========================
+===========================================
+Vertical Scaling : Modify the Instance type
+===========================================
 
 Test setup: 
 1. Single instance cluster: 
@@ -82,9 +82,9 @@ Cleanup
 * Optionally try to run psql and you would get an error indicating that DB is unavailable while the instance is getting modified
 
 
-============
-Auto Scaling
-============
+=================================
+Horizontal Scaling : Auto Scaling
+=================================
 
 Exercise setup
 --------------
@@ -156,7 +156,80 @@ pgbench -h $PGREADEREP -n -c 15    -T 900 -P 5 -b select-only -r  pgbenchtest
 Cleanup
 -------
 
-* Stop the cluster if you won't be using it
+* Delete the Auto Scaling Policy
+* Delete all Replicas
+* Stop the cluster & Bastion host if you won't be using it for a while
+
+
+==================================
+Part-1 : Failover with RDS Console
+==================================
+
+Exercise setup
+--------------
+* In this set up we will need 2 Replicas with different priorities
+
+
+* Create replica node-02 (skip if you already have it)
+
+./bin/db/create-replica.sh node-02
+
+1. Checkout the READER & WRITER endpoints
+------------------------------------------
+* On Bastion host
+dig $PGWRITEREP | grep node-  <<This will point to node-01>>
+dig $PGREADEREP | grep node-  <<This will point to node-02>>
+
+2. Trigger Failover on console
+-------------------------------
+* Select any instance in RDS/Cluster
+* Initiate failover by Actions>>Failover
+
+3. Check the WRITER & READER endpoints
+--------------------------------------
+* On Bastion host
+dig $PGWRITEREP | grep node-  <<This will point to node-02>>
+
+dig $PGREADEREP | grep node-  <<This will point to node-01>>
+
+===============================
+Part-2 : Failover with priority
+===============================
+
+Exercise setup
+--------------
+* In this set up we will need 2 Replicas with different priorities
+
+
+* Create replica node-02 (skip if you already have it)
+
+./bin/db/create-replica.sh node-02
+
+* Create replica node-03 (skip if you already have it)
+
+./bin/db/create-replica.sh node-03
+
+1. Modify the node-03 priority tier using console
+-------------------------------------------------
+* Select the node-03 in RDS console
+* Click on modify
+* Change the priority to 'tier-2'
+* Check 'Apply Immediately'
+* Modify
+
+2. Verify priority change in the RDS console
+--------------------------------------------
+
+3. Trigger a failover
+---------------------
+* Use the Bastion host to trigger failover
+
+aws rds failover-db-cluster --db-cluster-identifier rdsa-postgresql-cluster 
+
+4. Observe in RDS console
+-------------------------
+* Node-1 should become WRITER after the failover
+
 
 ===========
 References:
