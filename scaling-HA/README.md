@@ -177,8 +177,8 @@ Exercise setup
 1. Checkout the READER & WRITER endpoints
 ------------------------------------------
 * On Bastion host
-dig $PGWRITEREP | grep node-  <<This will point to node-01>>
-dig $PGREADEREP | grep node-  <<This will point to node-02>>
+dig $PGWRITEREP  +short  <<This will point to node-01>>
+dig $PGREADEREP +short   <<This will point to node-02>>
 
 2. Trigger Failover on console
 -------------------------------
@@ -188,9 +188,9 @@ dig $PGREADEREP | grep node-  <<This will point to node-02>>
 3. Check the WRITER & READER endpoints
 --------------------------------------
 * On Bastion host
-dig $PGWRITEREP | grep node-  <<This will point to node-02>>
+dig $PGWRITEREP +short <<This will point to node-02>>
 
-dig $PGREADEREP | grep node-  <<This will point to node-01>>
+dig $PGREADEREP +short  <<This will point to node-01>>
 
 ===============================
 Part-2 : Failover with priority
