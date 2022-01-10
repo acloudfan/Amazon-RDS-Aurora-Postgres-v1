@@ -39,3 +39,11 @@ aws rds create-db-cluster-parameter-group   \
     --db-parameter-group-family     "$PG_ENGINE"  \
     --description                   "$DBPG_DESC"
 
+if [ $? == 0 ]; then
+    echo "Documentation suggests waiting for 5 minutes before applying the"
+    echo "newly created custom Parameter Groups to a DB cluster."
+else
+    echo "Failed!!"
+fi
+
+echo "Done."
