@@ -231,8 +231,38 @@ aws rds failover-db-cluster --db-cluster-identifier rdsa-postgresql-cluster
 * Node-1 should become WRITER after the failover
 
 
+===
+CCM
+===
+https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraPostgreSQL.cluster-cache-mgmt.html
+
+Exercise setup
+--------------
+* Cluster should have at least 1 replica
+* Setup the pgbenchtest database
+
+# Create the pgbench database
+psql -c "CREATE DATABASE pgbenchtest;"
+
+# Initialize the pgbench database
+pgbench -i  pgbenchtest -s 100
+
+1. Enable CCM on the cluster
+    * Create a custom parameter group
+        Name=Custom-pg-for-CCM
+    * Enable CCM in custom PG
+    * Modify the cluster to use the custom pg
+
+2. 
+
+Cleanup
+-------
+1. Replace the custom PG with default pg
+2. Delete the custom PG
+
 =================================
 Clone a cluster within an Account
+MOVE TO CLUSTER MANAGEMENT - UPDATE Video
 =================================
 
 1. Create the clone using RDS console
@@ -279,6 +309,7 @@ Cleanup
 
 =====================
 Cross Account Cloning
+MOVE TO CLUSTER MANAGEMENT - UPDATE Video
 =====================
 
 
