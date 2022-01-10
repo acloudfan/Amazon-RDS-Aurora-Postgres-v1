@@ -34,8 +34,8 @@ PG_ENGINE="$PG_ENGINE""$PG_VERSION"
 echo "Create the DB Parameter Group: $DBPG_NAME"
 echo "                       Family: $PG_ENGINE"
 
-aws rds create-db-parameter-group   \
-    --db-parameter-group-name       "$DBPG_NAME"  \
+aws rds create-db-cluster-parameter-group   \
+    --db-cluster-parameter-group-name       "$DBPG_NAME"  \
     --db-parameter-group-family     "$PG_ENGINE"  \
     --description                   "$DBPG_DESC"
 
