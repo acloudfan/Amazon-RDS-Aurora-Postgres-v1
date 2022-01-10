@@ -25,5 +25,5 @@ PARAM_NAME=$2
 PARAM_VALUE=$3
 
 aws rds modify-db-cluster-parameter-group \
-    --db-parameter-group-name $DBPG_NAME \
+    --db-cluster-parameter-group-name $DBPG_NAME \
     --parameters "ParameterName=$PARAM_NAME,ParameterValue=$PARAM_VALUE,ApplyMethod=immediate" 
