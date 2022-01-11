@@ -245,15 +245,74 @@ Exercise setup
 psql -c "CREATE DATABASE pgbenchtest;"
 
 # Initialize the pgbench database
-pgbench -i  pgbenchtest -s 100
+pgbench -i   -s 1000 --fillfactor 100 pgbenchtest
+SELECT pg_size_pretty( pg_database_size('pgbenchtest') );
 
 1. Enable CCM on the cluster
-    * Create a custom parameter group
-        Name=Custom-pg-for-CCM
-    * Enable CCM in custom PG
-    * Modify the cluster to use the custom pg
+    # Create a custom parameter group
+    CUSTOM_PG_NAME=custom-pg-for-ccm
+    ./bin/db/create-custom-db-pg.sh $CUSTOM_PG_NAME 'This is to try CCM'
 
-2. 
+    # Enable CCM in custom PG
+    ./bin/db/set-parameter-value.sh $CUSTOM_PG_NAME apg_ccm_enabled 1
+
+    # Modify the cluster to use the custom pg
+    # Wait for few minutes after creation of the custom PG 
+       
+    aws rds modify-db-cluster \
+    --db-cluster-identifier $PG_CLUSTER_ID   \
+    --db-cluster-parameter-group-name  $CUSTOM_PG_NAME
+
+2. Change the promotion priority for node-01 & node-02
+------------------------------------------------------
+    * CCM requires the Writer & Reader node priority = tier-0
+    * After the instances ar modified, verify the setup
+    psql -c "SELECT * FROM aurora_ccm_status();"
+
+3. Run the test w/o CCM
+-----------------------
+# Create a temp directory
+mkdir temp
+cd temp
+rm pgbench_log*
+
+# Run the test - logs will capture 10% of txns
+pgbench  -n -c 350 -j 100   -T 600 -P 5 -b select-only@80 -b tpcb-like@20 -l --sampling-rate  1.0 pgbenchtest
+
+# Utility script copies the data to the table pgbenchstats
+./bin/pgbench/copy_logs.sh
+
+# Verify
+psql -d pgbenchtest -c "SELECT count(*) FROM pgbenchstats;"
+
+
+
+
+# After 600 secs/10 minutes - FAILOVER
+# pgbench will exit so run it again
+pgbench  -n -c 350 -j 100   -T 600 -P 5 -b select-only@80 -b tpcb-like@20 -l --sampling-rate  0.10 pgbenchtest
+
+4. Copy the test data to analysis table
+---------------------------------------
+# Utility script copies the data to the table pgbenchstats
+./bin/pgbench/copy_logs.sh
+
+# Verify
+psql -d pgbenchtest -c "SELECT count(*) FROM pgbenchstats;"
+
+5. Now get avgs
+psql --csv -d pgbenchtest -c "SELECT * FROM pgbenchstats_avg();" > pgbenchstats.csv
+
+scp -i raj-23-win-keypair-blog-acc-Ohio.pem ec2-user@3.137.185.72:/home/ec2-user/pgbenchstats.csv pgbenchstats.csv 
+
+DROP TABLE IF EXISTS  pgbenchstats;
+CREATE TABLE pgbenchstats (client_id int, transaction_no int, time  int, script_no int, time_epoch int, time_us int);
+
+#https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/PostgreSQL.Procedural.Importing.Copy.html
+
+\COPY pgbenchstats FROM '/home/ec2-user/pgbench_log.17509' WITH DELIMITER ' ' CSV;;
+
+
 
 Cleanup
 -------
