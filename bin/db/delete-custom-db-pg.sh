@@ -13,10 +13,9 @@ if [ -z "$1" ]; then
 fi
 
 DBPG_NAME=$1
-DBPG_DESC=$2
 
 aws rds delete-db-parameter-group   \
-    --db-cluster-parameter-group-name       "$DBPG_NAME"  
+    --db-parameter-group-name       "$DBPG_NAME"  
 
 
 echo "Done."
