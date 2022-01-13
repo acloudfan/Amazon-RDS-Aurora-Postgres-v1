@@ -15,7 +15,7 @@ fi
 DBPG_NAME=$1
 DBPG_DESC=$2
 
-aws rds delete-db-parameter-group   \
+aws rds delete-db-cluster-parameter-group   \
     --db-cluster-parameter-group-name       "$DBPG_NAME"  
 
 
