@@ -7,7 +7,7 @@
 # Usage:  ./bin/bash/create-custom-db-pg.sh  <Name>  '<Description>'
 
 if [ -z "$1" ]; then
-    echo "Usage:  ./bin/bash/create-custom-db-pg.sh  <Name>  '<Description>'"
+    echo "Usage:  ./bin/bash/delete-custom-db-pg.sh  <Name>"
     echo "Please provide the Name !!"
     exit
 fi
