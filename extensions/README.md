@@ -1,22 +1,76 @@
+===================
 Postgres Extensions
 ===================
+Prior to v13 only superuser coule manage extensions
+In v13, trusted extensions are introduced that may be managed by other ROLE/USER
 
+List available extensions
+-------------------------
+These are the extensions that may be enabled/disabled on PG
 
+=> SELECT * FROM pg_available_extensions;
+
+List the extensions available on RDS
+
+=> SHOW rds.extensions
+
+List the installed extensions
+-----------------------------
+=> \dx
+=> \dx+
+
+Create extensions
+-----------------
+https://www.postgresql.org/docs/current/sql-createextension.html
+Or install an extension
+ONLY available extensions can be installed
+
+=> CREATE EXTENSION <<Extension name>>
+
+DROP extensions
+---------------
+=> DROP EXTENSION <<Extension name>>
+
+List the versions of extensions
+-------------------------------
+=> SELECT * FROM pg_available_extension_versions
+
+Upgrade the version of extension
+--------------------------------
+=> ALTER EXTENSION <<Extension name>> UPDATE TO <<new version>>
+
+Control the creation of extensions on RDS
+-----------------------------------------
+=> SHOW rds.allowed_extensions
+
+===============================================
 Hands On : S3 export using the aws_s3 extension
 ===============================================
 https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/postgresql-s3-export.html
 
+Exercise setup
+--------------
+* Verify that extension is available
+$  psql   -c 'SELECT * FROM pg_available_extensions' | grep aws_s3
+
+* Check if your role is allowed to create extension (v12.6 or later, v13.2 or later)
+$  psql   -c 'SHOW rds.allowed_extensions'
+
+
 1. Setup the S3 bucket and roles using CloudFormation Template
+--------------------------------------------------------------
 
 * Set the stack name to  'rdsa-s3extension-test'
 * Use the template 's3-roles-etension.yml'
 
 2. SSH to Bastion host & Setup the environment variable
+-------------------------------------------------------
 * If you log out of the terminal then you will need to set these again
 export  TEST_BUCKET=<<Copy the value for 'ExtensionRDSATestBucket' from the Cloud Formation Stack>>
 export  TEST_ROLE_ARN=<<Copy the value for 'RDSAS3DBClusterRoleArn' from the Cloud Formation Stack>>
 
 3. Add the roles to the DB cluster setup
+----------------------------------------
 
 * (Optional) Check feature names; use the appropriate version
 aws  rds      describe-db-engine-versions  \
@@ -34,6 +88,7 @@ aws  rds      add-role-to-db-cluster  \
 aws rds describe-db-clusters  --db-cluster-id $PG_CLUSTER_ID --query DBClusters[0].AssociatedRoles
 
 4. Set up test table that will be exported to s3
+------------------------------------------------
 
 * Launch psql with appropriate environment vars
 psql --set=TEST_BUCKET="$TEST_BUCKET"  --set=AWS_DEFAULT_REGION="$AWS_DEFAULT_REGION"
@@ -44,9 +99,11 @@ SELECT s, md5(random()::text)
 FROM generate_Series(1,5) s;
 
 5. Enable the extension
+-----------------------
 => CREATE EXTENSION IF NOT EXISTS aws_s3 CASCADE;
 
 6. Specify S3 path to export to. This command will setup the env variable s3_uri_1
+----------------------------------------------------------------------------------
 
 => SELECT aws_commons.create_s3_uri( 
    :'TEST_BUCKET' ,   
@@ -58,12 +115,14 @@ FROM generate_Series(1,5) s;
 => SELECT :'s3_uri_1' AS s3_uri ;
 
 7. Export the data to S3
+------------------------
 => SELECT * FROM aws_s3.query_export_to_s3('SELECT * FROM extension_test', 
    :'s3_uri_1',
    options :='format csv'
 );
 
 8. Check out the exported data
+------------------------------
 
 * Quit the psql
 

@@ -1,6 +1,6 @@
 ---
 ## 
-## Creates an EC2 host to interact with DB cluster
+## Creates an S3 bucket and a role for executing ops against the bucket
 ##
 ## Changelog:
 ##
