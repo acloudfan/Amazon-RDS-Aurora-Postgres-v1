@@ -3,22 +3,50 @@ PostgreSQL Stat Collector
 =========================
 https://www.postgresql.org/docs/12/monitoring-stats.html
 
+====================================================================
+Config parameters for stats
+Checkout cluster parameter group for parameters with prefix : track_
+=====================================================================
+You may control the tracking by setting these confg parameters.
+Heavy stats activity may have an impact on performance.
+
+track_activities
+track_activity_query_size
+track_commit_timestamp
+track_counts
+track_functions
+track_io_timing
+
+=================================================
 Hands on with Functions & Parameters (Part 1 & 2)
 =================================================
-1. Start a psql Session (#1)
-- SHOW track_counts;
-- SHOW track_functions;
-2. Get the pid for the backend process & begin a transaction
-- SELECT get_backend_pid()
-- BEGIN;
-3. Start another psql session (#2)
-4. Get the activity in session #1
-- SELECT pg_stat_get_activity(PID for session#1)
 
+1. Start a psql Session (#1)
+----------------------------
+=> SHOW track_counts;
+=> SHOW track_functions;
+
+2. Get the pid for the backend process & begin a transaction
+------------------------------------------------------------
+=> SELECT get_backend_pid()
+=> BEGIN;
+
+3. Start another psql session (#2)
+----------------------------------
+
+4. Get the activity in session #1
+---------------------------------
+=> SELECT pg_stat_get_activity(PID for session#1)
+
+==========================
 Hands on with static views
 ==========================
+
 1. In psql Session#1 get the details of pg_stat_user_tables
-- \d pg_stat_user_tables
+-----------------------------------------------------------
+
+=> \d pg_stat_user_tables
+
 2. Get the current value for tuple counters for the test tables
 - \x
 - SELECT seq_scan, n_tup_ins, idx_scan FROM pg_stat_user_tables WHERE relname = 'test';
