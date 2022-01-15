@@ -85,7 +85,7 @@ $ psql
 
 ==================================
 Hands on with dynamic views
-===========================
+==================================
 1. In psql Session#1 get the details of pg_stat_user_tables
 -----------------------------------------------------------
 
@@ -103,6 +103,96 @@ Hands on with dynamic views
 => \x
 => SELECT * FROM pg_stat_activity WHERE pid=<<Pid of Session#2>>
 
+
+=====================
+Hands On: Wait Events
+=====================
+
+Refresher  Check out the pg_stat_activity view
+----------------------------------------------
+
+1. Get the PID
+--------------
+psql#1=> select pg_backend_pid();
+
+2. Get the current state of connection
+--------------------------------------
+psql#1=> \x
+psql#1=> SELECT * FROM pg_stat_activity WHERE pid=<<Process pid>>
+
+Part-1  Start an explicit transaction and check the wait_event_type
+-------------------------------------------------------------------
+Launch 2nd psql session
+
+1. Get the PID
+--------------
+psql#1=> select pg_backend_pid();
+
+2. Start a transaction in session#1
+-----------------------------------
+psql#1=> BEGIN;
+
+3. In session#2 check the wait event for session#1
+--------------------------------------------------
+psql#2=> SELECT * FROM pg_stat_activity WHERE pid=<<Process pid session#1>>
+
+4. End the transaction in session#1
+-----------------------------------
+psql#2=> COMMIT;
+
+--------------------------------------------
+Part-2  Lock a table and check out the state
+--------------------------------------------
+Launch a 3rd psql session
+
+1. In session#2 start a transaction
+-----------------------------------
+psql#2=> BEGIN;
+psql#2=> LOCK TABLE test;
+
+2. In session#1 start a transaction
+-----------------------------------
+psql#1=> BEGIN;
+psql#1=> LOCK TABLE test;
+
+3. In session#3 check the wait event for session#1
+--------------------------------------------------
+psql#3=> \x
+psql#3=> SELECT * FROM pg_stat_activity WHERE pid=<<Process pid session#1>>
+
+---------------------------------------------
+Part-3 Check out different locks on DB server
+---------------------------------------------
+
+1. Create a test database & setup pgbench db tables
+---------------------------------------------------
+Create the PG Bench database initialize it
+$ psql -c "CREATE DATABASE testactivity"
+$ pgbench -i -s 100 testactivity
+
+2.Run pgbench load
+------------------
+$ pgbench   -c 50  -T 300 -P 3 teststatements
+
+3. Check out locks and wait states
+----------------------------------
+In a 2nd SSH session start psql
+
+psql#2=> SELECT   wait_event_type, state, count(*) 
+       FROM     pg_stat_activity 
+       GROUP BY wait_event_type, state;
+
+
+===============================================================================
+pg_locks
+===============================================================================
+SELECT pid, locktype, relation, mode, granted 
+FROM pg_locks 
+WHERE (relation = (select relid from pg_stat_user_tables where relname = 'test') OR relation is null);
+
+SELECT locktype,count(*)  FROM pg_locks GROUP BY locktype;
+
+SELECT * FROM pg_locks WHERE locktype='tuple';
 
 ============================================================
 Extension: pg_stat_statements
@@ -185,78 +275,7 @@ Clean up
 $ psql -c "DROP DATABASE teststatements"
 
 
-===============================================================================
-pg_stat_activity
-Understanding the Wait Events
-===============================================================================
 
-Refresher  Check out the pg_stat_activity view
----------
-1. Get the PID
-psql#1=> select pg_backend_pid();
-
-2. Get the current state of connection
-psql#1=> \x
-psql#1=> SELECT * FROM pg_stat_activity WHERE pid=<<Process pid>>
-
-Part-1  Start an explicit transaction and check the wait_event_type
-------
-Launch 2nd psql session
-1. Get the PID
-psql#1=> select pg_backend_pid();
-
-2. Start a transaction in session#1
-psql#1=> BEGIN;
-
-3. In session#2 check the wait event for session#1
-psql#2=> SELECT * FROM pg_stat_activity WHERE pid=<<Process pid session#1>>
-
-4. End the transaction in session#1
-psql#2=> COMMIT;
-
-Part-2  Lock a table and check out the state
-------
-Launch a 3rd psql session
-
-1. In session#2 start a transaction
-psql#2=> BEGIN;
-psql#2=> LOCK TABLE test;
-
-2. In session#1 start a transaction
-psql#1=> BEGIN;
-psql#1=> LOCK TABLE test;
-
-3. In session#3 check the wait event for session#1
-psql#3=> \x
-psql#3=> SELECT * FROM pg_stat_activity WHERE pid=<<Process pid session#1>>
-
-Part-3 Check out different locks on DB server
-------
-
-1. Create a test database & setup pgbench db tables
-$ psql -c "CREATE DATABASE testactivity"
-$ pgbench -i -s 100 testactivity
-
-2.Run pgbench load
-$ pgbench   -c 50  -T 300 -P 3 teststatements
-
-3. Check out locks and wait states
-In a 2nd SSH session start psql
-
-psql#2=> SELECT   wait_event_type, state, count(*) 
-       FROM     pg_stat_activity 
-       GROUP BY wait_event_type, state;
-
-===============================================================================
-pg_locks
-===============================================================================
-SELECT pid, locktype, relation, mode, granted 
-FROM pg_locks 
-WHERE (relation = (select relid from pg_stat_user_tables where relname = 'test') OR relation is null);
-
-SELECT locktype,count(*)  FROM pg_locks GROUP BY locktype;
-
-SELECT * FROM pg_locks WHERE locktype='tuple';
 
 ===============================================================================
 Using the stats queries
