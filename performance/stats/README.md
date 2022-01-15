@@ -182,6 +182,99 @@ psql#2=> SELECT   wait_event_type, state, count(*)
        FROM     pg_stat_activity 
        GROUP BY wait_event_type, state;
 
+================================
+Hands on with pg_stat_statements
+================================
+-----------------------------------
+Part-1  Create database & extension
+-----------------------------------
+
+Check if its already created
+=> \dx
+
+1. Create DB 
+------------
+=> CREATE database  teststatements;
+=> \c  teststatements
+=> CREATE EXTENSION pg_stat_statements;
+
+2. Checkout the parameters for extension
+----------------------------------------
+=> SHOW pg_stat_statements.max;
+=> SHOW pg_stat_statements.track;
+
+---------------------------------------------------------
+Part-2   Get the stats for queries against specific table
+---------------------------------------------------------
+
+1. Create the benchmark tables
+------------------------------
+$ pgbench -i -s 100 teststatements
+
+2. Get stats for a specific table from the pg_stat_statements view
+------------------------------------------------------------------
+$ psql -d teststatements
+psql=> \x
+psql=> SELECT * FROM pg_stat_statements WHERE query LIKE '%pgbench%';
+
+3. Reset the stats
+------------------
+psql=> SELECT pg_stat_statements_reset();
+
+4. Run a query a couple of times to see the change in stats
+-----------------------------------------------------------
+psql=> SELECT * FROM pg_stat_statements WHERE query LIKE '%pgbench%';
+
+5. Checkout queries run by background processes
+-----------------------------------------------
+psql=> SELECT * FROM pg_stat_statements ;
+
+-------------------------------------------
+Part-3   Checkout the top 5 slowest queries 
+-------------------------------------------
+
+1. Run a load test against the database
+---------------------------------------
+$ pgbench   -c 10  -T 60 -P 3 teststatements
+
+2. Checkout the top 5 slowest (by mean_time) query/commands
+-----------------------------------------------------------
+$ psql -d teststatements
+psql=> SELECT query, calls, mean_time, rows
+        FROM pg_stat_statements 
+        WHERE query LIKE '%SELECT%pgbench%' 
+              OR query LIKE '%INSERT%pgbench%' 
+              OR query LIKE '%UPDATE%pgbench%'
+        ORDER BY mean_time DESC LIMIT 5;
+
+------------------------------------------------------
+Exercise#1   Checkout the top 5 frequently run queries
+------------------------------------------------------
+
+psql=> SELECT query, calls, mean_time, rows
+        FROM pg_stat_statements 
+        WHERE query LIKE '%SELECT%pgbench%' 
+              OR query LIKE '%INSERT%pgbench%' 
+              OR query LIKE '%UPDATE%pgbench%'
+        ORDER BY calls  DESC LIMIT 5;
+
+-----------------------------------------------------------------
+Exercise#2   Checkout the top 5 queries with lowest blk_hit ratio
+-----------------------------------------------------------------
+psql=> SELECT query, calls, mean_time, rows, 
+                100.0 * shared_blks_hit / nullif(shared_blks_hit + shared_blks_read, 0) 
+                AS hit_percent
+          FROM pg_stat_statements 
+          WHERE query LIKE '%SELECT%pgbench%' 
+              OR query LIKE '%INSERT%pgbench%' 
+              OR query LIKE '%UPDATE%pgbench%'
+          ORDER BY hit_percent ASC LIMIT 5;
+
+
+Clean up
+--------
+$ psql -c "DROP DATABASE teststatements"
+
 
 ===============================================================================
 pg_locks
@@ -202,77 +295,7 @@ https://www.postgresql.org/docs/12/pgstatstatements.html
 2. CREATE EXTENSION pg_stat_statements;
 3. \d pg_stat_statements
 
-Hands on with pg_stat_statements
-================================
-Part-1  Create database & extension
-------
-1. Create DB 
-=> CREATE database  teststatements;
-=> \c  teststatements
-=> CREATE EXTENSION pg_stat_statements;
 
-2. Checkout the parameters for extension
-=> SHOW pg_stat_statements.max;
-=> SHOW pg_stat_statements.track;
-
-Part-2   Get the stats for queries against specific table
-------
-1. Create the benchmark tables
-$ pgbench -i -s 100 teststatements
-
-2. Get stats for a specific table from the pg_stat_statements view
-$ psql -d teststatements
-psql=> \x
-psql=> SELECT * FROM pg_stat_statements WHERE query LIKE '%pgbench%';
-
-3. Reset the stats
-psql=> SELECT pg_stat_statements_reset();
-
-4. Run a query a couple of times to see the change in stats
-psql=> SELECT * FROM pg_stat_statements WHERE query LIKE '%pgbench%';
-
-5. Checkout queries run by background processes
-psql=> SELECT * FROM pg_stat_statements ;
-
-Part-3   Checkout the top 5 slowest queries 
-------
-1. Run a load test against the database
-$ pgbench   -c 10  -T 60 -P 3 teststatements
-
-2. Checkout the top 5 slowest (by mean_time) query/commands
-$ psql -d teststatements
-psql=> SELECT query, calls, mean_time, rows
-        FROM pg_stat_statements 
-        WHERE query LIKE '%SELECT%pgbench%' 
-              OR query LIKE '%INSERT%pgbench%' 
-              OR query LIKE '%UPDATE%pgbench%'
-        ORDER BY mean_time DESC LIMIT 5;
-
-Exercise#1   Checkout the top 5 frequently run queries
-----------
-
-psql=> SELECT query, calls, mean_time, rows
-        FROM pg_stat_statements 
-        WHERE query LIKE '%SELECT%pgbench%' 
-              OR query LIKE '%INSERT%pgbench%' 
-              OR query LIKE '%UPDATE%pgbench%'
-        ORDER BY calls  DESC LIMIT 5;
-
-Exercise#2   Checkout the top 5 queries with lowest blk_hit ratio
-----------
-psql=> SELECT query, calls, mean_time, rows, 
-                100.0 * shared_blks_hit / nullif(shared_blks_hit + shared_blks_read, 0) 
-                AS hit_percent
-          FROM pg_stat_statements 
-          WHERE query LIKE '%SELECT%pgbench%' 
-              OR query LIKE '%INSERT%pgbench%' 
-              OR query LIKE '%UPDATE%pgbench%'
-          ORDER BY hit_percent ASC LIMIT 5;
-
-
-Clean up
---------
-$ psql -c "DROP DATABASE teststatements"
 
 
 
