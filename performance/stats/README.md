@@ -17,8 +17,13 @@ track_counts
 track_functions
 track_io_timing
 
+Checkout the setup
+------------------
+
+=> SHOW  track_activities;
+
 =================================================
-Hands on with Functions & Parameters (Part 1 & 2)
+(Part 1 & 2) Hands on with Functions & Parameters 
 =================================================
 
 1. Start a psql Session (#1)
@@ -26,21 +31,28 @@ Hands on with Functions & Parameters (Part 1 & 2)
 => SHOW track_counts;
 => SHOW track_functions;
 
+=> \d  pg_stat_activity
+
 2. Get the pid for the backend process & begin a transaction
 ------------------------------------------------------------
+
 => SELECT get_backend_pid()
 => BEGIN;
+
+=> SELECT * FROM test;
 
 3. Start another psql session (#2)
 ----------------------------------
 
-4. Get the activity in session #1
----------------------------------
+$ psql
+
+4. Get the activity for session#1 in session #2
+-----------------------------------------------
 => SELECT pg_stat_get_activity(PID for session#1)
 
-==========================
-Hands on with static views
-==========================
+===================================
+(Part 3) Hands on with static views
+===================================
 
 1. In psql Session#1 get the details of pg_stat_user_tables
 -----------------------------------------------------------
@@ -48,32 +60,52 @@ Hands on with static views
 => \d pg_stat_user_tables
 
 2. Get the current value for tuple counters for the test tables
-- \x
-- SELECT seq_scan, n_tup_ins, idx_scan FROM pg_stat_user_tables WHERE relname = 'test';
-3. Run a query against table and check the counts again
-- SELECT * from test;
-- SELECT seq_scan, n_tup_ins, idx_scan FROM pg_stat_user_tables WHERE relname = 'test';
-4. Set the track_count=OFF 
-- SET track_counts=OFF;
-5. Repeat setp 3 ; no change in counts
-6. Set the tracking for count ON
-- SET track_counts=ON;
+---------------------------------------------------------------
 
+=> \x
+=> SELECT seq_scan, n_tup_ins, idx_scan FROM pg_stat_user_tables WHERE relname = 'test';
+
+3. Run a query against table and check the counts again
+-------------------------------------------------------
+=> SELECT * FROM test;
+=> SELECT seq_scan, n_tup_ins, idx_scan FROM pg_stat_user_tables WHERE relname = 'test';
+
+4. Set the track_count=OFF 
+--------------------------
+=> SET track_counts=OFF;
+
+5. Repeat step 3 ; no change in counts
+--------------------------------------
+=> SELECT * FROM test;
+=> SELECT seq_scan, n_tup_ins, idx_scan FROM pg_stat_user_tables WHERE relname = 'test';
+
+6. Set the tracking for count ON
+--------------------------------
+=> SET track_counts=ON;
+
+==================================
 Hands on with dynamic views
 ===========================
 1. In psql Session#1 get the details of pg_stat_user_tables
-- \d pg_stat_activity
+-----------------------------------------------------------
+
+=> \d pg_stat_activity
+
 2. In psql Session#2 start a transaction
-- SELECT pg_backend_pid();
-- BEGIN;
-- SELECT * FROM test;
+----------------------------------------
+
+=> SELECT pg_backend_pid();
+=> BEGIN;
+=> SELECT * FROM test;
+
 3. In Session#1 
-- \x
-- SELECT * FROM pg_stat_activity WHERE pid=<<Pid of Session#2>>
+---------------
+=> \x
+=> SELECT * FROM pg_stat_activity WHERE pid=<<Pid of Session#2>>
 
 
 ============================================================
-pg_stat_statements
+Extension: pg_stat_statements
 https://www.postgresql.org/docs/12/pgstatstatements.html
 ============================================================
 1. \dx 
