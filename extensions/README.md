@@ -43,6 +43,39 @@ Control the creation of extensions on RDS
 -----------------------------------------
 => SHOW rds.allowed_extensions
 
+
+===========================================================
+Hands On : PostGis extension for US Address standardization
+===========================================================
+http://postgis.net/docs/stdaddr.html
+
+https://postgis.net/docs/manual-3.2/postgis_installation.html#installing_pagc_address_standardizer
+
+
+1. Check if the address_standardizer extension is available
+-----------------------------------------------------------
+
+=> SELECT * FROM pg_available_extensions WHERE name='address_standardizer';
+
+2. Create extension 
+-------------------
+
+=> CREATE EXTENSION address_standardizer;
+
+3. Try it out
+-------------
+
+=> SELECT num, street, city, state, zip
+ FROM parse_address('1 Devonshire Place PH301, Boston, MA 02109');
+
+=> SELECT * 
+   FROM parse_address('123 Main Street unit 1A , Atlanta, Georgia 90919-1234');
+
+Cleanup
+-------
+=> DROP EXTENSION address_standardizer;
+
+
 ===============================================
 Hands On : S3 export using the aws_s3 extension
 ===============================================
@@ -60,7 +93,7 @@ $  psql   -c 'SHOW rds.allowed_extensions'
 1. Setup the S3 bucket and roles using CloudFormation Template
 --------------------------------------------------------------
 
-* Set the stack name to  'rdsa-s3extension-test'
+* Set Stack-Name = 'rdsa-s3extension-test'
 * Use the template 's3-roles-etension.yml'
 
 2. SSH to Bastion host & Setup the environment variable
@@ -75,8 +108,8 @@ export  TEST_ROLE_ARN=<<Copy the value for 'RDSAS3DBClusterRoleArn' from the Clo
 * (Optional) Check feature names; use the appropriate version
 aws  rds      describe-db-engine-versions  \
                          --engine           postgres   \
-                         --engine-version   11.9  \
-                         --query 'DBEngineVersions[0].SupportedFeatureNames'
+                         --engine-version   13.4  \
+                         --query 'DBEngineVersions[0].SupportedFeatureNames';
 
 * Add the role to cluster - will need ARN for role from the stack
 aws  rds      add-role-to-db-cluster  \
