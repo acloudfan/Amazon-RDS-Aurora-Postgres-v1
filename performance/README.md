@@ -47,9 +47,10 @@ WHERE id > 50000;
   - Which other waits do you see the mosyt?
 
 
-===============================
+========================================================
 Explain command : Query Planner
-===============================
+https://www.postgresql.org/docs/current/sql-explain.html
+========================================================
 ## Setup the test table & index
 => CREATE TABLE a (id INTEGER, text VARCHAR(10));
 => CREATE TABLE b (id INTEGER, text VARCHAR(10));
@@ -181,6 +182,7 @@ SELECT * FROM test WHERE id=1000;
 
 =======================
 Extension: pg_freespace
+https://www.postgresql.org/docs/current/pgfreespacemap.html
 =======================
 * Please note the output of pg_freespace(...) is not accurate
 
@@ -217,7 +219,7 @@ Drop the extension
 
 ===================================================
 Extension : pgstattuple
-https://www.postgresql.org/docs/12/pgstattuple.html
+https://www.postgresql.org/docs/current/pgstattuple.html
 ====================================================
 Provides tuple level stats for the table
 => CREATE EXTENSION pgstattuple;
