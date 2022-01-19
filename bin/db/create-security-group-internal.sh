@@ -34,7 +34,7 @@ aws cloudformation create-stack \
 
 while [ $? == 0 ]; do
     sleep $SLEEP_TIME
-    CF_STACK_STATUS=$(aws  cloudformation describe-stacks --stack-name $RDSA_CLUSTER_CF_STACK_NAME --output text --query 'Stacks[0].StackStatus')
+    CF_STACK_STATUS=$(aws  cloudformation describe-stacks --stack-name $RDSA_SG_CF_STACK_NAME --output text --query 'Stacks[0].StackStatus')
     if [[ $CF_STACK_STATUS == "CREATE_IN_PROGRESS" ]]; then
         echo -n "."
     else
