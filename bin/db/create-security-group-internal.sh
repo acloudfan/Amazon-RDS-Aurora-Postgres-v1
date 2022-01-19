@@ -29,7 +29,7 @@ fi
 # Create the stack
 aws cloudformation create-stack \
 --stack-name "$RDSA_SG_CF_STACK_NAME" --template-body "$TEMPLATE_LOCATION"  \
-ParameterKey=RdsAuroraVPC,ParameterValue="$VPC_ID"  \
+--parameters ParameterKey=RdsAuroraVPC,ParameterValue="$VPC_ID"  \
 --capabilities "CAPABILITY_NAMED_IAM"
 
 while [ $? == 0 ]; do

@@ -37,7 +37,7 @@ $   source   ~/.bashrc
 
 * Create the security group
 
-$ ./bin/db/create-security-group.sh
+$ ./bin/db/create-security-group-internal.sh
 
 
 Stack name = rdsa-security-group
