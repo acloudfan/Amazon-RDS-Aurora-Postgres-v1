@@ -1,6 +1,7 @@
 #!/bin/bash
 # Creates the RDSA PG Cluster 
 # DEPENDENCY on CloudFormation Stack: rdsa-vpc
+# ./bin/db/create-db-cluster-cf-stack.sh  [instance-class Default = db.t3.medium]
 
 
 
@@ -30,11 +31,23 @@ if [ -z "VPC_ID" ]; then
     exit
 fi
 
+
+
+
 # Show the info used for 
 echo "VPC ID = $VPC_ID"
 echo "Private Subnet List = $PRIVATE_SUBNETS"
 echo "Security Group = $RDSA_INTERNAL_SG"
 echo "CF Stack Name = $RDSA_CLUSTER_CF_STACK_NAME"
+
+# Instance class
+DB_INSTANCE_CLASS=db.t3.medium
+if [ -z "$1" ]; then
+    echo  "Instance Class = (default) $DB_INSTANCE_CLASS"
+else 
+    DB_INSTANCE_CLASS=$1
+    echo  "Instance Class = $DB_INSTANCE_CLASS"
+fi
 
 # Create the stack
 aws cloudformation create-stack \
@@ -45,6 +58,7 @@ ParameterKey=PrivateSubnets,ParameterValue="$PRIVATE_SUBNETS" \
 ParameterKey=DBMasterUsername,ParameterValue="masteruser" \
 ParameterKey=DBMasterUserPassword,ParameterValue="masteruserpw" \
 ParameterKey=VPCSecurityGroupCluster,ParameterValue="$RDSA_INTERNAL_SG" \
+ParameterKey=DBInstanceClass,ParameterValue="DB_INSTANCE_CLASS" \
 --capabilities "CAPABILITY_NAMED_IAM"
 
 while [ $? == 0 ]; do

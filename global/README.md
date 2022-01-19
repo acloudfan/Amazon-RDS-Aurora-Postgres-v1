@@ -1,9 +1,17 @@
 # Global Database
 
 
-1. Select a secondary region
+====================================================
+Create Aurora PostgreSQL cluster in secondary region
+====================================================
+
+1. In AWS management console, select a secondary region
+-------------------------------------------------------
 
 2. Create the VPC in the secondary region using CloudFormation
+--------------------------------------------------------------
+* Open up the CloudFormation consol
+* 
 Template: vpc/cluster-vpc-2-az.yml
 Stack name: rdsa-vpc
 
@@ -14,10 +22,8 @@ PublicSubnetIds: <<Select 1 of the public subnets in rdsa vpc>>
 VpcId: <<Select the rdsa vpc>>
 Acknowledge the stack creation
 
-* EC2/Bastion host info is available under the CloudFormation stack/resources
-
 4. Log on to the Bastion host & setup scripts & project repo
-
+* EC2/Bastion host info is available under the CloudFormation stack/resources
 * Download the setup script
 
 curl https://raw.githubusercontent.com/acloudfan/Amazon-RDS-Aurora-Postgres-v1/master/bin/install/setup-bastion.sh --output setup-bastion-host.sh 
@@ -48,9 +54,25 @@ $  ./bin/db/create-dbcluster-cf-stack.sh
     NOTE: MUST Wait for the cluster to get created
 
 6. Re-run the setup script
-$  ./install/setup-host.sh   <<Sec region>>
+$  ./bin/setup-env.sh   <<Sec region>>
 
-7. 
+7. Test the environment
+
+=> psql
+
+=======================
+Join the global cluster
+=======================
+
+1. Open up RDS dashboard in PRIMARY region
+------------------------------------------
+
+* Select the cluster
+* Actions >> Add AWS Region
+
+
+
+
 
 
 ========================
