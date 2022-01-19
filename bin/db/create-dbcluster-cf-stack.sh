@@ -31,9 +31,6 @@ if [ -z "VPC_ID" ]; then
     exit
 fi
 
-
-
-
 # Show the info used for 
 echo "VPC ID = $VPC_ID"
 echo "Private Subnet List = $PRIVATE_SUBNETS"
@@ -58,7 +55,7 @@ ParameterKey=PrivateSubnets,ParameterValue="$PRIVATE_SUBNETS" \
 ParameterKey=DBMasterUsername,ParameterValue="masteruser" \
 ParameterKey=DBMasterUserPassword,ParameterValue="masteruserpw" \
 ParameterKey=VPCSecurityGroupCluster,ParameterValue="$RDSA_INTERNAL_SG" \
-ParameterKey=DBInstanceClass,ParameterValue="DB_INSTANCE_CLASS" \
+ParameterKey=DBInstanceClass,ParameterValue="$DB_INSTANCE_CLASS" \
 --capabilities "CAPABILITY_NAMED_IAM"
 
 while [ $? == 0 ]; do
