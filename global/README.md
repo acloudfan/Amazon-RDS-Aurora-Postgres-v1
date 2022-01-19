@@ -30,12 +30,16 @@ chmod u+x ./setup-bastion-host.sh
 
 NOTE: You will get an error (DBClusterNotFoundFault) : Ignore it as we will take care of it in next step
 
-* Setup environment variables
+* Setup environment variables  STOP
 $   source   ~/.bashrc
 
 5. Create the Auora PG cluster in secondary region
 
 * Create the security group
+
+$ ./bin/db/create-security-group.sh
+
+
 Stack name = rdsa-security-group
 
 * Create the DB cluster

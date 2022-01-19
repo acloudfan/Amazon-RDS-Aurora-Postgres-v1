@@ -6,7 +6,7 @@ RDSA_VPC_CF_STACK_NAME="rdsa-vpc"
 
 TEMPLATE_LOCATION=file:///home/ec2-user/cloudformation/security-group.yml \
 
-SLEEP_TIME = 3s
+SLEEP_TIME=3s
 
 # Check if the stack already exists
 RDSA_PG_STACK_STATUS=$(aws cloudformation  describe-stacks --stack-name $RDSA_SG_CF_STACK_NAME --query 'Stacks[0].StackStatus')
@@ -17,7 +17,8 @@ if [ $? == 0 ]; then
 fi
 
 # Get the VPC ID
-VPC_ID=$(aws cloudformation  describe-stacks --stack-name $RDSA_VPC_CF_STACK_NAME --query 'Stacks[0].Outputs[?ExportName==`us-east-2-rdsa-vpc-MainVPC`].OutputValue | [0]')
+VPC_ID=$(aws cloudformation  describe-stacks --stack-name $RDSA_VPC_CF_STACK_NAME --query 'Stacks[0].Outputs[?ExportName==`rdsa-vpc-MainVPC`].OutputValue | [0]')
+echo $VPC_ID
 
 if [ -z "VPC_ID" ]; then
     echo "Looks like the stack rdsa-vpc is not there!!"

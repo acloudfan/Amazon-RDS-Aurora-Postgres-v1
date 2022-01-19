@@ -174,7 +174,7 @@ Outputs:
     Description: ImmDays Lab VPC
     Value: !Ref MainVPC
     Export:
-        Name: !Sub "${AWS::Region}-${AWS::StackName}-MainVPC"
+        Name: !Sub "${AWS::StackName}-MainVPC"
   PublicSubnetCidrA:
     Description: PublicSubnetA CIDR for LAB
     Value: !Select [ 0, !Cidr [ !GetAtt MainVPC.CidrBlock, 4, 8 ]]

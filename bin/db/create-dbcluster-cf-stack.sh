@@ -20,7 +20,7 @@ fi
 
 
 # Get the comma seperated list of subnets
-VPC_ID=$(aws cloudformation  describe-stacks --stack-name $RDSA_VPC_CF_STACK_NAME --query 'Stacks[0].Outputs[?ExportName==`us-east-2-rdsa-vpc-MainVPC`].OutputValue | [0]')
+VPC_ID=$(aws cloudformation  describe-stacks --stack-name $RDSA_VPC_CF_STACK_NAME --query 'Stacks[0].Outputs[?ExportName==`rdsa-vpc-MainVPC`].OutputValue | [0]')
 PRIVATE_SUBNETS=$(aws cloudformation  describe-stacks --stack-name $RDSA_VPC_CF_STACK_NAME --query 'Stacks[0].Outputs[?ExportName==`rdsa-vpc-SubnetsPrivate`].OutputValue | [0]')
 RDSA_INTERNAL_SG=$(aws cloudformation  describe-stacks --stack-name rdsa-security-group --query 'Stacks[0].Outputs[?OutputKey==`DBSecurityGroupCluster`].OutputValue | [0]')
 
