@@ -23,8 +23,8 @@ Parameters:
   DBInstanceClass:
     Description: 'The instance type of database server.'
     Type: String
-    Default: 'db.r4.large'
-    AllowedValues: ['db.t3.medium','db.r4.large','db.r5.large','db.r6g.large']
+    Default: 'db.t3.medium'
+    AllowedValues: ['db.t3.medium','db.r3.large','db.r5.large','db.r6g.large']
   DBCluster:
     Type: String
     Description: Name of the DB cluster
@@ -33,13 +33,14 @@ Parameters:
   DBEngineVersion:
     Description: Select Database Engine Version
     Type: String
-    Default: 11.9
+    Default: 13.4
     AllowedValues:
       - 11.6
       - 11.7
       - 11.8
       - 11.9
-      - 12.4
+      - 12.7
+      - 13.4
 
 Resources:
   ## Deploy a reader node

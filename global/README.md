@@ -1,5 +1,55 @@
 # Global Database
 
+
+1. Select a secondary region
+
+2. Create the VPC in the secondary region using CloudFormation
+Template: vpc/cluster-vpc-2-az.yml
+Stack name: rdsa-vpc
+
+3. Create the Bastion host in the secondary region using CloudFormation
+Template: vpc/bastion-host.yml
+Stack name: rdsa-bastion-host
+PublicSubnetIds: <<Select 1 of the public subnets in rdsa vpc>>
+VpcId: <<Select the rdsa vpc>>
+Acknowledge the stack creation
+
+* EC2/Bastion host info is available under the CloudFormation stack/resources
+
+4. Log on to the Bastion host & setup scripts & project repo
+
+* Download the setup script
+
+curl https://raw.githubusercontent.com/acloudfan/Amazon-RDS-Aurora-Postgres-v1/master/bin/install/setup-bastion.sh --output setup-bastion-host.sh 
+
+* Change mod of the file
+chmod u+x ./setup-bastion-host.sh 
+
+* Setup the environment
+./setup-bastion-host.sh <<Provide AWS Region>>  
+
+NOTE: You will get an error (DBClusterNotFoundFault) : Ignore it as we will take care of it in next step
+
+* Setup environment variables
+$   source   ~/.bashrc
+
+5. Create the Auora PG cluster in secondary region
+
+* Create the security group
+Stack name = rdsa-security-group
+
+* Create the DB cluster
+$  ./bin/db/create-dbcluster-cf-stack.sh
+
+    NOTE: MUST Wait for the cluster to get created
+
+6. Re-run the setup script
+$  ./install/setup-host.sh   <<Sec region>>
+
+7. 
+
+
+========================
 Create Global DB Cluster 
 ========================
 Set the Region in console visible
@@ -10,14 +60,14 @@ Stack name: primary-rdsa-cluster
 
 # Create the VPC in secondary region - Region 2 e.g., us-west-2
 Use the CloudFormation template : vpc/secondary-vpc-sg.yml
-Stack name: seondary-rdsa-cluster
+Stack name: secondary-rdsa-postgres-cluster
 
 # Go to the us-west-2 
 Use console to add it as the region to Global database
 Global cluster ID  : global-rdsa
 Select the VPC: rdsa-vpc
 Select the SG: rdsa-sg
-Select the instance: db.r4.large
+Select the instance: db.t3.medium
 
 Global cluster becomes available in all region in the console.
 

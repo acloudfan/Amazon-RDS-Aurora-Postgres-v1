@@ -138,6 +138,8 @@ chmod u+x ./setup-bastion-host.sh
 If you see a message:
 "An error occurred (DBClusterNotFoundFault) when calling the DescribeDBClusters operation: DBCluster rdsa-postgresql-cluster not found." then that means the DB cluster stack is not created !! 
 
+It is OK - as you can alsways creat the instance using the ./bin/db/create-dbcluster.sh
+
 5. Set the environment variables in the current shell
 -----------------------------------------------------
 source ~/.bashrc
