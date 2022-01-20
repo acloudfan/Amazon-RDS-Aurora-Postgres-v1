@@ -37,7 +37,7 @@ $ ./setup-bastion-host.sh <<Provide AWS  Region>>
 
 * Log out and log back in 
 
-* env | grep PG
+$ env | grep PG
 * NOTE: Some env vars will be empty as the Aurora PG cluster is not yet created
 
 4. Create the security group
@@ -57,10 +57,39 @@ $ ./bin/db/create-security-group-internal.sh
   Stack name = rdsa-postgresql
 
 * Or on Bastion host use the script:
-$  ./bin/db/create-security-group-internal.sh
+$  ./bin/db/create-dbcluster-cf-stack.sh
+
+* Wait for the DB cluster to become available
 
 6. Update the Bastion host environment
 --------------------------------------
+* Update the bastion host environment
+
+$ ./bin/install/setup-bastion.sh    <<AWS Region>>
+
+* Log out and log back in
+
+7. Test out the cluster
+-----------------------
+* Check status
+
+$ ./bin/db/dbcluster.sh  status
+
+* Launch psql for testing
+
+$ psql 
+
+=> CREATE TABLE test (id int);
+
+=> INSERT INTO test VALUES(1);
+
+=> SELECT * FROM test;
+
+============
+Stop cluster & Bation host
+============
+
+$ ./bin/db  dbcluster.sh  stop
 
 
 YML

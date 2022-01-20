@@ -57,6 +57,6 @@ sudo ./bin/install/psql-pgbench-jq.sh
 # fi
 
 # Setup the environment variables in the ~/.bashrc
-source PG_CLUSTER_ID=$PG_CLUSTER_ID; ./bin/setup-env.sh  $AWS_DEFAULT_REGION
+source PG_CLUSTER_ID=$PG_CLUSTER_ID;./bin/setup-env.sh  $AWS_DEFAULT_REGION
 
 
