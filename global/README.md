@@ -15,9 +15,14 @@ https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-datab
 * Modify the instance node-01 to use db.r5.large
 * PS: If you have replicas then all instances must be updated
 
-$  /bin/db/modify-db-cluster-instance.sh rdsa-postgresql-node-02 db.r5.large
+$  ./bin/db/modify-db-cluster-instance.sh rdsa-postgresql-node-01 db.r5.large
+
+* You may check  the status of the instance
+$  aws rds describe-db-instances  --db-instance-identifier  rdsa-postgresql-node-01 --query 'DBInstances[0].DBInstanceStatus'
 
 2. Ensure RDS Aurora PostgreSQL is available in secondary region
+
+$ ./bin/db/dbcluster.sh
 
 ============================
 Prepare the secondary region
@@ -41,12 +46,28 @@ PublicSubnetIds: <<Select 1 of the public subnets in rdsa vpc>>
 VpcId: <<Select the rdsa vpc>>
 Acknowledge the stack creation
 
-4. Log on to the Bastion host & create the subnet group
--------------------------------------------------------
+4. Log on to the Bastion host & setup env
+-----------------------------------------
 * EC2/Bastion host info is available under the CloudFormation stack/resources
 * Get the subnet group list from the console or CLI
   CloudFormation stack >> rdsa-vpc >> Outputs >> PrivateSubnets
 
+* Session Manager Login
+$  sudo su - ec2-user
+
+* Download setup script
+curl https://raw.githubusercontent.com/acloudfan/Amazon-RDS-Aurora-Postgres-v1/master/bin/install/setup-bastion.sh --output setup-bastion-host.sh 
+
+* Change mod of the file
+$ chmod u+x ./setup-bastion-host.sh 
+
+* Setup the environment
+$ ./setup-bastion-host.sh <<Provide AWS  Region>>  
+
+* Log out and log back in
+
+5. Setup the subet group
+------------------------
 * Use the command below for getting the list
 aws cloudformation describe-stacks --stack-name rdsa-vpc --query 'Stacks[0].Outputs[?OutputKey==`PrivateSubnets`].OutputValue | [0]' --output text
 
@@ -67,16 +88,14 @@ Create the global cluster
 2. Create global DB
 -------------------
 * Select the existing cluster 
-* Actions >> Add Region
+* Actions >> Add AWS Region
 
 Name=rdsa-postgresql-global
 Region=<<Select the secondary region>>
 DB Instance class=<<Select the instance e.g., db.r5.large>>
-Availability & Durability=Don't create Replica
 
 VPC=<<Select RDSA VPC>>
 Subnet group=<<Select the subnet group created earlier>>
-Public access=No
 
 Security group=<<Select the rdsa-security-group-internal>>
 
@@ -243,12 +262,26 @@ Cleanup - Primary
 * Select the secondary cluster
 * Actions >> Remove from Global cluster 
 
-2. Delete the global cluster
+2. Scale down the instance
+--------------------------
+$  ./bin/db/modify-db-cluster-instance.sh rdsa-postgresql-node-01 db.t3.medium
+
+* You may check  the status of the instance
+
+$  aws rds describe-db-instances  --db-instance-identifier  rdsa-postgresql-node-01 --query 'DBInstances[0].DBInstanceStatus'
+
+3. Delete the global cluster
 ----------------------------
 * Select the global db cluster
 * Actions >> Delete
 
+4. (optional) Stop the DB Cluster
+---------------------------------
+$   ./bin/db/dbcluster.sh stop
 
+5. (optional) Stop the bastion host
+-----------------------------------
+$   ./bin/host/stop-host.sh
 
 
 
