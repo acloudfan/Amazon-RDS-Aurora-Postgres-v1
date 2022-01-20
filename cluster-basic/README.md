@@ -44,14 +44,20 @@ $ ./setup-bastion-host.sh <<Provide AWS  Region>>
 ----------------------------
 * You may do it using the CloudFormation console
 * YML = basic-cluster/postgres-cluster.yml
-  Stack name = rdsa-postgresql
-  
+  Stack name = security-group.yml
+
 * Or on Bastion host use the script:
 $ ./bin/db/create-security-group-internal.sh
 
+
 5. Create the Aurora PG Cluster
 -------------------------------
+* You may do it using the CloudFormation console
+* YML = basic-cluster/postgres-cluster.yml
+  Stack name = rdsa-postgresql
 
+* Or on Bastion host use the script:
+$  ./bin/db/create-security-group-internal.sh
 
 6. Update the Bastion host environment
 --------------------------------------
