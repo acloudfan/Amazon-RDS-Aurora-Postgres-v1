@@ -1,9 +1,27 @@
 # Global Database
 
+=============================================================================================
+Validate instance size in primary region
+https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-database-getting-started.html#aurora-global-database.configuration.requirements
+=============================================================================================
 
-====================================================
-Create Aurora PostgreSQL cluster in secondary region
-====================================================
+* Global database instance MUST be of memory optimized class
+* Min size = db.r5.large
+
+1. Update the instance class for primary
+----------------------------------------
+
+* Log on to the bastion host 
+* Modify the instance node-01 to use db.r5.large
+* PS: If you have replicas then all instances must be updated
+
+$  /bin/db/modify-db-cluster-instance.sh rdsa-postgresql-node-02 db.r5.large
+
+2. Ensure RDS Aurora PostgreSQL is available in secondary region
+
+============================
+Prepare the secondary region
+============================
 
 1. In AWS management console, select a secondary region
 -------------------------------------------------------
@@ -16,14 +34,74 @@ Template: vpc/cluster-vpc-2-az.yml
 Stack name: rdsa-vpc
 
 3. Create the Bastion host in the secondary region using CloudFormation
+-----------------------------------------------------------------------
 Template: vpc/bastion-host.yml
 Stack name: rdsa-bastion-host
 PublicSubnetIds: <<Select 1 of the public subnets in rdsa vpc>>
 VpcId: <<Select the rdsa vpc>>
 Acknowledge the stack creation
 
-4. Log on to the Bastion host & setup scripts & project repo
+4. Log on to the Bastion host & create the subnet group
+-------------------------------------------------------
 * EC2/Bastion host info is available under the CloudFormation stack/resources
+* Get the subnet group list from the console or CLI
+  CloudFormation stack >> rdsa-vpc >> Outputs >> PrivateSubnets
+
+* Use the command below for getting the list
+aws cloudformation describe-stacks --stack-name rdsa-vpc --query 'Stacks[0].Outputs[?OutputKey==`PrivateSubnets`].OutputValue | [0]' --output text
+
+* Create the subnet group
+aws rds create-db-subnet-group  \
+    --db-subnet-group-name  rdsa-postgresql-db-subnet-group  \
+    --db-subnet-group-description 'This is for setting up a test group'   \
+    --subnet-ids  '["Private subnet-id-1","Private subnet-id-2"]'
+
+
+=========================
+Create the global cluster
+=========================
+
+1. Switch to PRIMARY region and open RDS console
+------------------------------------------------
+
+2. Create global DB
+-------------------
+* Select the existing cluster 
+* Actions >> Add Region
+
+Name=rdsa-postgresql-global
+Region=<<Select the secondary region>>
+DB Instance class=<<Select the instance e.g., db.r5.large>>
+Availability & Durability=Don't create Replica
+
+VPC=<<Select RDSA VPC>>
+Subnet group=<<Select the subnet group created earlier>>
+Public access=No
+
+Security group=<<Select the rdsa-security-group-internal>>
+
+Additional Config - Performance insights = Uncheck
+Additional Config - Enhanced monitoring = Uncheck
+
+3. Wait for the cluster in secondary region to be created
+---------------------------------------------------------
+* DO NOT proceed to next step till cluster is ready
+
+===================
+Test global cluster
+===================
+
+Why we can't use Bastion host in PRIMARY region?
+------------------------------------------------
+1. We will need connectivity between the Primary & Secondary VPC
+2. Secondary cluster rdsa-Gsecurity-group-internal will need to allow host to connect
+
+1. Logon to the bastion host in SECONDARY region
+------------------------------------------------
+
+
+2. Setup the bastion host environment
+-------------------------------------
 * Download the setup script
 
 curl https://raw.githubusercontent.com/acloudfan/Amazon-RDS-Aurora-Postgres-v1/master/bin/install/setup-bastion.sh --output setup-bastion-host.sh 
@@ -32,7 +110,7 @@ curl https://raw.githubusercontent.com/acloudfan/Amazon-RDS-Aurora-Postgres-v1/m
 chmod u+x ./setup-bastion-host.sh 
 
 * Setup the environment
-./setup-bastion-host.sh <<Provide AWS Region>>  
+./setup-bastion-host.sh <<Provide AWS SECONDARY Region>>  
 
 NOTE: You will get an error (DBClusterNotFoundFault) : Ignore it as we will take care of it in next step
 
