@@ -17,7 +17,7 @@ if [ $? == 0 ]; then
 fi
 
 # Get the VPC ID
-VPC_ID=$(aws cloudformation  describe-stacks --stack-name $RDSA_VPC_CF_STACK_NAME --query 'Stacks[0].Outputs[?ExportName==`rdsa-vpc-MainVPC`].OutputValue | [0]')
+VPC_ID=$(aws cloudformation  describe-stacks --stack-name $RDSA_VPC_CF_STACK_NAME --query 'Stacks[0].Outputs[?OutputKey==`MainVPC`].OutputValue | [0]')
 echo $VPC_ID
 
 if [ -z "VPC_ID" ]; then

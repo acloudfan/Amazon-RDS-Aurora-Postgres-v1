@@ -1,3 +1,62 @@
+=======================
+Create the test cluster
+=======================
+* Videos  in section#3 shows how to creat the cluster with console
+* The instructions here uses a combination of console & CLI
+
+1. Create the VPC
+-----------------
+* AWS CloudFormation Console
+* Create Stack >> With new resources
+* YML = vpc/cluster-vpc-2-az.yml
+    -   Stack Name=rdsa-vpc
+
+2. Create the Bastion Host
+--------------------------
+* AWS CloudFormation Console
+* Create Stack >> With new resources
+* YML = vpc/bastion-host.yml
+    -   Stack Name=rdsa-bastion-host
+    -   Subnet=<<Select rdsa PublicSubnet>>
+    -   VpcId=<<Select rdsa VPC>>
+
+3. Setup the Bastion host
+-------------------------
+* You may use the CloudFormation console
+* Log onto the Bastion host
+  Click on link to host in the Cloudformation>>rdsa-bastion-host>>Resources
+
+
+curl https://raw.githubusercontent.com/acloudfan/Amazon-RDS-Aurora-Postgres-v1/master/bin/install/setup-bastion.sh --output setup-bastion-host.sh 
+
+* Change mod of the file
+$ chmod u+x ./setup-bastion-host.sh 
+
+* Setup the environment
+$ ./setup-bastion-host.sh <<Provide AWS  Region>>  
+
+* Log out and log back in 
+
+* env | grep PG
+* NOTE: Some env vars will be empty as the Aurora PG cluster is not yet created
+
+4. Create the security group
+----------------------------
+* You may do it using the CloudFormation console
+* YML = basic-cluster/postgres-cluster.yml
+  Stack name = rdsa-postgresql
+  
+* Or on Bastion host use the script:
+$ ./bin/db/create-security-group-internal.sh
+
+5. Create the Aurora PG Cluster
+-------------------------------
+
+
+6. Update the Bastion host environment
+--------------------------------------
+
+
 YML
 ===
 enhanced-monitoring-role.yml  Creates the role for EM
