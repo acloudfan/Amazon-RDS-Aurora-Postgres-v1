@@ -136,66 +136,128 @@ $  ./bin/setup-env.sh   <<Sec region>>
 
 7. Test the environment
 
-=> psql
+$ psql
 
-=======================
-Join the global cluster
-=======================
+=> SELECT * from test;     
 
-1. Open up RDS dashboard in PRIMARY region
+=> INSERT INTO test VALUES(100);     -- This will throw an error
+
+===================
+Failover & Failback
+===================
+
+1. Select the global cluster in RDS console
+-------------------------------------------
+
+2. Initiate failover
+--------------------
+
+Actions >> Failover over 
+
+* Select the region & continue
+
+* Try psql in SECONDARY
+=> INSERT INTO test VALUES(101010); -- This will be successful
+
+3. Failback to primary
+----------------------
+* Select the global cluster
+
+Actions >> Failover over 
+
+
+============
+Try headless
+============
+
+1. Delete the instance in secondary cluster
+-------------------------------------------
+* Select the instance
+* Actions >> Delete
+
+2. [Optional] Create an instance & try SQL
 ------------------------------------------
 
-* Select the cluster
-* Actions >> Add AWS Region
+=================
+Promote secondary
+=================
+1. Promote the secondary
+------------------------
+
+* Select the secondary cluster
+* Actions >> Remove from Global cluster
+
+2. Checkout the secondary cluster
+---------------------------------
+* To test create an instance for the cluster
+* Test it out
+
+==================================
+Remove Primary from global cluster
+==================================
+* Select the secondary cluster
+* Actions >> Remove from Global cluster 
+
+
+===================
+Cleanup - Secondary
+===================
+
+1. Delete instance under the secondary cluster
+----------------------------------------------
+* If you don't have any instance, go to next step
+* Select the instance
+* Actions >> Delete
+
+2. Delete the secondary cluster
+-------------------------------
+* Select cluster (headless)
+* Actions >> Delete
+
+3. Delete the Subnet group
+--------------------------
+* You may do it with console or CLI
+
+aws rds delete-db-subnet-group  \
+    --db-subnet-group-name  rdsa-postgresql-db-subnet-group
+
+4. Delete the security group
+----------------------------
+./bin/db/delete-security-group-internal.sh
+
+5. Delete the Bastion host
+--------------------------
+./bin/host/delete-host-cf-stack.sh
+
+6. Delete the VPC
+-----------------
+* Open up the CloudFormation console 
+* Select the VPC stack >> Delete
+
+=================
+Cleanup - Primary
+=================
+
+1. Promote cluster in primary
+-----------------------------
+* Select the secondary cluster
+* Actions >> Remove from Global cluster 
+
+2. Delete the global cluster
+----------------------------
+* Select the global db cluster
+* Actions >> Delete
 
 
 
 
 
 
-========================
-Create Global DB Cluster 
-========================
-Set the Region in console visible
 
-# Create the primary cluster - Region 1 e.g., us-west-1
-Use the CloudFormation template : global/primary-cluster.yml
-Stack name: primary-rdsa-cluster
 
-# Create the VPC in secondary region - Region 2 e.g., us-west-2
-Use the CloudFormation template : vpc/secondary-vpc-sg.yml
-Stack name: secondary-rdsa-postgres-cluster
 
-# Go to the us-west-2 
-Use console to add it as the region to Global database
-Global cluster ID  : global-rdsa
-Select the VPC: rdsa-vpc
-Select the SG: rdsa-sg
-Select the instance: db.t3.medium
 
-Global cluster becomes available in all region in the console.
-
-# Create the bastion hosts in the VPC
-Use the CloudFormation template in both region
-Template : vpc/bastion-host.yml
-Stack name: rdsa-host
-
-# Setup environment and tools on Bastion host
-curl https://raw.githubusercontent.com/acloudfan/Amazon-RDS-Aurora-Postgres-v1/master/bin/install/setup-bastion.sh --output setup-bastion.sh 
-
-chmod u+x ./setup-bastion.sh 
-
-./setup-bastion.sh us-west-1   global-rdsa-cluster-cluster-1
-
-source ~/.bashrc
-
-# To write against Primary
-psql  -h $PGWRITEREP
-CREATE TABLE global(id integer);
-
-# To read from Secondary
-psql -h $PGREADEREP
-
+================
 Checkout the lag
 ================
 https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-database-monitoring.html
@@ -213,38 +275,6 @@ select * from aurora_global_db_status();
 - Checkout instance status
 select * from aurora_global_db_instance_status();
 
-
-Planned | Managed Failover
-==========================
-https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-database-disaster-recovery.html#aurora-global-database-disaster-recovery.managed-failover
-
-1. Connect to the primary region (Region-1)
-* execute the SQL Insert against primary cluster = SUCCESS
-
-2. Carry out the controlled failover
-* Checkout the console on which region is primary
-
-3. In the previous Bastion | psql session  (Region-1)
-* The session will break so launch psql
-* execute the SQL Insert against primary cluster = FAILURE
-
-4. Start the Bastion host in Region-2
-* execute the SQL Insert against primary cluster = SUCCESS
-
-Headless secondary cluster
-==========================
-# Writer instance in the primary cannot be deleted
-
-# Delete the instance 
-* Possible to delete from the console
-* Delete the CloudFormation stack used to create the instance
-
-Remove cluster
-==============
-* When DB cluster is removed from the Global DB it is promoted to a standalone cluster
-    - A Reader takes over as a Writer
-
-* Simply remove the cluster
 
 Managed RPO
 ===========
