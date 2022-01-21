@@ -25,7 +25,7 @@ $  aws rds describe-db-instances  --db-instance-identifier  rdsa-postgresql-node
 $ ./bin/db/dbcluster.sh
 
 ============================
-Prepare the secondary region
+Prepare the SECONDARY region
 ============================
 
 1. In AWS management console, select a secondary region
@@ -199,6 +199,10 @@ Promote secondary
 ---------------------------------
 * To test create an instance for the cluster
 * Test it out
+
+$ psql
+
+=> SHOW  transaction_read_only;
 
 ==================================
 Remove Primary from global cluster

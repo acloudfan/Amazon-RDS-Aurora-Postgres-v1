@@ -55,8 +55,9 @@ $ ./bin/db/create-security-group-internal.sh
 * You may do it using the CloudFormation console
 * YML = basic-cluster/postgres-cluster.yml
   Stack name = rdsa-postgresql
+  PrivateSubnets = <<Copy paste from rdsa-vpc stack - Output parameters>>
 
-* Or on Bastion host use the script:
+* Or on Bastion host use the script. It creates the subnet group & DB cluster:
 $  ./bin/db/create-dbcluster-cf-stack.sh
 
 * Wait for the DB cluster to become available
