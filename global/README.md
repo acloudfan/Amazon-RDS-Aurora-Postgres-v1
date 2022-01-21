@@ -77,6 +77,15 @@ aws rds create-db-subnet-group  \
     --db-subnet-group-description 'This is for setting up a test group'   \
     --subnet-ids  '["Private subnet-id-1","Private subnet-id-2"]'
 
+6. Create the security group
+----------------------------
+* You may do it using the CloudFormation console
+* YML = basic-cluster/postgres-cluster.yml
+  Stack name = security-group.yml
+
+* Or on Bastion host use the script:
+$ ./bin/db/create-security-group-internal.sh
+
 
 =========================
 Create the global cluster
@@ -102,6 +111,7 @@ Security group=<<Select the rdsa-security-group-internal>>
 Additional Config - Performance insights = Uncheck
 Additional Config - Enhanced monitoring = Uncheck
 
+
 3. Wait for the cluster in secondary region to be created
 ---------------------------------------------------------
 * DO NOT proceed to next step till cluster is ready
@@ -121,19 +131,13 @@ Why we can't use Bastion host in PRIMARY region?
 
 2. Setup the bastion host environment
 -------------------------------------
-* Download the setup script
-
-curl https://raw.githubusercontent.com/acloudfan/Amazon-RDS-Aurora-Postgres-v1/master/bin/install/setup-bastion.sh --output setup-bastion-host.sh 
-
-* Change mod of the file
-chmod u+x ./setup-bastion-host.sh 
 
 * Setup the environment
 ./setup-bastion-host.sh <<Provide AWS SECONDARY Region>>  
 
 NOTE: You will get an error (DBClusterNotFoundFault) : Ignore it as we will take care of it in next step
 
-* Setup environment variables  STOP
+* Setup environment variables  
 $   source   ~/.bashrc
 
 5. Create the Auora PG cluster in secondary region
