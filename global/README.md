@@ -33,7 +33,7 @@ Prepare the SECONDARY region
 
 2. Create the VPC in the secondary region using CloudFormation
 --------------------------------------------------------------
-* Open up the CloudFormation consol
+* Open up the CloudFormation console
 * 
 Template: vpc/cluster-vpc-2-az.yml
 Stack name: rdsa-vpc
