@@ -133,20 +133,31 @@ Why we can't use Bastion host in PRIMARY region?
 -------------------------------------
 
 * Setup the environment
-./setup-bastion-host.sh <<Provide AWS SECONDARY Region>>  rdsa-postgresql-global-cluster-1
+./bin/install/setup-bastion-host.sh <<Provide AWS SECONDARY Region>>  rdsa-postgresql-global-cluster-1
 
-NOTE: You will get an error (DBClusterNotFoundFault) : Ignore it as we will take care of it in next step
-
-* Setup environment variables  
+* Log out and Log back int 
 $   source   ~/.bashrc
 
 3. Test the environment
+-----------------------
+
+* For SECONDARY cluster Cluster EP is NOT available
+  So next command will throw error
+
+$ psql  - $PGWRITEREP
+
+* Use Reader EP to connect
 
 $ psql  -h $PGREADEREP
 
-=> SELECT * from test;     
-
+* Checkout the 'Standby" state
 => SHOW transaction_read_only; -- This is On as the instances are in STANDBY mode
+
+* Run some SQL
+
+=> SELECT * from test;    
+
+* (Optional) Run INSERT SQL against the primary and run SELECT against secondary
 
 ===================
 Failover & Failback
@@ -189,10 +200,12 @@ Try headless
 =================
 Promote secondary
 =================
+* Primary cluster cannot be removed from global DB
+
 1. Promote the secondary
 ------------------------
 
-* Select the secondary cluster
+* Select the PRIMARY cluster
 * Actions >> Remove from Global cluster
 
 2. Checkout the secondary cluster
