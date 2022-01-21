@@ -123,7 +123,7 @@ Test global cluster
 Why we can't use Bastion host in PRIMARY region?
 ------------------------------------------------
 1. We will need connectivity between the Primary & Secondary VPC
-2. Secondary cluster rdsa-Gsecurity-group-internal will need to allow host to connect
+2. Secondary cluster rdsa-security-group-internal will need to allow host to connect
 
 1. Logon to the bastion host in SECONDARY region
 ------------------------------------------------
@@ -133,37 +133,20 @@ Why we can't use Bastion host in PRIMARY region?
 -------------------------------------
 
 * Setup the environment
-./setup-bastion-host.sh <<Provide AWS SECONDARY Region>>  
+./setup-bastion-host.sh <<Provide AWS SECONDARY Region>>  rdsa-postgresql-global-cluster-1
 
 NOTE: You will get an error (DBClusterNotFoundFault) : Ignore it as we will take care of it in next step
 
 * Setup environment variables  
 $   source   ~/.bashrc
 
-5. Create the Auora PG cluster in secondary region
+3. Test the environment
 
-* Create the security group
-
-$ ./bin/db/create-security-group-internal.sh
-
-
-Stack name = rdsa-security-group
-
-* Create the DB cluster
-$  ./bin/db/create-dbcluster-cf-stack.sh
-
-    NOTE: MUST Wait for the cluster to get created
-
-6. Re-run the setup script
-$  ./bin/setup-env.sh   <<Sec region>>
-
-7. Test the environment
-
-$ psql
+$ psql  -h $PGREADEREP
 
 => SELECT * from test;     
 
-=> INSERT INTO test VALUES(100);     -- This will throw an error
+=> SHOW transaction_read_only; -- This is On as the instances are in STANDBY mode
 
 ===================
 Failover & Failback
@@ -178,6 +161,8 @@ Failover & Failback
 Actions >> Failover over 
 
 * Select the region & continue
+
+=> SHOW transaction_read_only;
 
 * Try psql in SECONDARY
 => INSERT INTO test VALUES(101010); -- This will be successful
