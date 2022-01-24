@@ -157,7 +157,7 @@ $ psql  -h $PGREADEREP
 
 => SELECT * from test;    
 
-* (Optional) Run INSERT SQL against the primary and run SELECT against secondary
+* (Optional) Run INSERT SQL against the primary and run SELECT against
 
 ===================
 Failover & Failback
@@ -197,9 +197,9 @@ Try headless
 2. [Optional] Create an instance & try SQL
 ------------------------------------------
 
-=================
-Promote secondary
-=================
+=======================================
+Promote secondary as standalone cluster
+=======================================
 * Primary cluster cannot be removed from global DB
 
 1. Promote the secondary
@@ -291,14 +291,25 @@ $   ./bin/host/stop-host.sh
 
 
 
+=======================
+CloudWatch - Monitoring
+=======================
+
+1. Open CloudWatch console
+--------------------------
+Metrics >> Search for "AuroraGlobalDBProgressLag"
+Add it to graph for the secondary region
+
+2. Create a batch with large # of txn and commit
+------------------------------------------------
+BEGIN;
+INSERT INTO test SELECT FROM generate_series(1,1000000);
+COMMIT;
 
 
-
-
-
-================
-Checkout the lag
-================
+========================================
+Checkout the lag using utility functions
+========================================
 https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-database-monitoring.html
 
 Describe Log Sequence Number or LSN
