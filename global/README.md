@@ -293,6 +293,7 @@ $   ./bin/host/stop-host.sh
 
 =======================
 CloudWatch - Monitoring
+https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-database-monitoring.html
 =======================
 
 1. Open CloudWatch console
@@ -302,28 +303,35 @@ Add it to graph for the secondary region
 
 2. Create a batch with large # of txn and commit
 ------------------------------------------------
+* Simulate a batch
+
 BEGIN;
 INSERT INTO test SELECT FROM generate_series(1,1000000);
 COMMIT;
 
+* Simulate a uniform write load
 
-========================================
-Checkout the lag using utility functions
-========================================
-https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-database-monitoring.html
+pgbench -i -s 1000 pgbenchtest
 
-Describe Log Sequence Number or LSN
+3. Check out the bump in CloudWatch metric after the commit
+-----------------------------------------------------------
+* The bump is due to amount of data replicated to secondary after the commit
 
-replication_lag_in_msec  vs    rpo_lag_in_msec
+4. Make calls to utility functions during the load run to observe changes
+-------------------------------------------------------------------------
+* Checkout the cluster status
+
+SELECT *
+FROM aurora_global_db_status();
+
+* Checkout the instance status
+
+SELECT server_id, session_id, aws_region, durable_lsn, highest_lsn_rcvd, oldest_read_view_lsn, visibility_lag_in_msec  
+FROM aurora_global_db_instance_status();
 
 
-# Use psql on Primary
 
-- Checkout lag
-select * from aurora_global_db_status();
 
-- Checkout instance status
-select * from aurora_global_db_instance_status();
 
 
 Managed RPO
