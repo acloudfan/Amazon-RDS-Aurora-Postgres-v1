@@ -185,6 +185,131 @@ Actions >> Failover over
 Actions >> Failover over 
 
 
+
+
+
+
+=======================
+CloudWatch - Monitoring
+https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-database-monitoring.html
+=======================
+
+1. Open CloudWatch console
+--------------------------
+Metrics >> Search for "AuroraGlobalDBProgressLag"
+Add it to graph for the secondary region
+
+2. Create a batch with large # of txn and commit
+------------------------------------------------
+* Simulate a batch
+
+BEGIN;
+INSERT INTO test SELECT FROM generate_series(1,1000000);
+COMMIT;
+
+* Simulate a uniform write load
+
+pgbench -i -s 1000 pgbenchtest
+
+3. Check out the bump in CloudWatch metric after the commit
+-----------------------------------------------------------
+* The bump is due to amount of data replicated to secondary after the commit
+
+4. Make calls to utility functions during the load run to observe changes
+-------------------------------------------------------------------------
+* Checkout the cluster status
+
+SELECT *
+FROM aurora_global_db_status();
+
+* Checkout the instance status
+
+SELECT server_id, session_id, aws_region, durable_lsn, highest_lsn_rcvd, oldest_read_view_lsn, visibility_lag_in_msec  
+FROM aurora_global_db_instance_status();
+
+===========
+Managed RPO
+===========
+https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-database-disaster-recovery.html#aurora-global-database-set-rpo
+
+SELECT * FROM aurora_global_db_status();
+
+select * from aurora_global_db_instance_status();
+
+=================================
+Endpoint Management with Route 53 
+=================================
+Idea is to create a Private Hosted zone and CNAME for the endpoints
+
+1. Create a Private Hosted zone on Route 53
+-------------------------------------------
+* Open console for Route 53 >> Create hosted zone
+
+  Domain name = globaldb.com
+
+* Add all secondary cluster VPC
+
+2. Add a CNAME record to the private hosted zone
+------------------------------------------------
+* Select the hosted zone we created
+
+* Click on the button 'Create Record'
+
+  Record name=rdsa-writer
+  Record type=CNAME
+  Value=<<Copy/Paste cluster endpoint>>
+  TTL=60 seconds
+  Routing policy=Simple routing
+
+3. Test it out
+--------------
+* Open up the bastion host
+* Connect with the new writer endpoint
+
+  psql  -h rdsa-writer.globaldb.com
+
+Cleanup
+-------
+* Open the console for Route 53
+* Open the private hosted zone (globaldb.com)
+* Delete the CNAME record (rdsa-writer.globaldb.com)
+* Delete the hosted zone (globaldb.com)
+
+============================
+Endpoint Route 53 Limitation
+============================
+Applications cannot use the PGSSLMODE=verify-full as the host name will not match the cert
+Try out the limitation.
+
+1. Download the certificate
+---------------------------
+* Copy the link for the certificate for the Region from the following link
+https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.SSL.html
+
+* On bastion host run the command
+$ wget <<Paste the link for the certificate>> 
+
+2. Use psql to test with CNAME (rdsa-writer.globaldb.com)
+---------------------------------------------------------
+* This will FAIL due to host name mismatch
+
+PGSSLMODE=verify-full PGSSLROOTCERT=us-east-2-bundle.pem psql  -h rdsa-writer.globaldb.com
+
+3. Use psql to test with CNAME (Cluster's writer endpoint)
+----------------------------------------------------------
+* This will succeed
+
+PGSSLMODE=verify-full PGSSLROOTCERT=us-east-2-bundle.pem psql  -h $PGWRITEREP
+
+=============================
+Automatic Endpoint Management
+=============================
+
+* This blog explains how you can carry out automatic failover
+
+https://aws.amazon.com/blogs/database/automate-amazon-aurora-global-database-endpoint-management/
+
+
 ============
 Try headless
 ============
@@ -196,6 +321,7 @@ Try headless
 
 2. [Optional] Create an instance & try SQL
 ------------------------------------------
+
 
 =======================================
 Promote secondary as standalone cluster
@@ -288,56 +414,3 @@ $   ./bin/db/dbcluster.sh stop
 5. (optional) Stop the bastion host
 -----------------------------------
 $   ./bin/host/stop-host.sh
-
-
-
-=======================
-CloudWatch - Monitoring
-https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-database-monitoring.html
-=======================
-
-1. Open CloudWatch console
---------------------------
-Metrics >> Search for "AuroraGlobalDBProgressLag"
-Add it to graph for the secondary region
-
-2. Create a batch with large # of txn and commit
-------------------------------------------------
-* Simulate a batch
-
-BEGIN;
-INSERT INTO test SELECT FROM generate_series(1,1000000);
-COMMIT;
-
-* Simulate a uniform write load
-
-pgbench -i -s 1000 pgbenchtest
-
-3. Check out the bump in CloudWatch metric after the commit
------------------------------------------------------------
-* The bump is due to amount of data replicated to secondary after the commit
-
-4. Make calls to utility functions during the load run to observe changes
--------------------------------------------------------------------------
-* Checkout the cluster status
-
-SELECT *
-FROM aurora_global_db_status();
-
-* Checkout the instance status
-
-SELECT server_id, session_id, aws_region, durable_lsn, highest_lsn_rcvd, oldest_read_view_lsn, visibility_lag_in_msec  
-FROM aurora_global_db_instance_status();
-
-
-
-
-
-
-Managed RPO
-===========
-https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-database-disaster-recovery.html#aurora-global-database-set-rpo
-
-SELECT * FROM aurora_global_db_status();
-
-select * from aurora_global_db_instance_status();
