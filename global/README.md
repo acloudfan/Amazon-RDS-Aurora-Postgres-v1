@@ -354,15 +354,14 @@ Remove Primary from global cluster
 Cleanup - Secondary
 ===================
 
-1. Delete instance under the secondary cluster
+1. Remove secondary cluster from the Global DB
 ----------------------------------------------
-* If you don't have any instance, go to next step
-* Select the instance
-* Actions >> Delete
+* Use RDS console
+* Select the secondary & select Actions>>Remove from global db
 
-2. Delete the secondary cluster
--------------------------------
-* Select cluster (headless)
+2. Delete the secondary cluster instance
+----------------------------------------
+* Select cluster instance
 * Actions >> Delete
 
 3. Delete the Subnet group
@@ -385,9 +384,10 @@ aws rds delete-db-subnet-group  \
 * Open up the CloudFormation console 
 * Select the VPC stack >> Delete
 
-=================
+
+===================================
 Cleanup - Primary
-=================
+===================================
 
 1. Promote cluster in primary
 -----------------------------
