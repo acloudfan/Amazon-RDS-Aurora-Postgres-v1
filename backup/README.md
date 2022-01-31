@@ -77,7 +77,7 @@ pg_dump -F c   buptest  >   buptest.dump.custom
 
 2. Drop and Recreate the test database
 --------------------------------------
-
+* These are for demo only as same effect may be achieved with -c and -C options
 psql -c "DROP DATABASE buptest;"
 
 psql -c "CREATE DATABASE buptest;"
@@ -85,11 +85,16 @@ psql -c "CREATE DATABASE buptest;"
 
 3. Restore the database from dump
 ---------------------------------
-
+* Creates the DB objects and populate
 pg_restore   -d buptest < buptest.dump.custom
+
+* Drops the database recreates it
+pg_restore  -d postgres -c -C <  buptest.dump.custom
 
 4. Clean up
 -----------
+
+* You may drop the test database once you are done with this exercise
 
 psql -c "DROP DATABASE buptest;"
 
@@ -114,3 +119,131 @@ GRANT rds_superuser TO user1;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO user1;
 
 pg_dumpall --no-role-passwords   > dumpall.sql
+
+========================
+Change the backup window
+========================
+
+1. Open the RDS console
+-----------------------
+
+* Select the DB cluster
+* Click on Modify
+
+
+2. Get the current UTC time
+---------------------------
+
+* Open google.com
+* Search for   *current UTC time*
+
+3. Modify the cluster
+---------------------
+
+
+===============================
+Restore a cluster from snapshot
+===============================
+
+1. Cluster restore from automatic snapshot
+------------------------------------------
+* In RDS console click on 'snapshot' in left navigation panel
+* Select the system or manual snapshot
+* Actions >> Restore snapshot
+
+2. Set the configuration for the restored cluster
+-------------------------------------------------
+
+* DB Cluster Identifier = rdsa-postgresql-restored
+
+* Verify Connectivity parameters = Go with default for the existing DB cluster
+    - RDSA VPC
+    - Subnet Group  (rdsa-postgresql-db-subnet-group)
+    - Security Group  (rdsa-security-group-internal)
+
+* Instance class
+    -  Select Burstable instance db.t3.medium
+
+* Restore Database
+
+3. Check availability of the restored cluster
+---------------------------------------------
+
+* Open a Bastion host session
+
+* Check the value for LatestRestorableTime & EarliestRestorableTime
+
+aws rds describe-db-clusters \
+    --db-cluster-id  rdsa-postgresql-restored-cluster  \
+    --query 'DBClusters[0].{Latest:LatestRestorableTime,Earliest:EarliestRestorableTime}'
+
+* If you get NULL for the two parameters then cluster is still creating
+
+* Note down the 'LatestRestorableTime'
+
+4. Test out the cluster
+-----------------------
+* Start a psql session
+* Get the Cluster Endpoint for the restored cluster
+* Use psql to test
+
+psql -h <<Paste cluster endpoint>>
+
+* INSERT a couple of rows in the test table
+
+5. Check the LatestRestorableTime
+---------------------------------
+
+* May have to check multiple times
+* After few minutes, you will see a change in 'LatestRestorableTime'
+
+
+Cleanup
+-------
+* Delete the instance in new cluster
+
+
+==============================================
+Restore a cluster from existing cluster (PITR)
+==============================================
+
+1. Recreate the labdb=>test table and populate with some data
+-------------------------------------------------------------
+
+-- Truncate table
+TRUNCATE TABLE test;
+
+-- Populate table with 5 rows
+INSERT INTO test
+SELECT * FROM generate_series(1, 5);
+
+-- Time-1: Note down the UTC time
+\! date
+
+2. Wait for 30 seconds and insert another 5 Rows
+-------------------------------------------------
+
+INSERT INTO test
+SELECT * FROM generate_series(6, 10);
+
+-- Time-2: Note down the UTC time
+\! date
+
+3. Wait for 30 seconds and insert another 5 Rows
+-------------------------------------------------
+
+INSERT INTO test
+SELECT * FROM generate_series(11, 15);
+
+-- Time-3: Note down the UTC time
+\! date
+
+-- Checkout the data
+SELECT count(*) FROM test;
+
+4. Restore the cluster to a state prior to last insert
+------------------------------------------------------
+* Select the existing DB cluster
+
+* 
+
