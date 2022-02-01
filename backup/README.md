@@ -139,7 +139,12 @@ Change the backup window
 
 3. Modify the cluster
 ---------------------
+* Set the automatic backup time = UTC Time from #2  + 5 minutes
+* Select Apply Immediately
 
+4. Wait for 5 minutes
+---------------------
+* You should see the automatic backup
 
 ===============================
 Restore a cluster from snapshot
@@ -207,6 +212,10 @@ Cleanup
 Restore a cluster from existing cluster (PITR)
 ==============================================
 
+aws rds describe-db-clusters \
+    --db-cluster-id  rdsa-postgresql-cluster  \
+    --query 'DBClusters[0].{Latest:LatestRestorableTime,Earliest:EarliestRestorableTime}'
+
 1. Recreate the labdb=>test table and populate with some data
 -------------------------------------------------------------
 
@@ -244,6 +253,24 @@ SELECT count(*) FROM test;
 4. Restore the cluster to a state prior to last insert
 ------------------------------------------------------
 * Select the existing DB cluster
+* Actions >> Restore to point in time
 
-* 
+* Set
+    - Custom date time = Batch#2 time converted to local timezone
+    - DB Cluster Identifier = rdsa-postgresql-pitr
 
+5. Test the restored cluster
+----------------------------
+* Use psql to connect to the restored cluster
+psql -h <<paste the cluster endpoint for restored cluster>>
+
+* Check the data in test table
+SELECT * FROM test;
+
+* You should see rows with [id=1, 10]
+
+
+====================
+Cross Region copying
+https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_CopySnapshot.html
+====================
