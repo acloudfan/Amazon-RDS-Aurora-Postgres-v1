@@ -300,7 +300,7 @@ Note: Bucket names are unique
 -------------------
 * Open the KMS console
 * On left navigation panel select
-  'Customr Managed Key'
+  'Customer Managed Key'
 
 * Select 'Symmetric Key'
 
@@ -317,7 +317,7 @@ chmod u+x *.sh
 ./set-s3-copy-task-role.sh     <<Your bucket name>>
 
 
-3. Use console to export the snapshot
+4. Use console to export the snapshot
 -------------------------------------
 * This may be done with CLI as well
 
