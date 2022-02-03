@@ -285,10 +285,7 @@ Exercise setup
 * We will be using utility scripts under the subfolder
   ~/Amazon-RDS-Aurora-Postgres-v1/backup
 
-* Change directory & chmod for the utility scripts
 
-cd ~/Amazon-RDS-Aurora-Postgres-v1/backup
-chmod u+x *.sh
 
 1. Create an S3 bucket
 ----------------------
@@ -312,7 +309,10 @@ Note: Bucket names are unique
 3. Create the role
 ------------------
 * Use the utility script - pass bucket as the parameter
-* If you get permission error then you forgot the setup steps above
+* Change directory & chmod for the utility scripts
+
+cd ~/Amazon-RDS-Aurora-Postgres-v1/backup
+chmod u+x *.sh
 
 ./set-s3-copy-task-role.sh     <<Your bucket name>>
 
