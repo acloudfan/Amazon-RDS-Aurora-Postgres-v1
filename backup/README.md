@@ -295,16 +295,11 @@ chmod u+x *.sh
 * Create OR you may use the existing bucket
 * Bucket should be in the *SAME region as the snapshot*
 
+My bucket name = rdsa-copy-to-s3
+
 Note: Bucket names are unique
 
-2. Create the role
-------------------
-* Use the utility script - pass bucket as the parameter
-* If you get permission error then you forgot the setup steps above
-
-./set-s3-copy-task-role.sh     <<Your bucket name>>
-
-3. Create a KMS key
+2. Create a KMS key
 -------------------
 * Open the KMS console
 * On left navigation panel select
@@ -313,6 +308,13 @@ Note: Bucket names are unique
 * Select 'Symmetric Key'
 
 * Name = rdsa-cmk-for-s3-export
+
+3. Create the role
+------------------
+* Use the utility script - pass bucket as the parameter
+* If you get permission error then you forgot the setup steps above
+
+./set-s3-copy-task-role.sh     <<Your bucket name>>
 
 
 3. Use console to export the snapshot
