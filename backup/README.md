@@ -332,8 +332,10 @@ chmod u+x *.sh
 * Encryption = rdsa-cmk-for-s3-export
 
 Cleanup steps
--------------
-1. KMS Key
+=============
+
+1. Delete KMS Key
+-----------------
 * Open the KMS console - select 'Customer managed key' in left panel
 
 * Select the key - rdsa-cmk-for-s3-export
@@ -342,8 +344,9 @@ Cleanup steps
   Actions >> Schedule for deletion
   Change waiting period = 7 days (minimum)
 
-2. Cleanup & Delete S3
+2. Empty & Delete S3 
 ----------------------
+* Optional if you want to retain data & bucket
 
 * Delete the s3 export folder on S3
 
