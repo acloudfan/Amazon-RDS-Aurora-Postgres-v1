@@ -295,6 +295,7 @@ chmod u+x *.sh
 * Create OR you may use the existing bucket
 * Bucket should be in the *SAME region as the snapshot*
 
+Note: Bucket names are unique
 
 2. Create the role
 ------------------
