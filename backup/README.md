@@ -274,3 +274,36 @@ SELECT * FROM test;
 Cross Region copying
 https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_CopySnapshot.html
 ====================
+
+
+============================
+Export snapshot to S3 bucket
+============================
+
+1. Create a bucket
+------------------
+* Bucket should be in the same region as the snapshot
+
+2. Create the role
+------------------
+* Use the utility script - pass bucket as the parameter
+
+cd Amazon-RDS-Aurora*
+cd backup
+chmod u+x *.sh
+
+./set-s3-copy-task-role.sh     <<Your bucket name>>
+
+3. Create a KMS key
+-------------------
+* Open the KMS console
+* On left navigation panel 
+
+
+3. Use console to export the snapshot
+-------------------------------------
+* This may be done with CLI as well
+
+* Select the snapshot
+* Actions >> Export to S3
+*
