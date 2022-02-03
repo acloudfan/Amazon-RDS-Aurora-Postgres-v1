@@ -280,24 +280,38 @@ https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_CopySnapshot.h
 Export snapshot to S3 bucket
 ============================
 
-1. Create a bucket
-------------------
-* Bucket should be in the same region as the snapshot
+Exercise setup
+--------------
+* We will be using utility scripts under the subfolder
+  ~/Amazon-RDS-Aurora-Postgres-v1/backup
+
+* Change directory & chmod for the utility scripts
+
+cd ~/Amazon-RDS-Aurora-Postgres-v1/backup
+chmod u+x *.sh
+
+1. Create an S3 bucket
+----------------------
+* Create OR you may use the existing bucket
+* Bucket should be in the *SAME region as the snapshot*
+
 
 2. Create the role
 ------------------
 * Use the utility script - pass bucket as the parameter
-
-cd Amazon-RDS-Aurora*
-cd backup
-chmod u+x *.sh
+* If you get permission error then you forgot the setup steps above
 
 ./set-s3-copy-task-role.sh     <<Your bucket name>>
 
 3. Create a KMS key
 -------------------
 * Open the KMS console
-* On left navigation panel 
+* On left navigation panel select
+  'Customr Managed Key'
+
+* Select 'Symmetric Key'
+
+* Name = rdsa-cmk-for-s3-export
 
 
 3. Use console to export the snapshot
@@ -307,3 +321,30 @@ chmod u+x *.sh
 * Select the snapshot
 * Actions >> Export to S3
 *
+
+
+
+Cleanup steps
+-------------
+1. KMS Key
+* Open the KMS console - select 'Customer managed key' in left panel
+
+* Select the key - rdsa-cmk-for-s3-export
+
+* Schedule for deletion
+  Actions >> Schedule for deletion
+  Change waiting period = 7 days (minimum)
+
+2. Cleanup & Delete S3
+----------------------
+
+* Delete the s3 export folder on S3
+
+* Delete the S3 bucket (if you no longer need it)
+
+3. Delete the IAM role
+----------------------
+* Use the utility script to delete the role
+
+cd ~/Amazon-RDS-Aurora-Postgres-v1/backup
+./cleanup-s3-copy-task-role.sh
