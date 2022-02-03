@@ -62,17 +62,13 @@ IAM_COPY_TASK_POLICY_ARN=$(aws iam list-policies --query "Policies[?PolicyName==
 echo "IAM_COPY_TASK_POLICY ARN=$IAM_COPY_TASK_POLICY_ARN"
 
 # Create the role trust policy
-# This trust policy will allow the Role used for Bastion host to assume the IAM DB Role
-BASTION_HOST_ROLE=($(jq -r '.Arn' <<< $(aws sts get-caller-identity)))
-
 read -r -d ''  ASSUME_ROLE_POLICY << EOL
 {
     "Version": "2012-10-17",
     "Statement": {
         "Effect": "Allow",
         "Principal": {
-            "Service": "export.rds.amazonaws.com",
-            
+            "Service": "export.rds.amazonaws.com"
           },
         "Action": "sts:AssumeRole"
     }
@@ -89,7 +85,7 @@ IAM_COPY_TASK_ROLE_ARN=$(aws iam list-roles --query "Roles[?RoleName=='$IAM_COPY
 echo "IAM_COPY_TASK_ROLE Arn=$IAM_COPY_TASK_ROLE_ARN"
 
 # Attach the role to policy IAM_COPY_TASK_POLICY
-echo "Attaching the DBUSER policy to DBUSER role"
+echo "Attaching the IAM policy to IAM role"
 aws iam attach-role-policy   --role-name $IAM_COPY_TASK_ROLE  --policy-arn  $IAM_COPY_TASK_POLICY_ARN
 
 
