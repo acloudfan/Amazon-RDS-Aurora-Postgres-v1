@@ -323,9 +323,13 @@ Note: Bucket names are unique
 
 * Select the snapshot
 * Actions >> Export to S3
-*
 
-
+* Export identifier = rdsa-s3-export-test
+* Amount of data = All
+* S3 destination = <<Your bucket>>
+* S3 destination prefix = <<optional>>
+* IAM Role = rdsa-copy-to-s3-role
+* Encryption = rdsa-cmk-for-s3-export
 
 Cleanup steps
 -------------
@@ -351,3 +355,6 @@ Cleanup steps
 
 cd ~/Amazon-RDS-Aurora-Postgres-v1/backup
 ./cleanup-s3-copy-task-role.sh
+
+
+export PS1='$(pwd) $ '
