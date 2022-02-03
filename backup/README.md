@@ -314,7 +314,7 @@ Note: Bucket names are unique
 cd ~/Amazon-RDS-Aurora-Postgres-v1/backup
 chmod u+x *.sh
 
-./set-s3-copy-task-role.sh     <<Your bucket name>>
+./setup-s3-copy-task-role.sh     <<Your bucket name>>
 
 
 4. Use console to export the snapshot
