@@ -359,5 +359,9 @@ Cleanup steps
 cd ~/Amazon-RDS-Aurora-Postgres-v1/backup
 ./cleanup-s3-copy-task-role.sh
 
+==========
+AWS Backup
+==========
+https://docs.aws.amazon.com/aws-backup/latest/devguide/how-it-works.html
 
 export PS1='$(pwd) $ '
