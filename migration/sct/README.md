@@ -9,13 +9,81 @@ SCT converted schema to PostgreSQL
 (3) manual-converted-sakila-postgresql.sql
 Manually adjusted sakila schema 
 
-SCT Installation
-================
+=============================
+Install - SCT, MySQL
+Connect SCT to MySQL database
+=============================
+
+Part-1 Install Schema Conversion tool
+-------------------------------------
 1. Start the Windows based Bastion Host
+   * If you have not set it - please follow instructions under
+   /vpc/README.md   Refer: Setup Windows Bastion Host
 2. Connect to the bastion host using RDP client
-2. Google for "AWS Schema Conversion Tool"
+   * Covered in a video in the section "Setup Aurora Cluster"
+3. Google for "AWS Schema Conversion Tool"
+* You may use Internet Explorer as well :)
 https://docs.aws.amazon.com/SchemaConversionTool/latest/userguide/CHAP_Installing.html
-3. Download & Install SCT
+
+4. Download & Install SCT
+
+Part-2 Install and populate MySQL
+---------------------------------
+
+1. Download and install MySQL on Windows Bastion host
+https://dev.mysql.com/downloads/installer/
+
+* Set the password=<<Something simple to remember e.g., password>>
+
+2. Launch MySQL workbench
+* Connect to it by launching 'MySQL Workbench' from windows start menu
+
+3. Download the sample database schema/data
+* Google for 'MySQL Sakila database'
+* Or use the link below for downloading the zip file with schema and data
+* Unzip the sakila zip file
+https://dev.mysql.com/doc/sakila/en/sakila-installation.html
+
+
+4. In the MySQL workbench
+* File >> New Query Tab
+* Click on 'Folder' icon in query tab & select the sakila schema file
+* In left navigation panel 'Data Import/Restore'
+* In 'Data Import' tab select 'Import from Self-Contained File'
+* Select the sakila data file
+* Click on 'Start Import'
+* In left navigation panel click on 'Schemas' and checkout data in teh tables
+
+Part-3 Connect SCT to MySQL
+---------------------------
+1. Copy the JDBC driver
+* Create folder   Documents\MySQL\JDBC
+* Copy driver jar file:
+    From:   C:\Program Files (x86)\MySQL\JDBC
+    To:     Documents\MySQL\JDBC
+
+2. Setup SCT project
+* Launch SCT
+* File >> New project
+    - Name = mysql-sakila-to-postgres
+* File >> Save project
+
+3. Setup the source
+* Click on 'Add source'
+    - Select 'MySQL'
+    - Connection name = localhost-mysql
+    - Server name = localhost
+    - Username = root
+    - Password = password
+    - Store password = check the box
+    - MySQL driver path = Documents/MySQL/JDBC
+
+* Click on 'Test connection'
+* Acknowledge the risk
+* Click on 'Connect'
+* Click on 'Main view' button on top
+
+
 
 Conversion Example
 ==================
@@ -51,8 +119,8 @@ Launch the SCT tool
 -------------------
 
 
-Refernces
-=========
+References
+==========
 
 * MySQL sakila sample Database
 https://dev.mysql.com/doc/sakila/en/sakila-introduction.html
