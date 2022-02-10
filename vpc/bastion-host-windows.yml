@@ -76,6 +76,10 @@ Resources:
           FromPort: "8082"  # Used for Nginx
           ToPort: "8082"
           CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: "3306"  # Allow connection to local mysql from DMS
+          ToPort: "3306"
+          CidrIp: 10.0.0.0/16
 
   # Bastion host role
   BastionHostRoleWindows:

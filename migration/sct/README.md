@@ -84,6 +84,100 @@ Part-3 Connect SCT to MySQL
 * Click on 'Main view' button on top
 
 
+=========================
+Generating the SCT Report
+=========================
+
+1. Launch SCT
+-------------
+* Open the project that was created earlier
+
+2. Select the schema: sakila 
+----------------------------
+* In left panel uncheck all except the schema 'sakila'
+* Switch view   : Mapping View
+
+3. Create mapping
+------------------
+* Select Aurora_PostgreSQL under the targets in the right panel
+* Click on 'Create mapping'
+
+4. Assessment report
+--------------------
+* Switch to Main view
+* Right click on schema 'sakila' and select 'Create report'
+
+
+=======================
+Schema conversion setup
+=======================
+
+1. Download the Posgres JDBC driver
+-----------------------------------
+* Create a folder  Documents\Postgresql\JDBC
+* Open the link https://jdbc.postgresql.org/download.html
+* Download driver and copy to folder Documents\Postgresql\JDBC
+
+2. Setup Target
+---------------
+* Open SCT - open project
+* Click on 'Add Target'
+  - Name = rdsa-postgresql-cluster
+  - Server name = <<Cluster endpoint for test cluster>>
+  - Server port = 5432
+  - Database = labdb
+  - User name = masteruser
+  - Password = masteruserpw
+  - Store password = checked
+  - Driver path = Postgresql JDBC driver
+
+3. Test & connect
+-----------------
+* Click on the button 'Test connection'
+* Click on Connect
+* Save project
+
+
+======================
+Schema conversion rule
+======================
+
+1. Open the Mapping view
+------------------------
+
+2. Click on '+ New migration rule'
+----------------------------------
+* Click on '+Add new rule'
+  - Name = rename-schema
+  - For = select 'schema'
+  - Where schema name like = sakila
+  - Actions = rename
+  -         = 
+  - Save, Save All, Close
+
+3. Carryout conversion
+----------------------
+* Switch to main view
+* Right click on schema 'sakila' in left panel
+* Select 'Convert schema'
+
+4. Download schema
+------------------
+* Right click on schema 'sakila' in left panel
+* Select 'Save as SQL'
+  - Name = 1.sakila-schema-mysql
+
+* Right click on schema 'pagila' in right panel
+* Select 'Save as SQL'
+  - Name = 2.automatic-converted-sakila-postgresql
+
+5. Apply to database
+--------------------
+* Expand the target DB 'rdsa-postgresql-cluster' in right panel
+* Right click on Schemas
+* Click on Apply to database
+* Check 'Apply status' in main window in the lower panel
+
 
 Conversion Example
 ==================
