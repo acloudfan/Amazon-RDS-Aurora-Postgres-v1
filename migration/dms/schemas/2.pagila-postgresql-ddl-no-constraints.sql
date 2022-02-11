@@ -432,11 +432,13 @@ CREATE TABLE pagila.film (
     rating pagila.mpaa_rating DEFAULT 'G'::pagila.mpaa_rating,
     special_features text[],
     last_update timestamp with time zone DEFAULT now() NOT NULL,
-    fulltext tsvector 
+    fulltext tsvector NOT NULL
 );
 
 
 ALTER TABLE pagila.film OWNER TO masteruser;
+
+
 
 --
 -- Name: film_actor; Type: TABLE; Schema: public; Owner: postgres
@@ -725,7 +727,7 @@ CREATE TABLE pagila.payment (
     rental_id integer NOT NULL,
     amount numeric(5,2) NOT NULL,
     payment_date timestamp with time zone NOT NULL,
-    last_update timestamp with time zone NOT NULL
+    last_update timestamp with time zone DEFAULT now() NOT NULL
 )
 PARTITION BY RANGE (payment_date);
 
@@ -742,7 +744,8 @@ CREATE TABLE pagila.payment_p2020_01 (
     staff_id integer NOT NULL,
     rental_id integer NOT NULL,
     amount numeric(5,2) NOT NULL,
-    payment_date timestamp with time zone NOT NULL
+    payment_date timestamp with time zone NOT NULL,
+    last_update timestamp with time zone DEFAULT now() NOT NULL
 );
 ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_01 FOR VALUES FROM ('2020-01-01 00:00:00+00') TO ('2020-02-01 00:00:00+00');
 
@@ -759,7 +762,8 @@ CREATE TABLE pagila.payment_p2020_02 (
     staff_id integer NOT NULL,
     rental_id integer NOT NULL,
     amount numeric(5,2) NOT NULL,
-    payment_date timestamp with time zone NOT NULL
+    payment_date timestamp with time zone NOT NULL,
+    last_update timestamp with time zone DEFAULT now() NOT NULL
 );
 ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_02 FOR VALUES FROM ('2020-02-01 00:00:00+00') TO ('2020-03-01 00:00:00+00');
 
@@ -776,7 +780,8 @@ CREATE TABLE pagila.payment_p2020_03 (
     staff_id integer NOT NULL,
     rental_id integer NOT NULL,
     amount numeric(5,2) NOT NULL,
-    payment_date timestamp with time zone NOT NULL
+    payment_date timestamp with time zone NOT NULL,
+    last_update timestamp with time zone DEFAULT now() NOT NULL
 );
 ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_03 FOR VALUES FROM ('2020-03-01 00:00:00+00') TO ('2020-04-01 01:00:00+01');
 
@@ -793,7 +798,8 @@ CREATE TABLE pagila.payment_p2020_04 (
     staff_id integer NOT NULL,
     rental_id integer NOT NULL,
     amount numeric(5,2) NOT NULL,
-    payment_date timestamp with time zone NOT NULL
+    payment_date timestamp with time zone NOT NULL,
+    last_update timestamp with time zone DEFAULT now() NOT NULL
 );
 ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_04 FOR VALUES FROM ('2020-04-01 01:00:00+01') TO ('2020-05-01 01:00:00+01');
 
@@ -810,7 +816,8 @@ CREATE TABLE pagila.payment_p2020_05 (
     staff_id integer NOT NULL,
     rental_id integer NOT NULL,
     amount numeric(5,2) NOT NULL,
-    payment_date timestamp with time zone NOT NULL
+    payment_date timestamp with time zone NOT NULL,
+    last_update timestamp with time zone DEFAULT now() NOT NULL
 );
 ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_05 FOR VALUES FROM ('2020-05-01 01:00:00+01') TO ('2020-06-01 01:00:00+01');
 
@@ -827,7 +834,8 @@ CREATE TABLE pagila.payment_p2020_06 (
     staff_id integer NOT NULL,
     rental_id integer NOT NULL,
     amount numeric(5,2) NOT NULL,
-    payment_date timestamp with time zone NOT NULL
+    payment_date timestamp with time zone NOT NULL,
+    last_update timestamp with time zone DEFAULT now() NOT NULL
 );
 ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_06 FOR VALUES FROM ('2020-06-01 01:00:00+01') TO ('2020-07-01 01:00:00+01');
 

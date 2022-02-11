@@ -1,3 +1,57 @@
+==================================
+Part-1 Install MySQL on Linux Host
+==================================
+The Linux Bastion Host Security group allows connections from within VPC
+
+1. Install the MySQL server
+---------------------------
+* Log on to the Linux Bastion Host
+* Assuming that user is logged in as ec2-user
+
+sudo yum update -y
+
+# MariaDB is community managed MySQL
+sudo yum install mariadb-server -y
+
+# Start the server
+sudo systemctl start mariadb
+
+
+# Run the command below if ONLY if you want MariaDB to restart on host reboot
+# sudo systemctl enable mariadb
+
+2. Setup root password
+----------------------
+# Set the password
+sudo mysql_secure_installation
+    - Enter current password for root (enter for none): <<Hit enter>>
+    - Set root password?  =  Y
+    - New password = password
+    - Re-enter password = password
+    - Remove anonymous users? = Y
+    - Rest all = n
+
+3. Setup a user for DMS to use
+------------------------------
+* Connect to the mysql server
+
+mysql -u root -p -h localhost
+
+mysql=>
+
+#CREATE USER 'dms_user'@'%' IDENTIFIED WITH mysql_native_password BY 'password';
+
+CREATE USER 'dms_user'@'%' IDENTIFIED  BY 'password';
+
+GRANT ALL PRIVILEGES ON *.* TO 'dms_user'@'%' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+
+mysql=>
+SYSTEM mysql -u dms_user -p
+SELECT user();
+
+
+
 
 
 ====================
