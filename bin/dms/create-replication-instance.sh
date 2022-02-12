@@ -33,6 +33,7 @@ if  [ $? == 0 ]; then
     echo 'Creation will take a couple of minutes .. '
     echo 'Done.'
 else
+    echo 'Make sure to create the Replication-Subnet-Group.'
     echo 'Failed !!!'
 fi
 

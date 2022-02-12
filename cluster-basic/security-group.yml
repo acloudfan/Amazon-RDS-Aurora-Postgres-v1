@@ -38,12 +38,23 @@ Parameters:
     Default: 10.0.0.0/24
     Description: This is the CIDR for public subnet A
 
+  # Private Subnet A CIDR
+  PrivateSubnetCidrA:
+    Type: String
+    Default: 10.0.2.0/24
+    Description: This is the CIDR for private subnet A
+
   # Public Subnet B CIDR
   PubSubnetCidrB:
     Type: String
     Default: 10.0.1.0/24
     Description: This is the CIDR for public subnet B
 
+  # Private Subnet B CIDR
+  PrivateSubnetCidrB:
+    Type: String
+    Default: 10.0.3.0/24
+    Description: This is the CIDR for private subnet B
 
 Resources:
   # Create VPC security group for RDS/Aurora PostgreSQL
@@ -67,6 +78,16 @@ Resources:
           ToPort: !Ref RdsIngressPort
           CidrIp: !Ref PubSubnetCidrB
           Description: Allows hosts in public subnet B to connect with the cluster
+        - IpProtocol: tcp
+          FromPort: !Ref RdsIngressPort
+          ToPort: !Ref RdsIngressPort
+          CidrIp: !Ref PrivateSubnetCidrA
+          Description: Allows hosts in private subnet A to connect with the cluster
+        - IpProtocol: tcp
+          FromPort: !Ref RdsIngressPort
+          ToPort: !Ref RdsIngressPort
+          CidrIp: !Ref PrivateSubnetCidrB
+          Description: Allows hosts in private subnet B to connect with the cluster
   
   # Add self reference for the SG
   # RDSASecurityGroupClusterIngress:
