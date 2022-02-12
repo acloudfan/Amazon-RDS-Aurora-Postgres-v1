@@ -62,7 +62,7 @@ Resources:
       VpcId: !Ref VpcId
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: "22"
+          FromPort: "22"    # SSH
           ToPort: "22"
           CidrIp: 0.0.0.0/0
         - IpProtocol: tcp
@@ -70,17 +70,17 @@ Resources:
           ToPort: "8080"
           CidrIp: 0.0.0.0/0
         - IpProtocol: tcp
-          FromPort: "3389"
-          ToPort: "3389"
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: "8082"  # Used for Nginx
-          ToPort: "8082"
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
           FromPort: "3306"  # Allow connection to local mysql from DMS
           ToPort: "3306"
           CidrIp: 10.0.0.0/16
+        - IpProtocol: tcp
+          FromPort: "3389"  # Windows RDP
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: "8082"  # Future use
+          ToPort: "8082"
+          CidrIp: 0.0.0.0/0
+
 
   # Bastion host role
   BastionHostRole:

@@ -1,4 +1,5 @@
 ==================================
+Exercise: Setup MySQL & Endpoints
 Part-1 Install MySQL on Linux Host
 ==================================
 The Linux Bastion Host Security group allows connections from within VPC
@@ -25,11 +26,11 @@ sudo systemctl start mariadb
 # Set the password
 sudo mysql_secure_installation
     - Enter current password for root (enter for none): <<Hit enter>>
-    - Set root password?  =  Y
-    - New password = password
-    - Re-enter password = password
+    - Set root password?  =  n
     - Remove anonymous users? = Y
-    - Rest all = n
+    - Disallow root login remotely?  = n
+    - Remove test database and access to it? = Y
+    - Reload privilege tables now? = Y
 
 3. Setup a user for DMS to use
 ------------------------------
@@ -39,8 +40,6 @@ mysql -u root -p -h localhost
 
 mysql=>
 
-#CREATE USER 'dms_user'@'%' IDENTIFIED WITH mysql_native_password BY 'password';
-
 CREATE USER 'dms_user'@'%' IDENTIFIED  BY 'password';
 
 GRANT ALL PRIVILEGES ON *.* TO 'dms_user'@'%' WITH GRANT OPTION;
@@ -49,6 +48,57 @@ FLUSH PRIVILEGES;
 mysql=>
 SYSTEM mysql -u dms_user -p
 SELECT user();
+
+=================================
+Exercise: Setup MySQL & Endpoints
+Part-2 Create the  Endpoints
+=================================
+Open the DMS Console
+
+1. Source endpoint for MySQL
+----------------------------
+* Select 'Endpoints' in left navigation panel
+* Create new 'Source' endpoint
+    - Name = mysql-on-bastion-host
+    - Description = mysql-on-bastion-host
+    - Source Engine = Select MySQL
+    - Access to endpoint = 'Provide access information manually'
+    - Server name = <<Copy/paste Windows Bastion Host DNS>>
+    - Port = 3306
+    - User = dms_user
+    - Password = password
+* Click on create endpoint
+
+2. Target endpoint for Aurora PostgreSQL
+----------------------------------------
+* Select 'Endpoints' in left navigation panel
+* Create new 'Target' endpoint
+    - Name = rdsa-postgresql-cluster
+    - Description = rdsa-postgresql-cluster
+    - Source Engine = Select 'Amazon Aurora PostgreSQL'
+    - Access to endpoint = 'Provide access information manually'
+    - Server name = Copy/paste Cluster EP for 'rdsa-postgresql-cluster'
+    - Port = 5432
+    - User = masteruser
+    - Password = masteruserpw
+* Click on create endpoint
+
+
+=====================================================
+Exercise: Setup Replication instance & Test Endpoints
+Part-1 Setup replication instance
+=====================================================
+
+=====================================================
+Exercise: Setup Replication instance & Test Endpoints
+Part-2 Test source endpoint
+=====================================================
+
+=====================================================
+Exercise: Setup Replication instance & Test Endpoints
+Part-1 Test target end point
+=====================================================
+
 
 
 
