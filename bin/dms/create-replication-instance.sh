@@ -25,6 +25,7 @@ aws dms create-replication-instance \
     --replication-instance-class  $INSTANCE_CLASS  \
     --allocated-storage  $INSTANCE_ALLOCATED_STORE \
     --engine-version   $INSTANCE_ENGINE_VERSION   \
+    --replication-subnet-group-identifier  $REPL_SUBNET_GROUP_ID \
     $INSTANCE_MULTI_AZ \
     $INSTANCE_PUBLIC_ACCESS  
 
