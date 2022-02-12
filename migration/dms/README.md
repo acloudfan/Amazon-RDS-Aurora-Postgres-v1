@@ -89,14 +89,29 @@ Exercise: Setup Replication instance & Test Endpoints
 Part-1 Setup replication instance
 =====================================================
 
-=====================================================
-Exercise: Setup Replication instance & Test Endpoints
-Part-2 Test source endpoint
-=====================================================
+* Please ensure MySQL is running
+sudo systemctl start mariadb
+
+1. Populate the MySQL database
+------------------------------
+* Logon to the bastion host
+* Populate the MySQL database
+
+* Start the MySQL session, provide 'password'
+mysql -u dms_user  -p -h localhost  
+
+* Create the database
+DROP DATABASE sakila; 
+CREATE DATABASE sakila;
+
+* Setup the schema
+source Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/sakila-schema.sql 
+
+mysql -u dms_user  -p -h localhost <  Amazon-RDS-Aurora-Postgres-v1/migration/sct/schema-conversion/sakila-data.sql 
 
 =====================================================
 Exercise: Setup Replication instance & Test Endpoints
-Part-1 Test target end point
+Part-2 Test source & target endpoints
 =====================================================
 
 
@@ -104,48 +119,24 @@ Part-1 Test target end point
 
 
 
-====================
-Setup schema : pagila 
-=====================
+=====================================================
+Exercise: Setup Replication task
+Part-1 Setup replication instance
+=====================================================
+
+
+2. Setup schema on Aurora Postgres labdb - pagila 
+-------------------------------------------------
 
 psql -c 'drop schema pagila cascade'
 psql -c 'CREATE SCHEMA pagila'
 
 psql  <  Amazon-RDS-Aurora-Postgres-v1/migration/sct/schema-conversion/3.manual-converted-sakila-postgresql.sql
 
-=======================
-Setup DMS user on MySQL
-=======================
-* Log on to Windows Bastion host
-* Launch mysql command line tool
-* Run the following commands
-
-mysql=>
-
-CREATE USER 'dms_user'@'%' IDENTIFIED WITH mysql_native_password BY 'password';
-GRANT ALL PRIVILEGES ON *.* TO 'dms_user'@'%' WITH GRANT OPTION;
-FLUSH PRIVILEGES;
-
-mysql=>
-SYSTEM mysql -u dms_user -p
-SELECT user();
 
 
-==================================================
-(Optional) Test MySQL connectivity from Linux Host
-==================================================
-The Windows Bastion Host Security group allows connections from within VPC
-The idea of this part is to confirm the connectivity.
 
-* Log on to the Linux Bastion Host
-sudo su -
-yum install mysql
 
-* Connect to MySQL on windows host
-
-mysql -u root -p -h << Private host_name or Ip-address of Windows Bastion Host>>
-
-* If you are unable to connect to it then there is a problem !!
 
 ===========================
 Create Replication instance
@@ -162,38 +153,7 @@ Create Replication instance
 
 
 
-================
-Create endpoints
-================
 
-1. Source endpoint for MySQL
-----------------------------
-* Open the DMS Console
-* Select 'Endpoints' in left navigation panel
-* Create new 'Source' endpoint
-    - Name = mysql-on-windows
-    - Description = mysql-on-windows
-    - Source Engine = Select MySQL
-    - Access to endpoint = 'Provide access information manually'
-    - Server name = Copy/paste Windows Bastion Host DNS
-    - Port = 3306
-    - User = dms_user
-    - Password = password
-* Click on create endpoint
-
-2. Target endpoint for Aurora PostgreSQL
-----------------------------------------
-* Select 'Endpoints' in left navigation panel
-* Create new 'Target' endpoint
-    - Name = rdsa-postgresql-cluster
-    - Description = rdsa-postgresql-cluster
-    - Source Engine = Select 'Amazon Aurora PostgreSQL'
-    - Access to endpoint = 'Provide access information manually'
-    - Server name = Copy/paste Cluster EP for 'rdsa-postgresql-cluster'
-    - Port = 5432
-    - User = masteruser
-    - Password = masteruserpw
-* Click on create endpoint
 
 =======================
 Create Replication Task
@@ -221,6 +181,26 @@ Enable CW Logs for the task
 dms-cloudwatch-logs-role
 
 
+============================================
+If you are using MySQL instead of MariaDB
+as there is a minor difference in user setup
+Setup DMS user on MySQL 
+============================================
+* Log on to Windows Bastion host
+* Launch mysql command line tool
+* Run the following commands
+
+mysql=>
+
+CREATE USER 'dms_user'@'%' IDENTIFIED WITH mysql_native_password BY 'password';
+GRANT ALL PRIVILEGES ON *.* TO 'dms_user'@'%' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+
+mysql=>
+SYSTEM mysql -u dms_user -p
+SELECT user();
+
+
 ===================
 MySQL binlog_format
 ===================
@@ -232,6 +212,7 @@ MySQL binlog_format
 binlog_format=ROW
 
 * Restart the database after the config change
+
 
 
 References:
