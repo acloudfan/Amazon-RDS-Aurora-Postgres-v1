@@ -88,6 +88,43 @@ Open the DMS Console
 Exercise: Setup Replication instance & Test Endpoints
 Part-1 Setup replication instance
 =====================================================
+PS: We will use a utility script but if you want to use DMS console
+please follow the instructions later in this README file.
+
+1. Create the Replication Subnet Group
+--------------------------------------
+* Use the utility script to create the subnet group
+* This script reads the comma separated list of private subnets from
+* VPC CloudFormation stack
+
+./bin/dms/create-subnet-group.sh
+
+2. Create the Replication instance
+----------------------------------
+* Run the utility script
+* Uses the subnet created in #1
+
+./bin/dms/create-replication-instance.sh
+
+3. Test the Source endpoint
+---------------------------
+* Log on to Bastion host & make sure MySQL is running
+sudo systemctl start mariadb
+
+* Log on to DMS console
+
+=================================
+Exercise: Setup Replication Task
+Part-1 Setup replication instance
+=================================
+PS: We will use utility script but you may use DMS console 
+
+* Run the utility script
+./bin/dms/create-replication-task.sh  ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/1.task-mapping.json
+
+
+
+
 
 * Please ensure MySQL is running
 sudo systemctl start mariadb
@@ -113,26 +150,12 @@ source Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/sakila-data.sql
 * Verify
 SELECT count(*) FROM film;
 
-2. Setup Replication Instance
------------------------------
-* Open DMS console
-* Select 'Replication instance' in left navigation panel
-* Click on 'Create Replication Instance'
-    Leave all defaults except for the following.
-    - Name = rdsa-dms-replication-instance
-    - Description = rdsa-dms-replication-instance
-    - Allocated storage = 30 GiB
-    - VPC = Select the RDSA VPC
-    - Multi AZ = Select 'Dev or test workload (Single AZ)'
-    - Publicly accessible = Uncheck
-* A default "Subnet Group" will be created automatically
-* You may create/specify a subnet group
 
 
-=====================================================
-Exercise: Setup Replication instance & Test Endpoints
-Part-2 Test source & target endpoints
-=====================================================
+
+
+
+
 
 
 
@@ -155,14 +178,26 @@ psql  <  Amazon-RDS-Aurora-Postgres-v1/migration/sct/schema-conversion/3.manual-
 
 
 
+=====================================
+Create Replication Instance using DMS
+=====================================
+* Open DMS console
+* Select 'Replication instance' in left navigation panel
+* Click on 'Create Replication Instance'
+    Leave all defaults except for the following.
+    - Name = rdsa-dms-replication-instance
+    - Description = rdsa-dms-replication-instance
+    - Allocated storage = 30 GiB
+    - VPC = Select the RDSA VPC
+    - Multi AZ = Select 'Dev or test workload (Single AZ)'
+    - Publicly accessible = Uncheck
+* A default "Subnet Group" will be created automatically
+* You may create/specify a subnet group
 
 
-
-
-
-=======================
-Create Replication Task
-=======================
+======================================
+Create Replication Task in DMS console
+======================================
 * Open DMS console
 * Select 'Database migration task' in left navigation panel
 * Click on 'Create task'

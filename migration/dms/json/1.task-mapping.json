@@ -1,6 +1,17 @@
 {
     "rules": [
         {
+            "rule-type": "selection",
+            "rule-id": "523409273",
+            "rule-name": "523409273",
+            "object-locator": {
+                "schema-name": "sakila",
+                "table-name": "%"
+            },
+            "rule-action": "include",
+            "filters": []
+        },
+        {
             "rule-type": "transformation",
             "rule-id": "523434782",
             "rule-name": "523434782",
