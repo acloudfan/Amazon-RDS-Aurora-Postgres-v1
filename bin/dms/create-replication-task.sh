@@ -5,11 +5,19 @@
 
 
 if [ -z "$1" ]; then
-    echo "Usage:  ./bin/dms/create-replication-task.sh  <PATH-to-taks-mapping-JSON>"
+    echo "Usage:  ./bin/dms/create-replication-task.sh  <PATH-to-task-mapping-JSON> <PATH-to-task-setting-JSON"
     echo "Please provide path to task mapping JSON !!"
     exit
 else
     TABLE_MAPPING=$(cat $1)
+fi
+
+if [ -z "$2" ]; then
+    echo "Usage:  ./bin/dms/create-replication-task.sh  <PATH-to-task-mapping-JSON> <PATH-to-task-setting-JSON"
+    echo "Please provide path to task setting JSON !!"
+    exit
+else
+    TABLE_SETTING=$(cat $2)
 fi
 
 REPL_TASK_IDENTIFIER=rdsa-mysql-to-postgresql
@@ -71,6 +79,7 @@ aws dms create-replication-task  \
     --source-endpoint-arn  $SOURCE_ENDPOINT_ARN  \
     --target-endpoint-arn  $TARGET_ENDPOINT_ARN \
     --migration-type $MIGRATION_TYPE \
+    --replication-task-settings   "$TASK_SETTING" \
     --table-mappings "$TABLE_MAPPING"
 
 if  [ $? == 0 ]; then
