@@ -64,10 +64,6 @@ else
 fi
 
 
-
-
-
-
 # Create the Replication task
 aws dms create-replication-task  \
     --replication-task-identifier   $REPL_TASK_IDENTIFIER \
@@ -75,7 +71,7 @@ aws dms create-replication-task  \
     --source-endpoint-arn  $SOURCE_ENDPOINT_ARN  \
     --target-endpoint-arn  $TARGET_ENDPOINT_ARN \
     --migration-type $MIGRATION_TYPE \
-    --table-mappings $TABLE_MAPPING
+    --table-mappings "$TABLE_MAPPING"
 
 if  [ $? == 0 ]; then
     echo 'Creation of task will take < a minute .. '
