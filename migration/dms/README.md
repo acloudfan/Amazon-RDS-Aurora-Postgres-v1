@@ -107,7 +107,27 @@ CREATE DATABASE sakila;
 * Setup the schema
 source Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/sakila-schema.sql 
 
-mysql -u dms_user  -p -h localhost <  Amazon-RDS-Aurora-Postgres-v1/migration/sct/schema-conversion/sakila-data.sql 
+* Populate the database
+source Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/sakila-data.sql 
+
+* Verify
+SELECT count(*) FROM film;
+
+2. Setup Replication Instance
+-----------------------------
+* Open DMS console
+* Select 'Replication instance' in left navigation panel
+* Click on 'Create Replication Instance'
+    Leave all defaults except for the following.
+    - Name = rdsa-dms-replication-instance
+    - Description = rdsa-dms-replication-instance
+    - Allocated storage = 30 GiB
+    - VPC = Select the RDSA VPC
+    - Multi AZ = Select 'Dev or test workload (Single AZ)'
+    - Publicly accessible = Uncheck
+* A default "Subnet Group" will be created automatically
+* You may create/specify a subnet group
+
 
 =====================================================
 Exercise: Setup Replication instance & Test Endpoints
@@ -135,21 +155,6 @@ psql  <  Amazon-RDS-Aurora-Postgres-v1/migration/sct/schema-conversion/3.manual-
 
 
 
-
-
-
-===========================
-Create Replication instance
-===========================
-* Open DMS console
-* Select 'Replication instance' in left navigation panel
-* Click on 'Create Replication Instance'
-    Leave all defaults except for the following.
-    - Name = rdsa-dms-replication-instance
-    - Description = rdsa-dms-replication-instance
-    - VPC = Select the RDSA VPC
-    - Multi AZ = Select 'Dev or test workload (Single AZ)'
-    - Publicly accessible = Uncheck
 
 
 
