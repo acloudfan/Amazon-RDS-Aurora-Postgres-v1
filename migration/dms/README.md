@@ -120,8 +120,9 @@ Part-1 Setup replication instance
 PS: We will use utility script but you may use DMS console 
 
 * Run the utility script
-./bin/dms/create-replication-task.sh  ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/1.task-mapping.json
-
+./bin/dms/create-replication-task.sh \
+    ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/1.task-mapping.json   \
+    ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/task-setting.json
 
 
 
