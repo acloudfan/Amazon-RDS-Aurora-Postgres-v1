@@ -121,7 +121,6 @@ Part-1 Setup replication instance
 PS: We will use utility script but you may use DMS console 
 
 
-
 1. Populate the MySQL database
 ------------------------------
 * Logon to the bastion host
@@ -158,8 +157,8 @@ psql -c 'CREATE SCHEMA pagila'
 psql  <  Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/pagila-postgresql-ddl-no-constraints.sql
 
 
-3. Fix the MySQL binlog error
------------------------------
+3. Setup MySQL binlog format
+----------------------------
 * Checkout pre-requisites for MySQL
 https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Source.MySQL.html#CHAP_Source.MySQL.Prerequisites 
 
@@ -190,26 +189,40 @@ select @@global.binlog_format;
     ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/1.task-mapping.json   \
     ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/task-setting.json
 
-5. Checkout the job status in DMS console
------------------------------------------
-* JSON for settings
-* JSON for mappings
-* 
+5. Verify, & Modify 
+-------------------
+* Target table preparation mode
+    - Modify so that it is "Do nothing"
 
+* Stop task after full load completes
+    - Modify so that its is "Stop task after full load completes"
 
-5. Retry the replication task
------------------------------
+* Enable CloudWatch logs
+    - Check the box
+
+* Save    
+
+6. Run the replication task
+---------------------------
 * Select the task on DMS console
 
 * Actions >> Restart/Resume
   Select Restart
 
+7. Checkout the job status in DMS console
+-----------------------------------------
+* There will be an error :)
 
+Can you identify the issue?
 
-=====================================================
-Exercise: Setup Replication task
-Part-1 Setup replication instance
-=====================================================
+Hints:
+* Check the table statistics
+* Check the CloudWatch logs
+* Check the Postgres Logs 
+* Compare schema for failed table
+
+Note: Solution is in next hands on exercise
+
 
 
 
