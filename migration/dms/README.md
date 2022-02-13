@@ -36,8 +36,10 @@ sudo mysql_secure_installation
 3. Setup a user for DMS to use
 ------------------------------
 * Connect to the mysql server
+* Video was done with version = 5.5.68-MariaDB 
 
 mysql -u root -p -h localhost
+select @@global.version;
 
 mysql=>
 
