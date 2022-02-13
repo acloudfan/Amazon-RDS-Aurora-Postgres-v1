@@ -135,15 +135,15 @@ PS: We will use utility script but you may use DMS console
 
 mysql -u dms_user  -p -h localhost  
 
-* Create the database
+-- Create the database
 DROP DATABASE sakila; 
 CREATE DATABASE sakila;
 
-* Setup the schema
-source Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/sakila-schema.sql 
+-- Setup the schema
+source ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/sakila-schema.sql 
 
-* Populate the database
-source Amazon-RDS-Aurora-Postgres-v1/migration/sct/schemas/sakila-data.sql 
+-- Populate the database
+source ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/sakila-data.sql 
 
 * Verify
 SELECT count(*) FROM film;
@@ -159,15 +159,7 @@ psql  <  Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/1.pagila-postgresql
 
 psql  <  Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/pagila-postgresql-ddl-triggers.sql
 
-3. Setup the replication task
------------------------------
-* Run the utility script
-./bin/dms/create-replication-task.sh \
-    ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/1.task-mapping.json   \
-    ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/task-setting.json
-
-
-4. Fix the MySQL binlog error
+3. Fix the MySQL binlog error
 -----------------------------
 * Checkout pre-requisites for MySQL
 https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Source.MySQL.html#CHAP_Source.MySQL.Prerequisites 
@@ -191,6 +183,14 @@ sudo systemctl restart mariadb
 * Confirm if binlog_format = row
 mysql -u root -p -h localhost
 select @@global.binlog_format;
+
+4. Setup the replication task
+-----------------------------
+* Run the utility script
+./bin/dms/create-replication-task.sh \
+    ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/1.task-mapping.json   \
+    ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/task-setting.json
+
 
 5. Retry the replication task
 -----------------------------
