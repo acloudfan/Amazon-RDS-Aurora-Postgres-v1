@@ -260,7 +260,7 @@ CREATE TABLE pagila.customer (
     last_name text NOT NULL,
     email text,
     address_id integer NOT NULL,
-    activebool boolean DEFAULT true NOT NULL,
+    activebool boolean DEFAULT true ,
     create_date date DEFAULT CURRENT_DATE NOT NULL,
     last_update timestamp with time zone DEFAULT now(),
     active integer
@@ -430,15 +430,12 @@ CREATE TABLE pagila.film (
     length smallint,
     replacement_cost numeric(5,2) DEFAULT 19.99 NOT NULL,
     rating pagila.mpaa_rating DEFAULT 'G'::pagila.mpaa_rating,
-    special_features text[],
+    special_features text[] ,
     last_update timestamp with time zone DEFAULT now() NOT NULL,
-    fulltext tsvector NOT NULL
 );
 
 
 ALTER TABLE pagila.film OWNER TO masteruser;
-
-
 
 --
 -- Name: film_actor; Type: TABLE; Schema: public; Owner: postgres
@@ -726,10 +723,9 @@ CREATE TABLE pagila.payment (
     staff_id integer NOT NULL,
     rental_id integer NOT NULL,
     amount numeric(5,2) NOT NULL,
-    payment_date timestamp with time zone NOT NULL,
-    last_update timestamp with time zone DEFAULT now() NOT NULL
+    payment_date timestamp with time zone NOT NULL
 )
-PARTITION BY RANGE (payment_date);
+-- PARTITION BY RANGE (payment_date);
 
 
 ALTER TABLE pagila.payment OWNER TO masteruser;
@@ -744,10 +740,9 @@ CREATE TABLE pagila.payment_p2020_01 (
     staff_id integer NOT NULL,
     rental_id integer NOT NULL,
     amount numeric(5,2) NOT NULL,
-    payment_date timestamp with time zone NOT NULL,
-    last_update timestamp with time zone DEFAULT now() NOT NULL
+    payment_date timestamp with time zone NOT NULL
 );
-ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_01 FOR VALUES FROM ('2020-01-01 00:00:00+00') TO ('2020-02-01 00:00:00+00');
+-- ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_01 FOR VALUES FROM ('2020-01-01 00:00:00+00') TO ('2020-02-01 00:00:00+00');
 
 
 ALTER TABLE pagila.payment_p2020_01 OWNER TO masteruser;
@@ -762,10 +757,9 @@ CREATE TABLE pagila.payment_p2020_02 (
     staff_id integer NOT NULL,
     rental_id integer NOT NULL,
     amount numeric(5,2) NOT NULL,
-    payment_date timestamp with time zone NOT NULL,
-    last_update timestamp with time zone DEFAULT now() NOT NULL
+    payment_date timestamp with time zone NOT NULL
 );
-ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_02 FOR VALUES FROM ('2020-02-01 00:00:00+00') TO ('2020-03-01 00:00:00+00');
+-- ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_02 FOR VALUES FROM ('2020-02-01 00:00:00+00') TO ('2020-03-01 00:00:00+00');
 
 
 ALTER TABLE pagila.payment_p2020_02 OWNER TO masteruser;
@@ -780,10 +774,9 @@ CREATE TABLE pagila.payment_p2020_03 (
     staff_id integer NOT NULL,
     rental_id integer NOT NULL,
     amount numeric(5,2) NOT NULL,
-    payment_date timestamp with time zone NOT NULL,
-    last_update timestamp with time zone DEFAULT now() NOT NULL
+    payment_date timestamp with time zone NOT NULL
 );
-ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_03 FOR VALUES FROM ('2020-03-01 00:00:00+00') TO ('2020-04-01 01:00:00+01');
+-- ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_03 FOR VALUES FROM ('2020-03-01 00:00:00+00') TO ('2020-04-01 01:00:00+01');
 
 
 ALTER TABLE pagila.payment_p2020_03 OWNER TO masteruser;
@@ -798,10 +791,9 @@ CREATE TABLE pagila.payment_p2020_04 (
     staff_id integer NOT NULL,
     rental_id integer NOT NULL,
     amount numeric(5,2) NOT NULL,
-    payment_date timestamp with time zone NOT NULL,
-    last_update timestamp with time zone DEFAULT now() NOT NULL
+    payment_date timestamp with time zone NOT NULL
 );
-ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_04 FOR VALUES FROM ('2020-04-01 01:00:00+01') TO ('2020-05-01 01:00:00+01');
+-- ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_04 FOR VALUES FROM ('2020-04-01 01:00:00+01') TO ('2020-05-01 01:00:00+01');
 
 
 ALTER TABLE pagila.payment_p2020_04 OWNER TO masteruser;
@@ -816,10 +808,9 @@ CREATE TABLE pagila.payment_p2020_05 (
     staff_id integer NOT NULL,
     rental_id integer NOT NULL,
     amount numeric(5,2) NOT NULL,
-    payment_date timestamp with time zone NOT NULL,
-    last_update timestamp with time zone DEFAULT now() NOT NULL
+    payment_date timestamp with time zone NOT NULL
 );
-ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_05 FOR VALUES FROM ('2020-05-01 01:00:00+01') TO ('2020-06-01 01:00:00+01');
+-- ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_05 FOR VALUES FROM ('2020-05-01 01:00:00+01') TO ('2020-06-01 01:00:00+01');
 
 
 ALTER TABLE pagila.payment_p2020_05 OWNER TO masteruser;
@@ -834,10 +825,9 @@ CREATE TABLE pagila.payment_p2020_06 (
     staff_id integer NOT NULL,
     rental_id integer NOT NULL,
     amount numeric(5,2) NOT NULL,
-    payment_date timestamp with time zone NOT NULL,
-    last_update timestamp with time zone DEFAULT now() NOT NULL
+    payment_date timestamp with time zone NOT NULL
 );
-ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_06 FOR VALUES FROM ('2020-06-01 01:00:00+01') TO ('2020-07-01 01:00:00+01');
+-- ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_06 FOR VALUES FROM ('2020-06-01 01:00:00+01') TO ('2020-07-01 01:00:00+01');
 
 
 ALTER TABLE pagila.payment_p2020_06 OWNER TO masteruser;
@@ -997,4 +987,107 @@ CREATE VIEW pagila.staff_list AS
 
 
 ALTER TABLE pagila.staff_list OWNER TO masteruser;
+
+
+
+
+CREATE TRIGGER film_fulltext_trigger BEFORE INSERT OR UPDATE ON pagila.film FOR EACH ROW EXECUTE FUNCTION tsvector_update_trigger('fulltext', 'pg_catalog.english', 'title', 'description');
+
+
+--
+-- Name: actor last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER last_updated BEFORE UPDATE ON pagila.actor FOR EACH ROW EXECUTE FUNCTION pagila.last_updated();
+
+
+--
+-- Name: address last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER last_updated BEFORE UPDATE ON pagila.address FOR EACH ROW EXECUTE FUNCTION pagila.last_updated();
+
+
+--
+-- Name: category last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER last_updated BEFORE UPDATE ON pagila.category FOR EACH ROW EXECUTE FUNCTION pagila.last_updated();
+
+
+--
+-- Name: city last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER last_updated BEFORE UPDATE ON pagila.city FOR EACH ROW EXECUTE FUNCTION pagila.last_updated();
+
+
+--
+-- Name: country last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER last_updated BEFORE UPDATE ON pagila.country FOR EACH ROW EXECUTE FUNCTION pagila.last_updated();
+
+
+--
+-- Name: customer last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER last_updated BEFORE UPDATE ON pagila.customer FOR EACH ROW EXECUTE FUNCTION pagila.last_updated();
+
+
+--
+-- Name: film last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER last_updated BEFORE UPDATE ON pagila.film FOR EACH ROW EXECUTE FUNCTION pagila.last_updated();
+
+
+--
+-- Name: film_actor last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER last_updated BEFORE UPDATE ON pagila.film_actor FOR EACH ROW EXECUTE FUNCTION pagila.last_updated();
+
+
+--
+-- Name: film_category last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER last_updated BEFORE UPDATE ON pagila.film_category FOR EACH ROW EXECUTE FUNCTION pagila.last_updated();
+
+
+--
+-- Name: inventory last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER last_updated BEFORE UPDATE ON pagila.inventory FOR EACH ROW EXECUTE FUNCTION pagila.last_updated();
+
+
+--
+-- Name: language last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER last_updated BEFORE UPDATE ON pagila.language FOR EACH ROW EXECUTE FUNCTION pagila.last_updated();
+
+
+--
+-- Name: rental last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER last_updated BEFORE UPDATE ON pagila.rental FOR EACH ROW EXECUTE FUNCTION pagila.last_updated();
+
+
+--
+-- Name: staff last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER last_updated BEFORE UPDATE ON pagila.staff FOR EACH ROW EXECUTE FUNCTION pagila.last_updated();
+
+
+--
+-- Name: store last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER last_updated BEFORE UPDATE ON pagila.store FOR EACH ROW EXECUTE FUNCTION pagila.last_updated();
 

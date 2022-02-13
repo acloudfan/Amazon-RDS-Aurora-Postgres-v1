@@ -155,9 +155,8 @@ SELECT count(*) FROM film;
 psql -c 'drop schema pagila cascade'
 psql -c 'CREATE SCHEMA pagila'
 
-psql  <  Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/1.pagila-postgresql-ddl-no-constraints.sql
+psql  <  Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/pagila-postgresql-ddl-no-constraints.sql
 
-psql  <  Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/pagila-postgresql-ddl-triggers.sql
 
 3. Fix the MySQL binlog error
 -----------------------------
