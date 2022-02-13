@@ -2,18 +2,18 @@
 -- PostgreSQL database dump
 --
 
--- MANUALLY Updated & Tested Schema file for Target PostgreSQL DB Cluster
-
--- Dumped from database version 13beta3
--- Dumped by pg_dump version 13beta3
+-- NOTE:
+-- This is NOT THE ORIGINAL Pagila Scheme
+-- It is a simplified version to demonstrate working of DMS
+-- Removed the partitions for payment as there were data conflicts !!!
+-- Raj
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
--- SELECT pg_catalog.set_config('search_path', 'pagila', false);
--- SELECT pg_catalog.set_config('search_path', '', false);
+SELECT pg_catalog.set_config('search_path', 'pagila', false);
 SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
@@ -431,7 +431,7 @@ CREATE TABLE pagila.film (
     length smallint,
     replacement_cost numeric(5,2) DEFAULT 19.99 NOT NULL,
     rating pagila.mpaa_rating DEFAULT 'G'::pagila.mpaa_rating,
-    special_features text[] ,
+    special_features text ,
     last_update timestamp with time zone DEFAULT now() NOT NULL
 );
 

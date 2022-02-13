@@ -224,9 +224,50 @@ Hints:
 Note: Solution is in next hands on exercise
 
 
+=====================================
+Exercise: Fix Replication Task Errors
+=====================================
+Reason for the error:
+The sakila.payment table definition has a last_update column 
+which is not there in pagila.payment. As a result when DMS tries
+to insert in into the target its fails !!!
+
+Solution:
+Create a mapping rule that will drop the column : last_update
+
+1.Stop & Delete the replication task
+------------------------------------
+* Use DMS console to stop the task
+
+./bin/dms/delete-replication-task.sh
+
+2.Cleanup the Postgresql setup
+------------------------------
+
+psql -c 'drop schema pagila cascade'
+psql -c 'CREATE SCHEMA pagila'
+
+psql  <  Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/pagila-postgresql-ddl-no-constraints.sql
 
 
+3. Run the utility script for creation with a different task-mapping.json
+-------------------------------------------------------------------------
 
+./bin/dms/create-replication-task.sh \
+    ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/2.task-mapping.json   \
+    ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/task-setting.json
+
+* Checkout the mapping rule for last_update column
+
+5. Verify, & Modify 
+-------------------
+* Target table preparation mode
+    - Modify so that it is "Do nothing"
+
+* Stop task after full load completes
+    - Modify so that its is "Stop task after full load completes"
+
+* Insert rows to test
 
 
 =====================================
