@@ -6,8 +6,6 @@
 REPL_SUBNET_GROUP_ID=rdsa-dms-subnet-group
 REPL_INSTANCE_IDENTIFIER=rdsa-dms-replication-instance
 
-INSTANCE_IDENTIFIER=rdsa-dms-replication-instance
-
 # NOT ALL instances supported for all engine versions - check documentation
 INSTANCE_CLASS=dms.t3.medium
 INSTANCE_ENGINE_VERSION=3.4.6
