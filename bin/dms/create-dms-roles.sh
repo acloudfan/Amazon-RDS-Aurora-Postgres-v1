@@ -36,7 +36,7 @@ echo "DMS_VPC_ROLE Arn=$DMS_VPC_ROLE_ARN"
 
 # Attach the role to policy IAM_COPY_TASK_POLICY
 echo "Attaching the IAM policy to IAM role"
-aws iam attach-role-policy   --role-name $DMS_VPC_ROLE   --role-name dms-vpc-role --policy-arn arn:aws:iam::aws:policy/service-role/$DMS_VPC_MANAGEMENT_ROLE
+aws iam attach-role-policy   --role-name $DMS_VPC_ROLE  --policy-arn arn:aws:iam::aws:policy/service-role/$DMS_VPC_MANAGEMENT_ROLE
 echo "Created: $DMS_VPC_ROLE"
 else
     echo "$DMS_VPC_ROLE role exists - no action taken !!"
@@ -82,7 +82,7 @@ echo "DMS_CW_ROLE Arn=$DMS_CW_ROLE_ARN"
 
 # Attach the role to policy IAM_COPY_TASK_POLICY
 echo "Attaching the IAM policy to IAM role"
-aws iam attach-role-policy   --role-name $DMS_CW_ROLE   --role-name dms-vpc-role --policy-arn arn:aws:iam::aws:policy/service-role/$DMS_CW_MANAGEMENT_ROLE
+aws iam attach-role-policy   --role-name $DMS_CW_ROLE  --policy-arn arn:aws:iam::aws:policy/service-role/$DMS_CW_MANAGEMENT_ROLE
 echo "Created: $DMS_CW_ROLE"
 else
     echo "$DMS_CW_ROLE role exists - no action taken !!"
