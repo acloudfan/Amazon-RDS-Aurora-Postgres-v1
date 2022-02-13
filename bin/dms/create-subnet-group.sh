@@ -7,7 +7,7 @@ REPL_SUBNET_GROUP_ID=rdsa-dms-subnet-group
 RDSA_VPC_CF_STACK_NAME="rdsa-vpc"
 VPC_PRIVATE_SUBNETS=$(aws cloudformation  describe-stacks --stack-name $RDSA_VPC_CF_STACK_NAME --query 'Stacks[0].Outputs[?OutputKey==`PrivateSubnets`].OutputValue | [0]' --output text)
 
-# Replace , with space
+# Replace ',' with space
 VPC_PRIVATE_SUBNETS=$(echo ${VPC_PRIVATE_SUBNETS//,/ })
 
 # Create the subnet group
@@ -17,5 +17,8 @@ aws dms create-replication-subnet-group  \
     --subnet-ids $VPC_PRIVATE_SUBNETS
 
 
-echo 'Please check for errors !!'
-echo 'Done.'
+if  [ $? == 0 ]; then
+    echo 'Done.'
+else
+    echo 'Failed !!!'
+fi
