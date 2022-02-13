@@ -2,8 +2,6 @@
 #Creates the Replication instance
 # https://docs.aws.amazon.com/cli/latest/reference/dms/create-replication-instance.html
 
-
-
 # Subnet group
 REPL_SUBNET_GROUP_ID=rdsa-dms-subnet-group
 REPL_INSTANCE_IDENTIFIER=rdsa-dms-replication-instance
@@ -20,6 +18,7 @@ INSTANCE_MULTI_AZ=--no-multi-az
 INSTANCE_PUBLIC_ACCESS=--no-publicly-accessible
 INSTANCE_ALLOCATED_STORE=5
 
+# Create the instance
 aws dms create-replication-instance \
     --replication-instance-identifier  $REPL_INSTANCE_IDENTIFIER \
     --replication-instance-class  $INSTANCE_CLASS  \
