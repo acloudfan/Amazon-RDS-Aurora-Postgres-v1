@@ -432,7 +432,7 @@ CREATE TABLE pagila.film (
     replacement_cost numeric(5,2) DEFAULT 19.99 NOT NULL,
     rating pagila.mpaa_rating DEFAULT 'G'::pagila.mpaa_rating,
     special_features text[] ,
-    last_update timestamp with time zone DEFAULT now() NOT NULL,
+    last_update timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
