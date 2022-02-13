@@ -725,7 +725,7 @@ CREATE TABLE pagila.payment (
     rental_id integer NOT NULL,
     amount numeric(5,2) NOT NULL,
     payment_date timestamp with time zone NOT NULL
-)
+);
 
 ALTER TABLE pagila.payment OWNER TO masteruser;
 
