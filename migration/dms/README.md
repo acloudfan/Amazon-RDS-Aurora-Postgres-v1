@@ -3,6 +3,7 @@ Exercise: Setup MySQL & Endpoints
 Part-1 Install MySQL on Linux Host
 ==================================
 The Linux Bastion Host Security group allows connections from within VPC
+NOTE: Video created with MariaDB vserion = 5.5.68-MariaDB 
 
 1. Install the MySQL server
 ---------------------------
@@ -142,7 +143,7 @@ CREATE DATABASE sakila;
 source Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/sakila-schema.sql 
 
 * Populate the database
-source Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/sakila-data.sql 
+source Amazon-RDS-Aurora-Postgres-v1/migration/sct/schemas/sakila-data.sql 
 
 * Verify
 SELECT count(*) FROM film;
@@ -155,6 +156,8 @@ psql -c 'drop schema pagila cascade'
 psql -c 'CREATE SCHEMA pagila'
 
 psql  <  Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/1.pagila-postgresql-ddl-no-constraints.sql
+
+psql  <  Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/pagila-postgresql-ddl-triggers.sql
 
 3. Setup the replication task
 -----------------------------

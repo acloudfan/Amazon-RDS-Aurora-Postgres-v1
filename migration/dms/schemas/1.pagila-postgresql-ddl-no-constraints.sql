@@ -432,7 +432,7 @@ CREATE TABLE pagila.film (
     rating pagila.mpaa_rating DEFAULT 'G'::pagila.mpaa_rating,
     last_update timestamp with time zone DEFAULT now() NOT NULL,
     special_features text[],
-    fulltext tsvector NOT NULL
+    fulltext tsvector 
 );
 
 
