@@ -187,7 +187,7 @@ sudo cp ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/mysql-binlog.cnf  
 sudo systemctl   restart   mariadb
 
 # Confirm bin log format - it should be ROW
-select @@global.binlog_format;
+mysql -u root -e 'select @@global.binlog_format;'
 
 Part-2 Prepare the Target Database
 ==================================

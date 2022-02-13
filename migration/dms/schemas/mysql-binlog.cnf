@@ -10,7 +10,7 @@ symbolic-links=0
 
 # DMS Requirements
 # https://aws.amazon.com/premiumsupport/knowledge-center/dms-binary-logging-aurora-mysql/
-binlog_format=row
+binlog_format=ROW
 server-id=2
 log_bin=ON
 expire_logs_days=1
