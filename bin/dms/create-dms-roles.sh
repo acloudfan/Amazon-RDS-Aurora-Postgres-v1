@@ -36,8 +36,9 @@ echo "DMS_VPC_ROLE Arn=$DMS_VPC_ROLE_ARN"
 
 # Attach the role to policy IAM_COPY_TASK_POLICY
 echo "Attaching the IAM policy to IAM role"
-DMS_VPC_MANAGEMENT_ROLE=$(aws iam list-policies --query "Policies[?PolicyName=='$DMS_VPC_MANAGEMENT_ROLE'].Arn" --output text)
-aws iam attach-role-policy   --role-name $DMS_VPC_ROLE  --policy-arn  $DMS_VPC_MANAGEMENT_ROLE
+DMS_VPC_MANAGEMENT_ROLE_ARN=$(aws iam list-policies --query "Policies[?PolicyName=='$DMS_VPC_MANAGEMENT_ROLE'].Arn" --output text)
+echo "DMS_VPC_MANAGEMENT_ROLE_ARN=$DMS_VPC_MANAGEMENT_ROLE_ARN"
+aws iam attach-role-policy   --role-name $DMS_VPC_ROLE  --policy-arn  $DMS_VPC_MANAGEMENT_ROLE_ARN
 else
     echo "dms_vpc_role role exists - no action taken !!"
 fi
