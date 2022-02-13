@@ -109,11 +109,18 @@ please follow the instructions later in this README file.
 
 ./bin/dms/create-replication-instance.sh
 
-3. Test the Source endpoint
+
+
+Part-1 Test the Endpoints
+=========================
+
+1. Test the Source endpoint
 ---------------------------
 * Log on to Bastion host & make sure MySQL is running
 sudo systemctl start mariadb
 
+2. Test the Target endpoint
+---------------------------
 * Log on to DMS console
 
 =================================
