@@ -7,7 +7,7 @@
                 "Id": "TRANSFORMATION"
             },
             {
-                "Severity": "LOGGER_SEVERITY_WARNING",
+                "Severity": "LOGGER_SEVERITY_DEFAULT",
                 "Id": "SOURCE_UNLOAD"
             },
             {
@@ -15,7 +15,7 @@
                 "Id": "IO"
             },
             {
-                "Severity": "LOGGER_SEVERITY_WARNING",
+                "Severity": "LOGGER_SEVERITY_DEFAULT",
                 "Id": "TARGET_LOAD"
             },
             {
@@ -23,7 +23,7 @@
                 "Id": "PERFORMANCE"
             },
             {
-                "Severity": "LOGGER_SEVERITY_WARNING",
+                "Severity": "LOGGER_SEVERITY_DEFAULT",
                 "Id": "SOURCE_CAPTURE"
             },
             {
@@ -39,11 +39,11 @@
                 "Id": "VALIDATOR_EXT"
             },
             {
-                "Severity": "LOGGER_SEVERITY_WARNING",
+                "Severity": "LOGGER_SEVERITY_DEFAULT",
                 "Id": "TARGET_APPLY"
             },
             {
-                "Severity": "LOGGER_SEVERITY_WARNING",
+                "Severity": "LOGGER_SEVERITY_DEFAULT",
                 "Id": "TASK_MANAGER"
             },
             {
@@ -80,7 +80,7 @@
             }
         ],
         "CloudWatchLogGroup": "dms-tasks-rdsa-dms-replication-instance",
-        "CloudWatchLogStream": "dms-task-rdsa-mysql-to-postgresql"
+        "CloudWatchLogStream": "dms-task-rdsa-dms-replication-task"
     },
     "StreamBufferSettings": {
         "StreamBufferCount": 3,
@@ -118,7 +118,7 @@
     "FullLoadSettings": {
         "CommitRate": 10000,
         "StopTaskCachedChangesApplied": false,
-        "StopTaskCachedChangesNotApplied": false,
+        "StopTaskCachedChangesNotApplied": true,
         "MaxFullLoadSubTasks": 8,
         "TransactionConsistencyTimeout": 600,
         "CreatePkAfterFullLoad": false,
@@ -132,13 +132,13 @@
         "InlineLobMaxSize": 0,
         "ParallelLoadQueuesPerThread": 0,
         "SupportLobs": true,
-        "LobChunkSize": 64,
+        "LobChunkSize": 0,
         "TaskRecoveryTableEnabled": false,
         "ParallelLoadThreads": 0,
-        "LobMaxSize": 0,
+        "LobMaxSize": 32,
         "BatchApplyEnabled": false,
-        "FullLobMode": true,
-        "LimitedSizeLobMode": false,
+        "FullLobMode": false,
+        "LimitedSizeLobMode": true,
         "LoadMaxFileSize": 0,
         "ParallelLoadBufferSize": 0
     },

@@ -190,6 +190,12 @@ select @@global.binlog_format;
     ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/1.task-mapping.json   \
     ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/task-setting.json
 
+5. Checkout the job status in DMS console
+-----------------------------------------
+* JSON for settings
+* JSON for mappings
+* 
+
 
 5. Retry the replication task
 -----------------------------
