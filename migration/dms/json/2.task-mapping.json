@@ -7,7 +7,7 @@
             "rule-target": "column",
             "object-locator": {
                 "schema-name": "sakila",
-                "table-name": "payment%",
+                "table-name": "payment",
                 "column-name": "last_update"
             },
             "rule-action": "remove-column",

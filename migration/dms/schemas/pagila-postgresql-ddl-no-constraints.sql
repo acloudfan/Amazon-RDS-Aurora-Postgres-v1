@@ -722,7 +722,7 @@ CREATE TABLE pagila.payment (
     payment_id integer DEFAULT nextval('pagila.payment_payment_id_seq'::regclass) NOT NULL,
     customer_id integer NOT NULL,
     staff_id integer NOT NULL,
-    rental_id integer NOT NULL,
+    rental_id integer ,
     amount numeric(5,2) NOT NULL,
     payment_date timestamp with time zone NOT NULL
 );
