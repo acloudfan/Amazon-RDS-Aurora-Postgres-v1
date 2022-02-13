@@ -260,7 +260,7 @@ CREATE TABLE pagila.customer (
     last_name text NOT NULL,
     email text,
     address_id integer NOT NULL,
-    activebool boolean DEFAULT true NOT NULL,
+    activebool boolean DEFAULT true ,
     create_date date DEFAULT CURRENT_DATE NOT NULL,
     last_update timestamp with time zone DEFAULT now(),
     active integer
