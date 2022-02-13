@@ -93,6 +93,23 @@ Part-1 Setup replication instance
 PS: We will use a utility script but if you want to use DMS console
 please follow the instructions later in this README file.
 
+1. Create the DMS roles
+-----------------------
+* DMS requires multiple roles for tasks
+* These roles get created automatically if you are using DMS console
+* Need to be created manually for AWS CLI
+* Needs to be done once unless you delete the role
+
+./bin/dms/create-dms-roles.sh
+
+* To delete the roles you may use
+* Delete will fail if roles are in use
+
+./bin/dms/delete-dms-roles.sh
+
+Part-2 Setup replication instance
+=================================
+
 1. Create the Replication Subnet Group
 --------------------------------------
 * Use the utility script to create the subnet group
@@ -110,7 +127,7 @@ please follow the instructions later in this README file.
 
 
 
-Part-2 Test the Endpoints
+Part-3 Test the Endpoints
 =========================
 
 1. Test the Source endpoint

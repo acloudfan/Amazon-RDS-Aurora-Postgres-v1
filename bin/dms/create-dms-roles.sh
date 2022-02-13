@@ -2,6 +2,7 @@
 #These roles gets created automatically if you are using the DMS from console
 #If you are using CLI then they need to be created
 #1.dms_vpc_role
+#2.dms-cloudwatch-logs-role
 
 #---------------------------------
 DMS_VPC_ROLE=dms-vpc-role
@@ -54,25 +55,6 @@ DMS_CW_MANAGEMENT_ROLE=AmazonDMSCloudWatchLogsRole
 DMS_CW_ROLE_ARN=$(aws iam list-roles --query "Roles[?RoleName=='$DMS_CW_ROLE'].Arn" --output text)
 
 if  [ "$DMS_CW_ROLE_ARN" == "" ]; then
-
-read -r -d ''  ASSUME_ROLE_POLICY << EOL 
-{  
-    "Version": "2012-10-17",
-    "Statement": [
-    {
-      "Sid": "",
-      "Effect": "Allow",
-      "Principal": {
-       
-    "Service": "dms.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-EOL
-# Write out the trust policy to temp file
-echo "$ASSUME_ROLE_POLICY" > /tmp/assume-policy.json
 
 # Create the role with the trust policy
 aws iam create-role --role-name $DMS_CW_ROLE --assume-role-policy-document  file:///tmp/assume-policy.json  > /dev/null
