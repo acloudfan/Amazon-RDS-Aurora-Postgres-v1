@@ -726,7 +726,7 @@ CREATE TABLE pagila.payment (
     amount numeric(5,2) NOT NULL,
     payment_date timestamp with time zone NOT NULL
 )
--- PARTITION BY RANGE (payment_date);
+PARTITION BY RANGE (payment_date);
 
 
 ALTER TABLE pagila.payment OWNER TO masteruser;
@@ -743,7 +743,7 @@ CREATE TABLE pagila.payment_p2020_01 (
     amount numeric(5,2) NOT NULL,
     payment_date timestamp with time zone NOT NULL
 );
--- ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_01 FOR VALUES FROM ('2020-01-01 00:00:00+00') TO ('2020-02-01 00:00:00+00');
+ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_01 FOR VALUES FROM ('2020-01-01 00:00:00+00') TO ('2020-02-01 00:00:00+00');
 
 
 ALTER TABLE pagila.payment_p2020_01 OWNER TO masteruser;
@@ -760,7 +760,7 @@ CREATE TABLE pagila.payment_p2020_02 (
     amount numeric(5,2) NOT NULL,
     payment_date timestamp with time zone NOT NULL
 );
--- ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_02 FOR VALUES FROM ('2020-02-01 00:00:00+00') TO ('2020-03-01 00:00:00+00');
+ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_02 FOR VALUES FROM ('2020-02-01 00:00:00+00') TO ('2020-03-01 00:00:00+00');
 
 
 ALTER TABLE pagila.payment_p2020_02 OWNER TO masteruser;
@@ -777,7 +777,7 @@ CREATE TABLE pagila.payment_p2020_03 (
     amount numeric(5,2) NOT NULL,
     payment_date timestamp with time zone NOT NULL
 );
--- ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_03 FOR VALUES FROM ('2020-03-01 00:00:00+00') TO ('2020-04-01 01:00:00+01');
+ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_03 FOR VALUES FROM ('2020-03-01 00:00:00+00') TO ('2020-04-01 01:00:00+01');
 
 
 ALTER TABLE pagila.payment_p2020_03 OWNER TO masteruser;
@@ -794,7 +794,7 @@ CREATE TABLE pagila.payment_p2020_04 (
     amount numeric(5,2) NOT NULL,
     payment_date timestamp with time zone NOT NULL
 );
--- ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_04 FOR VALUES FROM ('2020-04-01 01:00:00+01') TO ('2020-05-01 01:00:00+01');
+ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_04 FOR VALUES FROM ('2020-04-01 01:00:00+01') TO ('2020-05-01 01:00:00+01');
 
 
 ALTER TABLE pagila.payment_p2020_04 OWNER TO masteruser;
@@ -811,7 +811,7 @@ CREATE TABLE pagila.payment_p2020_05 (
     amount numeric(5,2) NOT NULL,
     payment_date timestamp with time zone NOT NULL
 );
--- ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_05 FOR VALUES FROM ('2020-05-01 01:00:00+01') TO ('2020-06-01 01:00:00+01');
+ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_05 FOR VALUES FROM ('2020-05-01 01:00:00+01') TO ('2020-06-01 01:00:00+01');
 
 
 ALTER TABLE pagila.payment_p2020_05 OWNER TO masteruser;
@@ -828,7 +828,7 @@ CREATE TABLE pagila.payment_p2020_06 (
     amount numeric(5,2) NOT NULL,
     payment_date timestamp with time zone NOT NULL
 );
--- ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_06 FOR VALUES FROM ('2020-06-01 01:00:00+01') TO ('2020-07-01 01:00:00+01');
+ALTER TABLE ONLY pagila.payment ATTACH PARTITION pagila.payment_p2020_06 FOR VALUES FROM ('2020-06-01 01:00:00+01') TO ('2020-07-01 01:00:00+01');
 
 
 ALTER TABLE pagila.payment_p2020_06 OWNER TO masteruser;

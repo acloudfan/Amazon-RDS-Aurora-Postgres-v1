@@ -119,23 +119,19 @@ Part-1 Setup replication instance
 =================================
 PS: We will use utility script but you may use DMS console 
 
-* Run the utility script
-./bin/dms/create-replication-task.sh \
-    ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/1.task-mapping.json   \
-    ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/task-setting.json
 
-
-
-
-* Please ensure MySQL is running
-sudo systemctl start mariadb
 
 1. Populate the MySQL database
 ------------------------------
 * Logon to the bastion host
+* Please ensure MySQL is running
+
+    sudo systemctl start mariadb
+
 * Populate the MySQL database
 
 * Start the MySQL session, provide 'password'
+
 mysql -u dms_user  -p -h localhost  
 
 * Create the database
@@ -152,14 +148,53 @@ source Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/sakila-data.sql
 SELECT count(*) FROM film;
 
 
+2. Setup schema on Aurora Postgres labdb - pagila 
+-------------------------------------------------
+
+psql -c 'drop schema pagila cascade'
+psql -c 'CREATE SCHEMA pagila'
+
+psql  <  Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/1.pagila-postgresql-ddl-no-constraints.sql
+
+3. Setup the replication task
+-----------------------------
+* Run the utility script
+./bin/dms/create-replication-task.sh \
+    ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/1.task-mapping.json   \
+    ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/task-setting.json
 
 
+4. Fix the MySQL binlog error
+-----------------------------
+* Checkout pre-requisites for MySQL
+https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Source.MySQL.html#CHAP_Source.MySQL.Prerequisites 
 
 
+sudo nano /etc/my.cnf
 
+* Add following under the section [mysqld] and save
+binlog_format=row
+server-id=2
+log-bin=/var/tmp/MySql_Logs/BinLog
+log_bin=ON
+expire_logs_days=1
+binlog_checksum=NONE
+#binlog_row_image=FULL
+log_slave_updates=true
 
+* Restart MariaDB
+sudo systemctl restart mariadb
 
+* Confirm if binlog_format = row
+mysql -u root -p -h localhost
+select @@global.binlog_format;
 
+5. Retry the replication task
+-----------------------------
+* Select the task on DMS console
+
+* Actions >> Restart/Resume
+  Select Restart
 
 
 
@@ -169,13 +204,7 @@ Part-1 Setup replication instance
 =====================================================
 
 
-2. Setup schema on Aurora Postgres labdb - pagila 
--------------------------------------------------
 
-psql -c 'drop schema pagila cascade'
-psql -c 'CREATE SCHEMA pagila'
-
-psql  <  Amazon-RDS-Aurora-Postgres-v1/migration/sct/schema-conversion/3.manual-converted-sakila-postgresql.sql
 
 
 
@@ -253,7 +282,7 @@ MySQL binlog_format
 binlog_format=ROW
 
 * Restart the database after the config change
-
+sudo systemctl restart mariadb
 
 
 References:
@@ -274,4 +303,6 @@ https://aws.amazon.com/premiumsupport/knowledge-center/manage-cloudwatch-logs-dm
 https://aws.amazon.com/premiumsupport/knowledge-center/dms-enable-debug-logging/
 https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Troubleshooting.html#CHAP_Troubleshooting.General.CWL
 
+Troubleshooting MySQL binlog issue
+https://aws.amazon.com/premiumsupport/knowledge-center/dms-binary-logging-aurora-mysql/
 
