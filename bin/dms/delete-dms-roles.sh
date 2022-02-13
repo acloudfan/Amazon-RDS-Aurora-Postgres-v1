@@ -14,7 +14,7 @@ else
     # DMS_VPC_MANAGEMENT_ROLE_ARN=$(aws iam list-policies --query "Policies[?PolicyName=='$DMS_VPC_MANAGEMENT_ROLE'].Arn" --output text)
     echo "Detaching the  $DMS_VPC_MANAGEMENT_ROLE"
     # aws iam detach-role-policy --role-name $DMS_VPC_ROLE --policy-arn $DMS_VPC_MANAGEMENT_ROLE_ARN
-    aws iam detach-role-policy --role-name $DMS_VPC_ROLE --policy-arn arn:aws:iam::aws:policy/service-role/$DMS_CW_MANAGEMENT_ROLE
+    aws iam detach-role-policy --role-name $DMS_VPC_ROLE --policy-arn arn:aws:iam::aws:policy/service-role/$DMS_VPC_MANAGEMENT_ROLE
     echo "Deleting the $DMS_VPC_ROLE"
     aws iam delete-role --role-name $DMS_VPC_ROLE
     echo "Done."
