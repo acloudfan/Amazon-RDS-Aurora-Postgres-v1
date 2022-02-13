@@ -2,7 +2,7 @@ USE sakila;
 
 SET AUTOCOMMIT=0;
 
-INSERT INTO film VALUES (2001,'HONEY DEW','Don’t eat anything of unknown origins',2021,1,NULL,3,'4.99',50,'18.99','NC-17','Trailers,Commentaries,Behind the Scenes','2021-02-15 05:03:42');
+INSERT INTO film VALUES (2001,'HONEY DEW','HONEY DEW',2021,1,NULL,3,'4.99',50,'18.99','NC-17','Trailers,Commentaries,Behind the Scenes','2021-02-15 05:03:42');
 (2002,'Cliff Walkers','Cliff Walkers',2021,1,NULL,3,'4.99',50,'18.99','NC-17','Trailers,Commentaries,Behind the Scenes','2021-02-15 05:03:42');
 (2003,'The Vigil','The Vigil',2021,1,NULL,3,'4.99',50,'18.99','NC-17','Trailers,Commentaries,Behind the Scenes','2021-02-15 05:03:42');
 (2004,'Cry Macho','Cry Macho',2021,1,NULL,3,'4.99',50,'18.99','NC-17','Trailers,Commentaries,Behind the Scenes','2021-02-15 05:03:42');
