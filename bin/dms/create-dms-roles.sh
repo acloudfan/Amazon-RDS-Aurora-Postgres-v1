@@ -4,7 +4,7 @@
 #1.dms_vpc_role
 
 #---------------------------------
-DMS_VPC_ROLE=dms_vpc_role
+DMS_VPC_ROLE=dms-vpc-role
 DMS_VPC_MANAGEMENT_ROLE=AmazonDMSVPCManagementRole
 
 # Check if the role exist
