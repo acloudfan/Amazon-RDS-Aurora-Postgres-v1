@@ -54,6 +54,25 @@ DMS_CW_ROLE_ARN=$(aws iam list-roles --query "Roles[?RoleName=='$DMS_CW_ROLE'].A
 
 if  [ "$DMS_CW_ROLE_ARN" == "" ]; then
 
+read -r -d ''  ASSUME_ROLE_POLICY << EOL 
+{  
+    "Version": "2012-10-17",
+    "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+       
+    "Service": "dms.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOL
+# Write out the trust policy to temp file
+echo "$ASSUME_ROLE_POLICY" > /tmp/assume-policy.json
+
 # Create the role with the trust policy
 aws iam create-role --role-name $DMS_CW_ROLE --assume-role-policy-document  file:///tmp/assume-policy.json  > /dev/null
 DMS_CW_ROLE_ARN=$(aws iam list-roles --query "Roles[?RoleName=='$DMS_CW_ROLE'].Arn" --output text)
