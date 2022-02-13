@@ -52,10 +52,9 @@ mysql=>
 SYSTEM mysql -u dms_user -p
 SELECT user();
 
-=================================
-Exercise: Setup MySQL & Endpoints
+
 Part-2 Create the  Endpoints
-=================================
+============================
 Open the DMS Console
 
 1. Source endpoint for MySQL
@@ -111,7 +110,7 @@ please follow the instructions later in this README file.
 
 
 
-Part-1 Test the Endpoints
+Part-2 Test the Endpoints
 =========================
 
 1. Test the Source endpoint
