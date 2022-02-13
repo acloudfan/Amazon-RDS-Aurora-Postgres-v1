@@ -259,7 +259,7 @@ psql  <  Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/pagila-postgresql-d
 
 * Checkout the mapping rule for last_update column
 
-5. Verify, & Modify 
+4. Verify, & Modify 
 -------------------
 * Target table preparation mode
     - Modify so that it is "Do nothing"
@@ -267,7 +267,20 @@ psql  <  Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/pagila-postgresql-d
 * Stop task after full load completes
     - Modify so that its is "Stop task after full load completes"
 
-* Insert rows to test
+5. Apply the constraints
+------------------------
+
+psql  <  Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/pagila-postgresql-add-constraints-indexes.sql
+
+6.Insert rows to MySQL/Sakila database
+--------------------------------------
+* Check number of rows in film table Pagila
+psql -c 'SELECT COUNT(*) FROM pagila.film;'
+
+* Check the number of rows in film table in Sakila
+mysql -u root -e 'use sakila; SELECT COUNT(*) FROM film;'
+
+* mysql -u root < 
 
 
 =====================================

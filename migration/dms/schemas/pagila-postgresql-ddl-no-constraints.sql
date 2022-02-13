@@ -6,6 +6,7 @@
 -- This is NOT THE ORIGINAL Pagila Scheme
 -- It is a simplified version to demonstrate working of DMS
 -- Removed the partitions for payment as there were data conflicts !!!
+-- Removed multiple constraints
 -- Raj
 
 SET statement_timeout = 0;

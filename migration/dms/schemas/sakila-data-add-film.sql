@@ -1,3 +1,5 @@
+USE sakila;
+
 SET AUTOCOMMIT=0;
 
 INSERT INTO film VALUES 
