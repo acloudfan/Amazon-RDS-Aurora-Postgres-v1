@@ -387,7 +387,7 @@ https://aws.amazon.com/premiumsupport/knowledge-center/dms-task-error-status/
 
 Enable logging
 https://aws.amazon.com/premiumsupport/knowledge-center/manage-cloudwatch-logs-dms/
-
+https://aws.amazon.com/premiumsupport/knowledge-center/dms-cloudwatch-logs-not-appearing/
 https://aws.amazon.com/premiumsupport/knowledge-center/dms-enable-debug-logging/
 https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Troubleshooting.html#CHAP_Troubleshooting.General.CWL
 
