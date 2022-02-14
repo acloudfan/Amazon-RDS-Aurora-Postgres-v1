@@ -214,8 +214,10 @@ Part-3 Setup the replication task
 -------------------------
 
 ./bin/dms/create-replication-task.sh \
-    ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/task-setting.json \
-    ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/1.task-mapping.json   
+
+./test.sh \
+    file://./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/task-setting.json \
+    file://./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/1.task-mapping.json   
     
 
 

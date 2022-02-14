@@ -9,7 +9,9 @@ if [ -z "$1" ]; then
     echo "Please provide path to task setting JSON !!"
     exit
 else
-    TABLE_SETTING=$(cat $1)
+    TASK_SETTING=$(cat $1)
+    TASK_SETTING_FILE=$1
+    echo "Task settings: $TASK_SETTING_FILE"
 fi
 
 if [ -z "$2" ]; then
@@ -18,6 +20,8 @@ if [ -z "$2" ]; then
     exit
 else
     TABLE_MAPPING=$(cat $2)
+    TABLE_MAPPING_FILE=$2
+    echo "Table mappings: $TABLE_MAPPING_FILE"
 fi
 
 REPL_TASK_IDENTIFIER=rdsa-mysql-to-postgresql
@@ -79,8 +83,8 @@ aws dms create-replication-task  \
     --source-endpoint-arn  $SOURCE_ENDPOINT_ARN  \
     --target-endpoint-arn  $TARGET_ENDPOINT_ARN \
     --migration-type $MIGRATION_TYPE \
-    --replication-task-settings   "$TASK_SETTING" \
-    --table-mappings "$TABLE_MAPPING"
+    --replication-task-settings   "$TASK_SETTING_FILE" \
+    --table-mappings "$TABLE_MAPPING_FILE"
 
 if  [ $? == 0 ]; then
     echo 'Creation of task will take < a minute .. '

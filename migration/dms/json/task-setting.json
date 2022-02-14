@@ -78,9 +78,7 @@
                 "Severity": "LOGGER_SEVERITY_DEFAULT",
                 "Id": "FILE_TRANSFER"
             }
-        ],
-        "CloudWatchLogGroup": "dms-tasks-rdsa-dms-replication-instance",
-        "CloudWatchLogStream": "dms-task-rdsa-dms-replication-task"
+        ]
     },
     "StreamBufferSettings": {
         "StreamBufferCount": 3,
