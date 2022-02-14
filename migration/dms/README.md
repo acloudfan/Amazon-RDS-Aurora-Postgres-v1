@@ -212,25 +212,24 @@ Part-3 Setup the replication task
 
 1. Run the utility script
 -------------------------
+* Utility script takes the Task-Settings and Task-Mapping as parameters
 
 ./bin/dms/create-replication-task.sh \
-
-./test.sh \
     file://./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/task-setting.json \
     file://./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/1.task-mapping.json   
     
 
 
-2. Modify the Replication Task
+2. Verify the Replication Task
 ------------------------------
 * Target table preparation mode
-    - Modify so that it is "Do nothing"
-
-* Stop task after full load completes
-    - Modify so that its is "Stop task after full load completes"
+    - Modify task so that it is "Do nothing"
 
 * Enable CloudWatch logs
     - Check the box
+
+* Stop task after full load completes
+    - Modify so that its is "Stop task after full load completes"
 
 * Save    
 
