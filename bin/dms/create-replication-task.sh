@@ -1,7 +1,8 @@
 #!/bin/bash
 #Creates the Replication instance
 # https://docs.aws.amazon.com/cli/latest/reference/dms/create-replication-task.html
-# Usage "./bin/dms/create-replication-task.sh  <PATH-to-taks-mapping-JSON>"
+#
+# Usage "./bin/dms/create-replication-task.sh <PATH-to-task-setting-JSON> <PATH-to-taks-mapping-JSON>"
 
 if [ -z "$1" ]; then
     echo "Usage:  ./bin/dms/create-replication-task.sh  <PATH-to-task-setting-JSON>  <PATH-to-task-mapping-JSON> "
