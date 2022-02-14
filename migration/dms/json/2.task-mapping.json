@@ -2,8 +2,7 @@
     "rules": [
         {
             "rule-type": "selection",
-            "rule-id": "523409273",
-            "rule-name": "523409273",
+            "rule-name": "select_all_sakila_tables",
             "object-locator": {
                 "schema-name": "sakila",
                 "table-name": "%"
@@ -13,8 +12,7 @@
         },
         {
             "rule-type": "transformation",
-            "rule-id": "523434782",
-            "rule-name": "523434782",
+            "rule-name": "rename_sakila_to_pagila",
             "rule-target": "schema",
             "object-locator": {
                 "schema-name": "sakila"
