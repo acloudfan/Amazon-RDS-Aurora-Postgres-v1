@@ -271,22 +271,27 @@ The sakila.payment table definition has a last_update column
 which is not there in pagila.payment. As a result when DMS tries
 to insert in into the target its fails !!!
 
+Issue: DMS created the schema: sakila
+
+# Run this to see the tables created by DMS - notice the 'hasindexes'
+psql -c "SELECT * FROM pg_tables WHERE schemaname = 'sakila';"
+
+# Checkout the data in the sakila schema
+psql -c 'SELECT COUNT(*) FROM sakila.film;'
+
 Solution:
 Create a mapping rule that will drop the column : last_update
 
-1.Stop & Delete the replication task
+1.Cleanup the Postgresql setup
+------------------------------
+* Drop the  schema: sakila created due to earlier run
+psql -c 'CREATE SCHEMA sakila'
+
+2.Stop & Delete the replication task
 ------------------------------------
 * Use DMS console to stop the task
 
 ./bin/dms/delete-replication-task.sh
-
-2.Cleanup the Postgresql setup
-------------------------------
-
-psql -c 'drop schema pagila cascade'
-psql -c 'CREATE SCHEMA pagila'
-
-psql  <  Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/pagila-postgresql-ddl-no-constraints.sql
 
 
 3. Run the utility script for creation with a different task-mapping.json
