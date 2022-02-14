@@ -157,7 +157,8 @@ all requirements are met.
 * Logon to the bastion host
 * Please ensure MySQL is running; check the status and run it if needed
 
-    sudo systemctl start mariadb
+    sudo systemctl status mariadb
+    
     sudo systemctl start mariadb
 
 2. Populate the database with some test data
@@ -182,9 +183,14 @@ https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Source.MySQL.html#CHAP_Sou
 
 sudo cp /etc/my.cnf  /etc/my.cnf.backup
 sudo cp ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/mysql-binlog.cnf  /etc/my.cnf
+sudo echo "# Updated .." >> /etc/my.cnf
 
 # Restart MySQL
 sudo systemctl   restart   mariadb
+PS: If you get an error, do the followin:
+    sudo vi /etc/my.cnf
+    <esc> :  w  q
+    sudo systemctl   restart   mariadb
 
 # Confirm bin log format - it should be ROW
 mysql -u root -e 'select @@global.binlog_format;'
@@ -201,40 +207,21 @@ psql -c 'CREATE SCHEMA pagila'
 psql  <  ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/pagila-postgresql-ddl-no-constraints.sql
 
 
+Part-3 Setup the replication task
+=================================
+* Requires the Replication instance to be running
+* If you deleted it, please create it before the next step
 
+1. Run the utility script
+-------------------------
 
-3. Setup MySQL binlog format
-----------------------------
-* Checkout pre-requisites for MySQL
-
-
-sudo nano /etc/my.cnf
-
-* Add following under the section [mysqld] and save
-binlog_format=row
-server-id=2
-log_bin=ON
-expire_logs_days=1
-binlog_checksum=NONE
-#binlog_row_image=FULL
-log_slave_updates=true
-
-* Restart MariaDB
-sudo systemctl restart mariadb
-
-* Confirm if binlog_format = row
-mysql -u root -p -h localhost
-select @@global.binlog_format;
-
-4. Setup the replication task
------------------------------
-* Run the utility script
 ./bin/dms/create-replication-task.sh \
     ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/1.task-mapping.json   \
     ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/task-setting.json
 
-5. Verify, & Modify 
--------------------
+
+2. Modify the Replication Task
+------------------------------
 * Target table preparation mode
     - Modify so that it is "Do nothing"
 
@@ -246,14 +233,14 @@ select @@global.binlog_format;
 
 * Save    
 
-6. Run the replication task
+3. Run the replication task
 ---------------------------
 * Select the task on DMS console
 
 * Actions >> Restart/Resume
   Select Restart
 
-7. Checkout the job status in DMS console
+4. Checkout the job status in DMS console
 -----------------------------------------
 * There will be an error :)
 
