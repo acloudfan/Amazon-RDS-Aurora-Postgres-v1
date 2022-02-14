@@ -231,28 +231,36 @@ Part-3 Setup the replication task
 * Stop task after full load completes
     - Modify so that its is "Stop task after full load completes"
 
-* Save    
+* Save if you have made any changes
 
 3. Run the replication task
 ---------------------------
 * Select the task on DMS console
 
 * Actions >> Restart/Resume
-  Select Restart
+  
 
 4. Checkout the job status in DMS console
 -----------------------------------------
-* There will be an error :)
+* It should be stopped with no errors
 
-Can you identify the issue?
+* Verify count in pagila.film
+psql -c 'SELECT COUNT(*) FROM pagila.film;'
 
-Hints:
-* Check the table statistics
-* Check the CloudWatch logs
-* Check the Postgres Logs 
-* Compare schema for failed table
+It will be 0 ????
 
-Note: Solution is in next hands on exercise
+Root cause of the issue
+=======================
+
+Issue is due to the fact that DMS is writing out to the default schema in Postgres. So it created the schema sakila in Postgres and populated the data in it BUT that is not what we want.
+
+# Run this to see the tables created by DMS - notice the 'hasindexes'
+psql -c "SELECT * FROM pg_tables WHERE schemaname = 'sakila';"
+
+# Checkout the data in the sakila schema
+psql -c 'SELECT COUNT(*) FROM sakila.film;'
+
+Solution to this issue will be addressed in next exercise.
 
 
 =====================================

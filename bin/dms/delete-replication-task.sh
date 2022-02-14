@@ -8,6 +8,7 @@ REPL_TASK_ARN=$(aws dms describe-replication-tasks \
     --output text  \
     --query  "ReplicationTasks[?ReplicationTaskIdentifier=='${REPL_TASK_IDENTIFIER}'].ReplicationTaskArn | [0]")
 
+echo $REPL_TASK_ARN
 #Check if the ARN is valid
 if  [ "$REPL_TASK_ARN" == "" ]; then
     echo "Replication task not created !!"
