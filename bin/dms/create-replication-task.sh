@@ -9,7 +9,6 @@ if [ -z "$1" ]; then
     echo "Please provide path to task setting JSON !!"
     exit
 else
-    TASK_SETTING=$(cat $1)
     TASK_SETTING_FILE=$1
     echo "Task settings: $TASK_SETTING_FILE"
 fi
@@ -19,7 +18,6 @@ if [ -z "$2" ]; then
     echo "Please provide path to task mapping JSON !!"
     exit
 else
-    TABLE_MAPPING=$(cat $2)
     TABLE_MAPPING_FILE=$2
     echo "Table mappings: $TABLE_MAPPING_FILE"
 fi
