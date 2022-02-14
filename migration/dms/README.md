@@ -290,8 +290,9 @@ psql -c 'DROP SCHEMA sakila cascade'
 -------------------------------------------------------------------------
 
 ./bin/dms/create-replication-task.sh \
-    ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/2.task-mapping.json   \
-    ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/task-setting.json
+    file://./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/task-setting.json \
+    file://./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/2.task-mapping.json   
+    
 
 * Checkout the mapping rule for last_update column
 
