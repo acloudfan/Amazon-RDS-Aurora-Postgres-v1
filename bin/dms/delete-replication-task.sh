@@ -10,7 +10,7 @@ REPL_TASK_ARN=$(aws dms describe-replication-tasks \
 
 echo $REPL_TASK_ARN
 #Check if the ARN is valid
-if  [ "$REPL_TASK_ARN" == "" ]; then
+if  [ "$REPL_TASK_ARN" == "None" ]; then
     echo "Replication task not created !!"
     echo "Aborting."
     exit
