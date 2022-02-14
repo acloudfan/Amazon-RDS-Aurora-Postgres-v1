@@ -277,7 +277,7 @@ Create a mapping rule that will drop the column : last_update
 1.Cleanup the Postgresql setup
 ------------------------------
 * Drop the  schema: sakila created due to earlier run
-psql -c 'CREATE SCHEMA sakila'
+psql -c 'DROP SCHEMA sakila cascade'
 
 2.Stop & Delete the replication task
 ------------------------------------
