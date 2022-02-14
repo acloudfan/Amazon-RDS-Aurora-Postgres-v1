@@ -306,6 +306,9 @@ psql -c 'DROP SCHEMA sakila cascade'
 
 * Checkout the table stats
 
+# Checkout the data in the sakila schema
+psql -c 'SELECT COUNT(*) FROM sakila.film;'
+
 5. Apply the constraints
 ------------------------
 
