@@ -175,14 +175,16 @@ PS: If you get an error, do the followin:
 mysql -u root -e 'select @@global.binlog_format;'
 
 
-2. Populate the database with some test data
---------------------------------------------
+2. Create the database : sakila
+-------------------------------
 # Drop the database
 mysql -u root -e 'DROP DATABASE IF EXISTS sakila;'
 
 # Create the database
 mysql -u root -e 'CREATE DATABASE sakila;'
 
+3. Setup the database schema and populate
+-----------------------------------------
 # Setup schema & Populate the database with some test data
 mysql -u root < ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/sakila-schema.sql 
 mysql -u root < ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/sakila-data.sql 
