@@ -1,18 +1,15 @@
 {
     "rules": [
         {
-            "rule-type": "transformation",
-            "rule-id": "536506826",
-            "rule-name": "536506826",
-            "rule-target": "column",
+            "rule-type": "selection",
+            "rule-id": "523409273",
+            "rule-name": "523409273",
             "object-locator": {
                 "schema-name": "sakila",
-                "table-name": "payment",
-                "column-name": "last_update"
+                "table-name": "%"
             },
-            "rule-action": "remove-column",
-            "value": null,
-            "old-value": null
+            "rule-action": "include",
+            "filters": []
         },
         {
             "rule-type": "transformation",
@@ -25,17 +22,6 @@
             "rule-action": "rename",
             "value": "pagila",
             "old-value": null
-        },
-        {
-            "rule-type": "selection",
-            "rule-id": "523409273",
-            "rule-name": "523409273",
-            "object-locator": {
-                "schema-name": "sakila",
-                "table-name": "%"
-            },
-            "rule-action": "include",
-            "filters": []
         }
     ]
 }

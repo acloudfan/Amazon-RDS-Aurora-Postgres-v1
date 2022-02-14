@@ -10,18 +10,6 @@
             },
             "rule-action": "include",
             "filters": []
-        },
-        {
-            "rule-type": "transformation",
-            "rule-id": "523434782",
-            "rule-name": "523434782",
-            "rule-target": "schema",
-            "object-locator": {
-                "schema-name": "sakila"
-            },
-            "rule-action": "rename",
-            "value": "pagila",
-            "old-value": null
         }
     ]
 }

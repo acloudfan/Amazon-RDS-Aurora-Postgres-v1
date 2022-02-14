@@ -305,16 +305,16 @@ psql  <  Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/pagila-postgresql-a
 
 6.Insert rows to MySQL/Sakila database
 --------------------------------------
-* Check the number of rows in film table in Sakila
+# Check the number of rows in film table in Sakila
 mysql -u root -e 'use sakila; SELECT COUNT(*) FROM film;'
 
-* Check number of rows in film table Pagila
+# Check number of rows in film table Pagila
 psql -c 'SELECT COUNT(*) FROM pagila.film;'
 
-* Insert 10 rows
+# Insert 10 rows
 mysql -u root < ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/sakila-data-add-film.sql
 
-* Check count in sakila and pagila
+# Check count in sakila and pagila
 mysql -u root -e 'use sakila; SELECT COUNT(*) FROM film;'
 psql -c 'SELECT COUNT(*) FROM pagila.film;'
 
