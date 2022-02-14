@@ -85,7 +85,7 @@ aws dms create-replication-task  \
     --target-endpoint-arn  $TARGET_ENDPOINT_ARN \
     --migration-type $MIGRATION_TYPE \
     --replication-task-settings   "$TASK_SETTING_FILE" \
-    --table-mappings "$TABLE_MAPPING_FILE"    
+    --table-mappings "$TABLE_MAPPING_FILE"    >  /dev/null
 
 if  [ $? == 0 ]; then
     echo 'Creation of task will take < a minute .. '
