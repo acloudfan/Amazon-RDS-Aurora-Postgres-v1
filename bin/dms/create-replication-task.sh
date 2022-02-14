@@ -44,6 +44,7 @@ REPL_INSTANCE_ARN=$(aws dms describe-replication-instances  \
 if  [ "$REPL_INSTANCE_ARN" == "" ]; then
     echo "Replication instance not created !!"
     echo "Aborting."
+    exit
 else
     echo "Replication Instance ARN = $REPL_INSTANCE_ARN"
 fi
@@ -57,6 +58,7 @@ SOURCE_ENDPOINT_ARN=$(aws dms  describe-endpoints \
 if  [ "$SOURCE_ENDPOINT_ARN" == "" ]; then
     echo "Source EP not created !!"
     echo "Aborting."
+    exit
 else
     echo "Source Endpoint ARN = $SOURCE_ENDPOINT_ARN"
 fi
@@ -71,6 +73,7 @@ TARGET_ENDPOINT_ARN=$(aws dms  describe-endpoints \
 if  [ "$TARGET_ENDPOINT_ARN" == "" ]; then
     echo "Target EP not created !!"
     echo "Aborting."
+    exit
 else
     echo "Target Endpoint ARN = $TARGET_ENDPOINT_ARN"
 fi
