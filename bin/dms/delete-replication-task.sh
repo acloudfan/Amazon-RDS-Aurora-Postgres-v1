@@ -42,7 +42,7 @@ done;
 
 # Delete the replication task
 aws dms delete-replication-task \
-    --replication-task-arn   $REPL_TASK_ARN
+    --replication-task-arn   $REPL_TASK_ARN   > /dev/null
 
 echo "Deleting Replication Task: $REPL_TASK_IDENTIFIER"
 echo "Deletion may take a few minutes...check status on DMS console"
