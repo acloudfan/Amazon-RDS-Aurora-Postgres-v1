@@ -271,14 +271,6 @@ The sakila.payment table definition has a last_update column
 which is not there in pagila.payment. As a result when DMS tries
 to insert in into the target its fails !!!
 
-Issue: DMS created the schema: sakila
-
-# Run this to see the tables created by DMS - notice the 'hasindexes'
-psql -c "SELECT * FROM pg_tables WHERE schemaname = 'sakila';"
-
-# Checkout the data in the sakila schema
-psql -c 'SELECT COUNT(*) FROM sakila.film;'
-
 Solution:
 Create a mapping rule that will drop the column : last_update
 
