@@ -294,15 +294,17 @@ psql -c 'DROP SCHEMA sakila cascade'
     file://./Amazon-RDS-Aurora-Postgres-v1/migration/dms/json/2.task-mapping.json   
     
 
-* Checkout the mapping rule for last_update column
+* Checkout the mapping rule 
 
-4. Verify, & Modify 
--------------------
-* Target table preparation mode
-    - Modify so that it is "Do nothing"
+4. Run the replication task
+---------------------------
+* Select the task on DMS console
 
-* Stop task after full load completes
-    - Modify so that its is "Stop task after full load completes"
+* Actions >> Restart/Resume
+
+* Wait for the task to STOP
+
+* Checkout the table stats
 
 5. Apply the constraints
 ------------------------
