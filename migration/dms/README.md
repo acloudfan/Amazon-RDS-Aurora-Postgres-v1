@@ -152,14 +152,28 @@ source DB engine. As part of the planning user needs to ensure that
 all requirements are met.
 
 
-1. Verify that the MySQL database
+1. DMS Requires binlog_format=ROW
 ---------------------------------
-* Logon to the bastion host
-* Please ensure MySQL is running; check the status and run it if needed
+* Replication Task will fail without this setup
+https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Source.MySQL.html#CHAP_Source.MySQL.Prerequisites 
 
-    sudo systemctl status mariadb
-    
-    sudo systemctl start mariadb
+# Stop MySQL
+sudo systemctl stop mariadb
+
+# Copy the config file
+sudo cp /etc/my.cnf  /etc/my.cnf.backup
+sudo cp ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/mysql-binlog.cnf  /etc/my.cnf
+
+# Start MySQL
+sudo systemctl   start   mariadb
+PS: If you get an error, do the followin:
+    sudo vi /etc/my.cnf
+    <esc> :  w  q
+    sudo systemctl   restart   mariadb
+
+# Confirm bin log format - it should be ROW
+mysql -u root -e 'select @@global.binlog_format;'
+
 
 2. Populate the database with some test data
 --------------------------------------------
@@ -176,24 +190,6 @@ mysql -u root < ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/sakila-dat
 # Verify the load
 mysql -u root -e 'USE sakila; SELECT count(*) FROM film;'
 
-3. DMS Requires binlog_format=ROW
----------------------------------
-* Replication Task will fail without this setup
-https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Source.MySQL.html#CHAP_Source.MySQL.Prerequisites 
-
-sudo cp /etc/my.cnf  /etc/my.cnf.backup
-sudo cp ./Amazon-RDS-Aurora-Postgres-v1/migration/dms/schemas/mysql-binlog.cnf  /etc/my.cnf
-sudo echo "# Updated .." >> /etc/my.cnf
-
-# Restart MySQL
-sudo systemctl   restart   mariadb
-PS: If you get an error, do the followin:
-    sudo vi /etc/my.cnf
-    <esc> :  w  q
-    sudo systemctl   restart   mariadb
-
-# Confirm bin log format - it should be ROW
-mysql -u root -e 'select @@global.binlog_format;'
 
 Part-2 Prepare the Target Database
 ==================================
