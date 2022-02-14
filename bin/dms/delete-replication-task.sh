@@ -18,7 +18,14 @@ fi
 
 # Stop the replication task
 # https://docs.aws.amazon.com/cli/latest/reference/dms/stop-replication-task.html
-aws dms stop-replication-task --replication-task-arn $REPL_TASK_ARN
+STATUS=$(aws  dms describe-replication-tasks  --output text --query "ReplicationTasks[?ReplicationTaskIdentifier=='${REPL_TASK_IDENTIFIER}'].Status | [0]")
+if [[ "$STATUS" == "stopped" ]]; then
+    echo "Task already STOPPED"
+else
+    aws dms stop-replication-task --replication-task-arn $REPL_TASK_ARN
+fi
+
+
 
 echo "Attempting to stop: $REPL_TASK_ARN"
 # Continuously check the  status
