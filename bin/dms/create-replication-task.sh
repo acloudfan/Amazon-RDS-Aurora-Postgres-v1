@@ -3,21 +3,20 @@
 # https://docs.aws.amazon.com/cli/latest/reference/dms/create-replication-task.html
 # Usage "./bin/dms/create-replication-task.sh  <PATH-to-taks-mapping-JSON>"
 
-
 if [ -z "$1" ]; then
-    echo "Usage:  ./bin/dms/create-replication-task.sh  <PATH-to-task-mapping-JSON> <PATH-to-task-setting-JSON"
-    echo "Please provide path to task mapping JSON !!"
-    exit
-else
-    TABLE_MAPPING=$(cat $1)
-fi
-
-if [ -z "$2" ]; then
-    echo "Usage:  ./bin/dms/create-replication-task.sh  <PATH-to-task-mapping-JSON> <PATH-to-task-setting-JSON"
+    echo "Usage:  ./bin/dms/create-replication-task.sh  <PATH-to-task-setting-JSON>  <PATH-to-task-mapping-JSON> "
     echo "Please provide path to task setting JSON !!"
     exit
 else
-    TABLE_SETTING=$(cat $2)
+    TABLE_SETTING=$(cat $1)
+fi
+
+if [ -z "$2" ]; then
+    echo "Usage:  ./bin/dms/create-replication-task.sh   <PATH-to-task-setting-JSON> <PATH-to-task-mapping-JSON>"
+    echo "Please provide path to task mapping JSON !!"
+    exit
+else
+    TABLE_MAPPING=$(cat $2)
 fi
 
 REPL_TASK_IDENTIFIER=rdsa-mysql-to-postgresql
