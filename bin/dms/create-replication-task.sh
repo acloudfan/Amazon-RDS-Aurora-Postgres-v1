@@ -24,9 +24,13 @@ fi
 
 REPL_TASK_IDENTIFIER=rdsa-mysql-to-postgresql
 
+# Repl instance identifier - the instance must be running for task creation
 REPL_INSTANCE_IDENTIFIER=rdsa-dms-replication-instance
+
+# Endpoints
 SOURCE_ENDPOINT_IDENTIFIER=mysql-on-bastion-host
 TARGET_ENDPOINT_IDENTIFIER=rdsa-postgresql-cluster
+
 # [full-load | cdc | full-load-and-cdc]
 MIGRATION_TYPE=full-load-and-cdc
 # https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Tasks.CustomizingTasks.TableMapping.html
