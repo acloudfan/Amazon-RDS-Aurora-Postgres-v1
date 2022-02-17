@@ -1,0 +1,127 @@
+{
+    "test-name": "full-lob-not-nullable-at-target",
+    "test-result": "passed",
+    "table-results-summary": {
+        "passed": 16,
+        "failed": 0,
+        "warning": 0
+    },
+    "table-results": {
+        "passed": [
+            {
+                "schema-name": "sakila",
+                "table-name": "category",
+                "table-result": "passed",
+                "message": "Table has no LOBs",
+                "column-data": []
+            },
+            {
+                "schema-name": "sakila",
+                "table-name": "film",
+                "table-result": "passed",
+                "message": "Table has no LOBs",
+                "column-data": []
+            },
+            {
+                "schema-name": "sakila",
+                "table-name": "rental",
+                "table-result": "passed",
+                "message": "Table has no LOBs",
+                "column-data": []
+            },
+            {
+                "schema-name": "sakila",
+                "table-name": "staff",
+                "table-result": "passed",
+                "message": "All 11 LOB column(s) are nullable",
+                "column-data": []
+            },
+            {
+                "schema-name": "sakila",
+                "table-name": "inventory",
+                "table-result": "passed",
+                "message": "Table has no LOBs",
+                "column-data": []
+            },
+            {
+                "schema-name": "sakila",
+                "table-name": "payment",
+                "table-result": "passed",
+                "message": "Table has no LOBs",
+                "column-data": []
+            },
+            {
+                "schema-name": "sakila",
+                "table-name": "store",
+                "table-result": "passed",
+                "message": "Table has no LOBs",
+                "column-data": []
+            },
+            {
+                "schema-name": "sakila",
+                "table-name": "film_category",
+                "table-result": "passed",
+                "message": "Table has no LOBs",
+                "column-data": []
+            },
+            {
+                "schema-name": "sakila",
+                "table-name": "film_text",
+                "table-result": "passed",
+                "message": "Table has no LOBs",
+                "column-data": []
+            },
+            {
+                "schema-name": "sakila",
+                "table-name": "country",
+                "table-result": "passed",
+                "message": "Table has no LOBs",
+                "column-data": []
+            },
+            {
+                "schema-name": "sakila",
+                "table-name": "film_actor",
+                "table-result": "passed",
+                "message": "Table has no LOBs",
+                "column-data": []
+            },
+            {
+                "schema-name": "sakila",
+                "table-name": "language",
+                "table-result": "passed",
+                "message": "Table has no LOBs",
+                "column-data": []
+            },
+            {
+                "schema-name": "sakila",
+                "table-name": "actor",
+                "table-result": "passed",
+                "message": "Table has no LOBs",
+                "column-data": []
+            },
+            {
+                "schema-name": "sakila",
+                "table-name": "customer",
+                "table-result": "passed",
+                "message": "Table has no LOBs",
+                "column-data": []
+            },
+            {
+                "schema-name": "sakila",
+                "table-name": "address",
+                "table-result": "passed",
+                "message": "Table has no LOBs",
+                "column-data": []
+            },
+            {
+                "schema-name": "sakila",
+                "table-name": "city",
+                "table-result": "passed",
+                "message": "Table has no LOBs",
+                "column-data": []
+            }
+        ],
+        "failed": [],
+        "warning": []
+    }
+}

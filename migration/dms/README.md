@@ -330,6 +330,40 @@ mysql -u root -e 'use sakila; SELECT COUNT(*) FROM film;'
 psql -c 'SELECT COUNT(*) FROM pagila.film;'
 
 
+
+=================================================
+Exercise: Generate Premigration Assessment Report
+=================================================
+Sample reports are available under the subfolder:
+migration/dms/premigration-assessment
+
+1. Create an S3 bucket in the same region as your task
+-------------------------------------------------------
+
+2. Setup a role that will be assumed by DMS for accessing S3
+------------------------------------------------------------
+* This script creates multiple roles
+
+./bin/dms/create-dms-roles.sh
+
+3. Select the Replication task in console
+-----------------------------------------
+Actions >> Create premigration assessment
+
+4. Set the report configuration
+-------------------------------
+* Select the bucket you would like to send the report to
+* Set the IAM role
+
+rdsa-dms-s3-role
+
+5. Hit generate report
+----------------------
+* Report generation will take a couple of minutes
+
+
+
+
 =====================================
 Create Replication Instance using DMS
 =====================================

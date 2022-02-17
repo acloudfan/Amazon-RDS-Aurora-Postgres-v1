@@ -1,0 +1,58 @@
+{
+    "version": "0.0.1",
+    "overall-test-result": "warning",
+    "summary": {
+        "passed": [
+            {
+                "test-name": "table-with-no-primary-key-or-unique-constraint",
+                "test-result": "passed",
+                "table-results-summary": {
+                    "passed": 16,
+                    "failed": 0,
+                    "warning": 0
+                }
+            },
+            {
+                "test-name": "target-table-has-unique-key-or-primary-key-for-cdc",
+                "test-result": "passed",
+                "table-results-summary": {
+                    "passed": 16,
+                    "warning": 0,
+                    "failed": 0
+                }
+            },
+            {
+                "test-name": "table-with-lob-but-without-primary-key-or-unique-constraint",
+                "test-result": "passed",
+                "table-results-summary": {
+                    "warning": 0,
+                    "passed": 16,
+                    "failed": 0
+                }
+            },
+            {
+                "test-name": "full-lob-not-nullable-at-target",
+                "test-result": "passed",
+                "table-results-summary": {
+                    "passed": 16,
+                    "failed": 0,
+                    "warning": 0
+                }
+            }
+        ],
+        "failed": [],
+        "error": [],
+        "warning": [
+            {
+                "test-name": "unsupported-data-types-in-source",
+                "test-result": "warning",
+                "table-results-summary": {
+                    "warning": 1,
+                    "failed": 0,
+                    "passed": 15
+                }
+            }
+        ],
+        "cancelled": []
+    }
+}
