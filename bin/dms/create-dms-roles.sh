@@ -73,3 +73,30 @@ fi
 
 # #-------------------------
 
+
+
+# #---------------rdsa-dms-s3-role------------------
+# THIS IS NOT A STANDARD ROLE
+DMS_S3_ROLE=rdsa-dms-s3-role
+DMS_S3_FULL_ACCESS=AmazonS3FullAccess
+
+# Check if the role exist
+DMS_S3_ROLE_ARN=$(aws iam list-roles --query "Roles[?RoleName=='$DMS_S3_ROLE'].Arn" --output text)
+
+if  [ "$DMS_S3_ROLE_ARN" == "" ]; then
+
+# Create the role with the trust policy
+aws iam create-role --role-name $DMS_S3_ROLE --assume-role-policy-document  file:///tmp/assume-policy.json  > /dev/null
+DMS_S3_ROLE_ARN=$(aws iam list-roles --query "Roles[?RoleName=='$DMS_S3_ROLE'].Arn" --output text)
+
+echo "DMS_S3_ROLE Arn=$DMS_S3_ROLE_ARN"
+
+# Attach the role to policy IAM_COPY_TASK_POLICY
+echo "Attaching the IAM policy to IAM role"
+aws iam attach-role-policy   --role-name $DMS_S3_ROLE  --policy-arn arn:aws:iam::aws:policy/$DMS_S3_FULL_ACCESS
+echo "Created: $DMS_S3_ROLE"
+else
+    echo "$DMS_S3_ROLE role exists - no action taken !!"
+fi
+
+# #-------------------------

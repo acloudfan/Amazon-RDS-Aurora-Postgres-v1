@@ -141,6 +141,8 @@
         "ParallelLoadBufferSize": 0
     },
     "BeforeImageSettings": null,
+
+
     "ControlTablesSettings": {
         "historyTimeslotInMinutes": 5,
         "HistoryTimeslotInMinutes": 5,
@@ -149,7 +151,9 @@
         "HistoryTableEnabled": false,
         "ControlSchema": "",
         "FullLoadExceptionTableEnabled": false
-    },
+    }
+    
+    ,
     "LoopbackPreventionSettings": null,
     "CharacterSetSettings": null,
     "FailTaskWhenCleanTaskResourceFailed": false,
