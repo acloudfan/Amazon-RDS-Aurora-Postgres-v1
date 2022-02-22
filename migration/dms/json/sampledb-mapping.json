@@ -1,0 +1,58 @@
+{
+    "rules": [
+
+
+        {
+            "rule-type": "transformation",
+            "rule-id": "242589686",
+            "rule-name": "242589686",
+            "rule-target": "table",
+            "object-locator": {
+                "schema-name": "sampledb",
+                "table-name": "nest_1"
+            },
+            "rule-action": "rename",
+            "value": "new_nest_1",
+            "old-value": null
+        },
+
+
+        {
+            "rule-type": "selection",
+            "rule-id": "241574780",
+            "rule-name": "241574780",
+            "object-locator": {
+                "schema-name": "sampledb",
+                "table-name": "%"
+            },
+            "rule-action": "include",
+            "filters": []
+        }
+        
+        ,
+
+        {
+            "rule-type": "selection",
+            "rule-id": "225513013",
+            "rule-name": "225513013",
+            "object-locator": {
+                "schema-name": "sampledb",
+                "table-name": "nest_1"
+            },
+            "rule-action": "include",
+            "filters": [
+                {
+                    "filter-type": "source",
+                    "column-name": "id",
+                    "filter-conditions": [
+                        {
+                            "filter-operator": "ste",
+                            "value": "30"
+                        }
+                    ]
+                }
+            ]
+        }
+
+    ]
+}

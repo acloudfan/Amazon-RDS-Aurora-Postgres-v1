@@ -362,6 +362,115 @@ rdsa-dms-s3-role
 * Report generation will take a couple of minutes
 
 
+=======================
+Exercise: Try out rules
+=======================
+
+
+1. Create DB & test tables on MySQL
+-----------------------------------
+
+# Start Mariadb
+sudo systemctl start mariadb
+
+# Test database/tables & data
+mysql -u root -e 'DROP DATABASE IF EXISTS sampledb ;CREATE DATABASE sampledb;'
+mysql -u root -e 'use sampledb; CREATE TABLE test_1(id int);'
+mysql -u root -e 'use sampledb; CREATE TABLE nest_1(id int);'
+mysql -u root -e 'use sampledb; INSERT INTO test_1 (id) VALUES (1),(2),(3),(4),(5);'
+mysql -u root -e 'use sampledb; INSERT INTO nest_1 VALUES (10),(20),(30),(40),(50);'
+
+mysql -u root -e 'SELECT * FROM sampledb.test_1;'
+mysql -u root -e  'SELECT * FROM sampledb.nest_1;'
+
+2. Create a simple task
+-----------------------
+Name = rdsa-sampledb-task
+Instance = select the existing instance
+Source ep = mysql-on-bastion-host
+Target ep = rdsa-postgresql-cluster
+Migration type= full-with-cdc
+Target table prep mode = Drop tables on target
+
+Add new selection rule:
+Schema name = sampledb
+Table name = %
+Action = include
+
+
+Migration task startup configuration = Manually later
+
+* Leave everything else as default
+
+
+
+3. Start the task
+-----------------
+* Wait for full load to complete
+* Check tables in PostgreSQL sampledb.test_1 and sampledb.nest_1
+
+psql -c 'SELECT * FROM sampledb.test_1;'
+psql -c 'SELECT * FROM sampledb.nest_1;'
+
+4. Set the selection rule so only test_1 table is included
+----------------------------------------------------------
+* Stop task & modify it
+* Set the selection rule
+
+Schema name= sampledb
+Table name = %test%
+Action = include
+
+* Drop the schema
+psql -c 'DROP SCHEMA sampledb CASCADE;'
+
+* Run the task & wait for full load to complete
+* Run the SQLs, only the test_1 table will be there
+
+psql -c 'SELECT * FROM sampledb.test_1;'
+psql -c 'SELECT * FROM sampledb.nest_1;'
+
+5. Set the column filter so that sampledb.nest_1.id <= 30
+-------------------------------------------------------
+* Stop task & modify it
+* Add a new selection rule
+
+Schema name= sampledb
+Table name = nest_1
+Action = include
+
+* Add a column filter
+
+Column name = id
+Condition 1 = Less than or equal to    30
+
+* Run the task & wait for full load to complete
+
+* Run the SQL
+
+psql -c 'SELECT * FROM sampledb.nest_1;'
+
+6. Transform the table name nest_1 to new_nest_1
+------------------------------------------------
+
+Target = Table
+Schema name= sampledb
+Table name = nest_1
+Action = Add prefix   new_
+
+* Drop the schema
+psql -c 'DROP SCHEMA sampledb CASCADE;'
+
+* Run the task & wait for full load to complete
+
+* Run the SQL - you will get an error
+
+psql -c 'SELECT * FROM sampledb.nest_1;'
+
+* Run the SQL - it should work
+
+psql -c 'SELECT * FROM sampledb.new_nest_1;'
+
 
 
 =====================================
