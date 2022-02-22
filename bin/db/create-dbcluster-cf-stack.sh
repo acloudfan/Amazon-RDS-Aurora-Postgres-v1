@@ -1,7 +1,7 @@
 #!/bin/bash
 # Creates the RDSA PG Cluster 
 # DEPENDENCY on CloudFormation Stack: rdsa-vpc
-# ./bin/db/create-db-cluster-cf-stack.sh  [instance-class Default = db.t3.medium]
+# ./bin/db/create-db-cluster-cf-stack.sh  [instance-class Default = db.t3.medium] [PostgreSQL-Version = 13.4]
 
 
 
@@ -33,6 +33,14 @@ if [ -z "VPC_ID" ]; then
     exit
 fi
 
+
+# This will set the version
+if [ -z "$2" ]; then
+    DB_ENGINE_VERSION=13.4
+else
+    DB_ENGINE_VERSION=$2
+fi
+
 # Show the info used for 
 echo "VPC ID = $VPC_ID"
 echo "Private Subnet List = $PRIVATE_SUBNETS"
@@ -56,6 +64,7 @@ ParameterKey=RdsAuroraVPC,ParameterValue="$VPC_ID"  \
 ParameterKey=PrivateSubnets,ParameterValue="$PRIVATE_SUBNETS" \
 ParameterKey=DBMasterUsername,ParameterValue="masteruser" \
 ParameterKey=DBMasterUserPassword,ParameterValue="masteruserpw" \
+ParameterKey=DBEngineVersion,ParameterValue="$DB_ENGINE_VERSION" \
 ParameterKey=VPCSecurityGroupCluster,ParameterValue="$RDSA_INTERNAL_SG" \
 ParameterKey=DBInstanceClass,ParameterValue="$DB_INSTANCE_CLASS" \
 --capabilities "CAPABILITY_NAMED_IAM"

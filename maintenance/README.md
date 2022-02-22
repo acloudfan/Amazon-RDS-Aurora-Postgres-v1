@@ -7,3 +7,12 @@
 
 Example: ./bin/db/check-upgrade-version.sh  10.11
 
+##########################
+# Try out in place upgrade
+##########################
+
+1. Delete the existing Aurora Cluster
+-------------------------------------
+* Use the CloudFormation console or the utility script
+./bin/db/delete-dbcluster-cf-stack.sh
+
