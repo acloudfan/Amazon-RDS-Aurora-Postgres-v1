@@ -68,16 +68,6 @@ Backup and Restore.
 
 Refer: backup/README.md
 
-=================
-# 3. DMS approach
-=================
-
-Please refer to the lessons in the section:
-Database Migration Service
-
-Refer: migration/dms/README.md
-
-
 =========================================
 # 4. Logical Replication - native pub/sub
 =========================================
@@ -244,64 +234,25 @@ psql -d to_replicate -c 'DELETE FROM test WHERE id > 5;'
 psql -h $PGWRITEREP_LATEST -d to_replicate -c 'SELECT * FROM test;'
 
 
+Cleanup
+=======
 
 
 
 Check on publisher
-------------------
+==================
 Check replication slot on publisher
 psql  -d to_replicate -c 'SELECT * FROM pg_replication_slots;'
 
 Delete replication slot on publisher
 psql  -d to_replicate -c 'SELECT pg_drop_replication_slot(<<Slot name>>)';
 
-ps
 
-========================
-# 4. Logical Replication
-========================
+=================
+# 3. DMS approach
+=================
 
+Please refer to the lessons in the section:
+Database Migration Service
 
-Part-1: Setup provider for logical replication
-==============================================
-
-
-3. Setup a test database
-------------------------
-
-* pglogical requires the tables to be replicated to have a primary key
-
-psql -c "CREATE DATABASE replication_test;"
-psql -c "CREATE TABLE test(id int PRIMARY KEY);"
-psql -c "INSERT INTO test VALUES(generate_series(1,1000));"
-psql -c "SELECT count(*) FROM test;"
-
-4. Setup publication
---------------------
-* Setup th epublication on the provider
-
-psql -c "CREATE PUBLICATION testpub FOR TABLE test;"
-SELECT * FROM pg_catalog.pg_publication;
-
-
-
-Part-2: Setup subscriber for logical replication
-================================================
-
-
-
-1. Setup a new cluster
-----------------------
-* Use the console or CLI to create the cluster
-* Use the existing VPC/Subnet Group/
-
-    - Template = Dev/Test
-    - Name = rdsa-postgresql-cluster-latest
-    - User/password = masteruser/masteruserpw
-    - Instance class= Burstable / db.t3.medium
-    - VPC = rdsa-vpc
-    - Security Group = rdsa-security-group-internal
-
-
-2. Setup extension on provider cluster (existing)
--------------------------------------------------
+Refer: migration/dms/README.md
