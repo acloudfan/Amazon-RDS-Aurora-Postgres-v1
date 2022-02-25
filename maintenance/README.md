@@ -194,7 +194,7 @@ echo $PGWRITEREP_LATEST
 * Setup the database and tables
 psql  -h $PGWRITEREP_LATEST -d postgres -c 'CREATE DATABASE to_replicate;'
 psql  -h $PGWRITEREP_LATEST -d to_replicate -c 'CREATE TABLE test(id int PRIMARY KEY);'
-psql  -h $PGWRITEREP_LATEST -d to_replicate -c 'CREATE TABLE nest(id int);'
+
 
 
 3. Setup the subscription on new cluster
@@ -231,9 +231,19 @@ Part-4 Test Replication
 
 1. Insert rows on publisher & check on subscriber
 -------------------------------------------------
+* On the original cluster, insert some data
+
 psql -d to_replicate -c 'INSERT INTO test VALUES(generate_series(1,10));'
 
 psql -h $PGWRITEREP_LATEST -d to_replicate -c 'SELECT count(*) FROM test;'
+
+* On the original cluster, delete some data
+
+psql -d to_replicate -c 'DELETE FROM test WHERE id > 5;'
+
+psql -h $PGWRITEREP_LATEST -d to_replicate -c 'SELECT * FROM test;'
+
+
 
 
 
