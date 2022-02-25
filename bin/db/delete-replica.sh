@@ -23,7 +23,7 @@ while true; do
 done
 
 echo "Be aware that sometimes, the stack deletion fails !!"
-echo "NOTE: It is your responsibility to ensure that the cluster is successfully deleted."
+echo "NOTE: It is your responsibility to ensure that the DB node is successfully deleted."
 
 
 # Delete the stack
