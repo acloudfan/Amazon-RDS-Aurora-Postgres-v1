@@ -91,7 +91,7 @@ PG_ENGINE=aurora-postgresql<<REPLACE This with major version of existing cluster
 aws rds create-db-cluster-parameter-group  \
     --db-cluster-parameter-group-name rdsa-cluster-pg-publisher  \
     --db-parameter-group-family     "$PG_ENGINE"  \
-    --description                   "This is for testing pglogical"
+    --description                   "This is for testing logical replication"
 
 2. Set the publisher parameters
 -------------------------------
