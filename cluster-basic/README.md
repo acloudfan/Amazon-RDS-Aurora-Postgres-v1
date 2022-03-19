@@ -1,7 +1,7 @@
 =======================
 Create the test cluster
 =======================
-* Videos  in section#3 shows how to creat the cluster with console
+* Videos  in section#4 shows how to create the cluster with console
 * The instructions here uses a combination of console & CLI
 
 1. Create the VPC

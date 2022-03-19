@@ -1,6 +1,14 @@
-=================
+===================================================================
 raj@acloudfan.com
-=================
+
+This repository is part of a course put together by Rajeev Sakhuja
+
+Course title: Amazon Aurora PostgreSQL from A to Z
+
+Check out the course preview: 
+https://courses.pragmaticpaths.com/p/aurora-postgresql
+
+===================================================================
 
 
 ====================================
@@ -30,27 +38,6 @@ clone https://github.com/acloudfan/Amazon-RDS-Aurora-Postgres-v1.git
 
 
 
-1. Cluster - Basic
 
-
-Planning
-
-
-
-psql Cheatsheet
-===============
-[Help]
-\?
-
-[User]
-\du
-
-[Extension]
-\dx
-\dx+
-
-[Version]
-SELECT version();
-SELECT AURORA_VERSION();
 
 
