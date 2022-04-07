@@ -10,6 +10,8 @@ Checkout cluster parameter group for parameters with prefix : track_
 You may control the tracking by setting these confg parameters.
 Heavy stats activity may have an impact on performance.
 
+Parameters that control activity stats
+--------------------------------------
 track_activities
 track_activity_query_size
 track_commit_timestamp
