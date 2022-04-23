@@ -75,6 +75,7 @@ Resources:
           CidrIp: 10.0.0.0/16
         - IpProtocol: tcp
           FromPort: "3389"  # Windows RDP
+          ToPort: "3389"
           CidrIp: 0.0.0.0/0
         - IpProtocol: tcp
           FromPort: "8082"  # Future use
