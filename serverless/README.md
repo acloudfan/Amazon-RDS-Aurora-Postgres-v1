@@ -18,17 +18,24 @@ Part-1 : Use console to create cluster
 Engine:
     - Engine = Amazon Aurora
     - Edition = PostgreSQL-compatible
-    - Capacity type = Serverless
-    - Version = 10.14
+    - Click 'Show Filters
+        - Select 'Show versions that support Serverless v2'
+    - Version = 13.6
 
 Settings:
     - DB Cluster Identifier = rdsa-postgresql-serverless
     - User = masteruser
     - Password = masteruserpw
 
+Instance configuration:
+    - DB Instance Class = Serverless
+
 Capacity settings:
-    - Minimum = 2 ACU
-    - Maximum = 8 ACU
+    - Minimum = 0.5 ACU
+    - Maximum = 1 ACU
+
+Availability & Durability:
+    - Don't create an Aurora replica
 
 Connectivity:
     - VPC = rdsa-vpc
