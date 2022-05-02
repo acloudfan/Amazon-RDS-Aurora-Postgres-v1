@@ -1,16 +1,20 @@
-======================================================
-As of March 2021, 
-Amazon Aurora Serverless v2 is still in preview
-NOTE: Lessons will be updated within a few weeks of GA
-======================================================
-
-
+==================================================================================
+As of April 2022 - Serverless V2 is GA
+NOTE: Lessons in course will be updated and made available by 3rd week of May 2022
+==================================================================================
 
 
 ===========================
 Create a serverless cluster
 ===========================
 * Use console or CLI
+* Dependency on elements of the CloudFormation stacks
+    - VPC
+    - Bastion Host
+    - Security Group
+    - PostgreSQL stack
+        * Delete the Database as we won't use it
+        * We will use the subnet group
 
 Part-1 : Use console to create cluster
 ======================================
@@ -52,19 +56,44 @@ Additional configuration:
 
 Part-2 : Add 2 Readers
 ======================
-* For 1st Reader set 
-    - name = rdsa-postgresql-serverless-instance-2 
-    - failover priority = 1
-* For 2nd Reader set 
-    - name = rdsa-postgresql-serverless-instance-3 
-    - failover priority = 5
 
+1. Instance#2 Creation
+----------------------
+* For 1st Reader set 
+    - identifier = rdsa-postgresql-serverless-instance-2 
+    - instance configuration = serverless v2
+    - failover priority = 1
+    - Uncheck Performance Insights
+
+2. Instance#3 Creation
+----------------------
+* For 2nd Reader set 
+    - identifier = rdsa-postgresql-serverless-instance-3 
+    - instance configuration = serverless v2
+    - failover priority = 5
+    - Uncheck Performance Insights
+
+<<Wait for the instance creation to complete>>
+
+3. Set the failover priorities
+------------------------------
+* Instance#2 has a default failover priority = 1
+* Instance#3 priority to be changed to 5
+
+- Select the Instance#3 and click on <Modify>
+- Scroll down to 'Additional configuration' section
+    - Failover priority = tier-5
+- Click on 'Continue'
+- Select 'Apply Immediately'
+- Click on "Modify.." button
+
+<<Wait for the instance modification to complete>>
 
 Part-3: Test using psql & pgbench
 ==================================
 
 1. Setup host variables
-=======================
+-----------------------
 * Create a Bastion host session & copy paste the instructions below
 * You will need to do it in new session 
 
@@ -73,20 +102,47 @@ PGWRITEREP=$(aws rds describe-db-clusters --output text \
                         --query 'DBClusters[?DBClusterIdentifier == `rdsa-postgresql-serverless`].Endpoint')
 PGHOST=$PGWRITEREP
 
-PGREADEREP=
+PGREADEREP=$(aws rds describe-db-clusters --output text \
+                        --query 'DBClusters[?DBClusterIdentifier == `rdsa-postgresql-serverless`].ReaderEndpoint')
 
 2. Use psql to connect (optional)
-=================================
+---------------------------------
 
-3. Test-1: Run write load & observe capacity usage for the 3 nodes
-==================================================================
+psql -d pgbench
 
-pgbench -i --fillfactor=100 --scale=1000
+3. Open CloudWatch
+------------------
+* Click on 'All metrics' in left nav panel
+* In Browse - Click on 'RDS'
+* In search box type ServerlessDatabaseCapacity
+* Click on 'RDS>Per-Database Metrics' & select the 3 instances in the cluster
+    - You should see the capacity usage graph for the 3 instances
 
-4. Test-2: Run READ load & observe capacity usage for the 3 nodes
-==================================================================
+<<Wait for the capacity for the 3 instances to be stabilized at 2 ACU>>
 
-pgbench --progress-timestamp -M prepared -n -T 240 -P 5 -c 50 -j 50  -b select-only
+4. Test-1: Run write load & observe capacity usage for the 3 nodes
+------------------------------------------------------------------
+
+pgbench -d pgbench -i --fillfactor=100 --scale=500
+
+5. Test-2: Run READ load & observe capacity usage for the 3 nodes
+-----------------------------------------------------------------
+
+pgbench -d pgbench  --progress-timestamp -M prepared -n -T 240 -P 5 -c 50 -j 50  -b select-only
+
+Cleanup
+=======
+* Delete ALL the Serverless instances
+* Delete the PostgreSQL stack
 
 
 
+====================================
+Create a Mixed Configuration Cluster
+====================================
+
+
+Cleanup
+=======
+* Stop the Bastion Host (or delete)
+* Delete the VPC stack (if you don't need it anymore)
