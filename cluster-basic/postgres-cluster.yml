@@ -58,7 +58,7 @@ Parameters:
   DBEngineVersion:
     Description: Select Database Engine Version
     Type: String
-    Default: 13.4
+    Default: 13.6
     AllowedValues:
       - 11.6
       - 11.7
@@ -66,6 +66,7 @@ Parameters:
       - 11.9
       - 12.7
       - 13.4
+      - 13.6
 
 
 # Used as globals
@@ -74,7 +75,7 @@ Mappings:
     global:
       dbSchema: labdb
       dbDriver: pgsql
-      dbFamily: aurora-postgresql11
+
 
 # Resources for the cluster
 Resources:

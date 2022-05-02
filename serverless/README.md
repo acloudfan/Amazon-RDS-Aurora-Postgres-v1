@@ -46,18 +46,17 @@ Connectivity:
         - Data API = Check it off
 
 Additional configuration:
-    - Initial DB = labdb
+    - Initial DB = pgbench
     - Deletion protection = Uncheck
 
-Part-2 : Test cluster using Data API & psql
-===========================================
+Part-2 : Add 2 Readers
+======================
 
-1. Use Console Data API
------------------------
-* On left navigation panel in console select 'Query Editor'
-* Select the serverless database and try out queries
 
-2. Use Bastion host & psql
+Part-3: (Optional) Test using psql
+==================================
+
+1. Use Bastion host & psql
 --------------------------
 * Create a Bastion host session
 
