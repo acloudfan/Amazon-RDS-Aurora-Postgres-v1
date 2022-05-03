@@ -4,9 +4,69 @@ NOTE: Lessons in course will be updated and made available by 3rd week of May 20
 ==================================================================================
 
 
-===========================
-Create a serverless cluster
-===========================
+=========================================
+Convert existing cluster to serverless v2
+=========================================
+
+Prepare
+=======
+* Minimum version needed for Serverless v2 is 13.6
+* Either upgrade the existing rdsa-postgresql-cluster to v13.6
+* OR delete the CloudFormation stack (rdsa-postgreql) and recreate with v13.6
+
+Part-1 Create a Mixed configuration cluster
+===========================================
+
+1. Add Serverless v2 instance
+-----------------------------
+* Select the cluster
+* Action > Add reader
+
+2. Setup serverless reader parameters
+-------------------------------------
+- DB Instance identifier = rdsa-postgresql-serverless-1
+- Instance Configuration
+    - Select 'Serverless v2'
+    - Capacity range Minmum=2, Maximum=8
+- Additional Configuration
+    - Uncheck 'Enable Performance Insights'
+- Click on 'Add Reader'
+
+Part-2 Convert from Mixed to all serverless instances
+=====================================================
+
+1. Delete the provisioned instance
+----------------------------------
+* Select the provisioned instance
+* Action > Delete
+* Confirm and continue
+
+2. Add another serverless instance
+----------------------------------
+- DB Instance identifier = rdsa-postgresql-serverless-2
+- NOTE: You won't need to specify the capacity
+
+3. Connect from the Bastion host
+--------------------------------
+- You may connect from the host 
+- No change in behavior
+- A load run will cause the instances to scale up/down
+
+Cleanup
+-------
+We will use the cluster with this setup in the next hands on lecture
+
+
+* Stop the cluster
+
+NOTE: If you plan to take a longer break then
+
+* DELETE all the serverless instances in the cluster
+* Delete the CloudFormation stack (rdsa-postgresql)
+
+=======================================
+Create a serverless cluster (Ground up)
+=======================================
 * Use console or CLI
 * Dependency on elements of the CloudFormation stacks
     - VPC
