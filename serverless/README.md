@@ -108,6 +108,19 @@ Writer = Provisioned instance
 Reader-1 = Serverless V2 instance, Failover priority=1
 Reader-2 = Serverless V2 instance, Failover priority=5
 
+Test-1 
+------
+# Simple update run
+# 500 connections, No vacuum, updates for 5 minutes
+pgbench -c 500  -T 300 -P 2 -b simple-update  -n pgbench
+
+Test-2
+------
+# All select run 
+# 1000 connections, No vacuum, updates for 5 minutes
+pgbench -c 1000  -T 300 -P 2 -b select-only  -n pgbench
+
+
 ======================================
 Connection management in Serverless v2
 ======================================
