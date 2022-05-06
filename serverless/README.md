@@ -64,6 +64,73 @@ NOTE: If you plan to take a longer break then
 * DELETE all the serverless instances in the cluster
 * Delete the CloudFormation stack (rdsa-postgresql)
 
+
+====================================
+Capacity management in Serverless v2
+====================================
+* You will learn how Aurora manages Serverless V2 instance capacity
+* Cluster Capacity Range = 2 to 8 ACU
+* Prepare pgbench database
+$ psql -c 'CREATE DATABASE pgbench'
+$ pgbench -d pgbench -i --fillfactor=100 --scale=500
+
+Part-1 All Serverless V2 instances
+==================================
+Writer = Serverless V2 instance
+Reader-1 = Serverless V2 instance, Failover priority=1
+Reader-2 = Serverless V2 instance, Failover priority=5
+
+Observations-1
+==============
+* For Minimum capacity <= 1 ACU
+* With no load all instances running HOT, close to 100% CPU usage
+
+Test-1
+------
+* Run updates against the Writer
+* Observe the Max ServerlessDatabaseCapacity & DBInstance
+
+# Simple update run
+# 500 connections, No vacuum, updates for 5 minutes
+pgbench -c 500  -T 300 -P 2 -b simple-update  -n pgbench
+
+Test-2
+------
+* Run selects against the Writer
+
+# All select run 
+# 1000 connections, No vacuum, updates for 5 minutes
+pgbench -c 1000  -T 300 -P 2 -b select-only  -n pgbench
+
+Part-2 Mixed configuration cluster
+==================================
+Writer = Provisioned instance
+Reader-1 = Serverless V2 instance, Failover priority=1
+Reader-2 = Serverless V2 instance, Failover priority=5
+
+======================================
+Connection management in Serverless v2
+======================================
+
+Error
+-----
+- In low minimum setup, Once in a while received an error indicating connection starvation
+
+pgbench: error: connection to database "pgbench" failed: FATAL:  remaining connection slots are reserved for non-replication superuser connections
+
+
+
+
+=====================================
+Replication behavior in Serverless v2
+=====================================
+
+
+====================================
+Failure recovery - CCM not available
+====================================
+
+
 =======================================
 Create a serverless cluster (Ground up)
 =======================================
@@ -206,3 +273,22 @@ Cleanup
 =======
 * Stop the Bastion Host (or delete)
 * Delete the VPC stack (if you don't need it anymore)
+
+
+
+
+
+
+
+
+
+
+===
+
+# Setup the endpoint information in environment variables
+PGWRITEREP=$(aws rds describe-db-clusters --output text \
+                        --query 'DBClusters[?DBClusterIdentifier == `mixed-serverless`].Endpoint')
+PGHOST=$PGWRITEREP
+
+PGREADEREP=$(aws rds describe-db-clusters --output text \
+                        --query 'DBClusters[?DBClusterIdentifier == `mixed-serverless`].ReaderEndpoint')
