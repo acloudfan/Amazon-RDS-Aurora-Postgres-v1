@@ -112,13 +112,13 @@ Test-1
 ------
 # Simple update run
 # 500 connections, No vacuum, updates for 5 minutes
-pgbench -c 500  -T 300 -P 2 -b simple-update  -n pgbench
+pgbench -c 500  -T 300 -P 2 -b simple-update  pgbench
 
 Test-2
 ------
 # All select run 
 # 1000 connections, No vacuum, updates for 5 minutes
-pgbench -c 1000  -T 300 -P 2 -b select-only  -n pgbench
+pgbench -c 1000  -T 300 -P 2 -b select-only   pgbench
 
 
 ======================================
