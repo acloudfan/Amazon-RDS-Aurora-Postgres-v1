@@ -14,6 +14,14 @@ Creates the VPC with 3 private & 3 public subnets across 3 AZ
 
 PS: Use this template for your own experimentation
 
+Pre-requisite
+-------------
+Make sure there are 3 AZ's available in the region where you are creating the VPC
+
+Paste the region and run the command to verify:
+
+aws ec2 describe-availability-zones --region   <<your region>>
+
 ================
 bastion-host.yml
 ================
