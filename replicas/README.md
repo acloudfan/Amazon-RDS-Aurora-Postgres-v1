@@ -1,3 +1,8 @@
+Changes
+======= 
+March 16, 2024 : Added new version support + changed default to 15.2
+
+
 postgres-cluster-replica.yml
 ============================
 Creates a READ Replica for the Aurora cluster
