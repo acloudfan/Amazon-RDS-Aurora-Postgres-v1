@@ -7,10 +7,9 @@ if [ -z $SUDO_USER ]; then
     exit 0
 fi
 
-# March 17, 2024 : Changed to v14.11 (from 13)
-# CHANGE THE Version to 14 otherwise psql will misbehave !!!
-echo "Installing the postgresql14 tools"
-amazon-linux-extras install postgresql14 vim epel -y
+# CHANGE THE Version to 13 otherwise psql will misbehave !!!
+echo "Installing the postgresql13 tools"
+amazon-linux-extras install postgresql13 vim epel -y
 
 echo "Install the pgbench"
 yum install postgresql-contrib -y

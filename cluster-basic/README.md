@@ -1,3 +1,9 @@
+Changes:
+========
+March 2024, Added newer versions of the PG
+March 2024, Made v15.3 as the default
+
+
 =======================
 Create the test cluster
 =======================

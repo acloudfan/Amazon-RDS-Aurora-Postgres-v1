@@ -4,8 +4,7 @@
 #        ./bin/db/create-replica.sh  node-02
 
 if [ -z "$1" ]; then
-    ## March 16, 2024 : Changed the version to 15.2
-    echo "Usage: ./bin/db/create-replica.sh  <<node name>>  [Instance type   db.t3.medium=default] [Engine version  15.2=default]"
+    echo "Usage: ./bin/db/create-replica.sh  <<node name>>  [Instance type   db.t3.medium=default] [Engine version  13.4=default]"
     echo "       ./bin/db/create-replica.sh  node-02"
     exit
 fi
@@ -29,9 +28,7 @@ else
     echo "DB Instance Type=$DB_INSTANCE_TYPE"
 fi
 
-## March 16, 2024 : Changed the version to 15.2
-# DB_ENGINE_VERSION="13.4"
-DB_ENGINE_VERSION="15.2"
+DB_ENGINE_VERSION="13.4"
 if [ -z "$3" ]; then
     echo "DB Engine Version=$DB_ENGINE_VERSION"
 else
